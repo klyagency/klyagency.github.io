@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Contacto - KLY Agency</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary: #111;
+      --accent: #5551ff;
+      --bg: #f7f7f7;
+      --radius: 20px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      max-width: 420px;
+      width: 100%;
+      animation: fadeInUp 0.6s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 15px;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      font-size: 15px;
+      margin-bottom: 15px;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    button {
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #3e3aff;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    .success-message {
+      display: none;
+      margin-top: 15px;
+      padding: 10px;
+      background: #dff0d8;
+      color: #3c763d;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>¿trabajamos juntos?</h1>
+    <p>cuéntanos sobre tu restaurante o marca</p>
+    <form id="form" action="https://formspree.io/f/xzzeoyoa" method="POST">
+      <input type="text" name="nombre" placeholder="Tu nombre" required>
+      <input type="email" name="email" placeholder="Tu correo" required>
+      <textarea name="mensaje" rows="4" placeholder="¿En qué podemos ayudarte?" required></textarea>
+      <button type="submit">enviar mensaje</button>
+      <div class="success-message" id="success">¡Mensaje enviado correctamente!</div>
+    </form>
+    <div class="footer">kly agency · resultados, no ruidos</div>
+  </div>
+
+  <script>
+    const form = document.getElementById('form');
+    const success = document.getElementById('success');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        form.reset();
+        success.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

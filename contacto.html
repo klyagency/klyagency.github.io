@@ -6,9 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
-      --primary: #111;
+      --primary: #ffffff;
       --accent: #5551ff;
-      --bg: #f7f7f7;
+      --bg: #313338; /* Gris estilo Discord */
+      --card-bg: #42434a;
       --radius: 20px;
     }
 
@@ -29,9 +30,9 @@
     }
 
     .container {
-      background: white;
+      background: var(--card-bg);
       border-radius: var(--radius);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       padding: 40px;
       max-width: 420px;
       width: 100%;
@@ -54,7 +55,7 @@
     }
 
     p {
-      color: #666;
+      color: #ccc;
       margin-bottom: 30px;
       font-size: 15px;
     }
@@ -63,9 +64,11 @@
       width: 100%;
       padding: 12px 15px;
       border-radius: 12px;
-      border: 1px solid #ddd;
+      border: 1px solid #555;
       font-size: 15px;
       margin-bottom: 15px;
+      background: #2b2d31;
+      color: white;
       transition: all 0.2s ease;
     }
 
@@ -90,15 +93,15 @@
       margin-top: 20px;
       text-align: center;
       font-size: 14px;
-      color: #aaa;
+      color: #888;
     }
 
     .success-message {
       display: none;
       margin-top: 15px;
       padding: 10px;
-      background: #dff0d8;
-      color: #3c763d;
+      background: #4caf50;
+      color: white;
       border-radius: 10px;
       font-size: 14px;
     }

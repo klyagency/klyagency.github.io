@@ -10,12 +10,18 @@
       --accent: #5551ff;
       --bg: #2b2d31;
       --radius: 20px;
+      --success: #4ee984;
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
     }
 
     body {
@@ -27,6 +33,7 @@
       min-height: 100vh;
       padding: 20px;
       color: var(--primary);
+      position: relative;
     }
 
     .container {
@@ -79,12 +86,17 @@
       outline: none;
     }
 
+    input:valid, textarea:valid {
+      border-color: var(--success);
+    }
+
     button {
       background: var(--accent);
       color: white;
       font-weight: 600;
       border: none;
       cursor: pointer;
+      transition: 0.3s ease;
     }
 
     button:hover {
@@ -99,17 +111,47 @@
     }
 
     .success-message {
-      display: none;
       margin-top: 15px;
       padding: 10px;
       background: #28a74520;
-      color: #4ee984;
+      color: var(--success);
       border-radius: 10px;
       font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      display: none;
+    }
+
+    .success-message.show {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Botón flotante Instagram */
+    .insta-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 30px;
+      font-size: 14px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+      z-index: 10;
+    }
+
+    .insta-button:hover {
+      background: rgba(255, 255, 255, 0.15);
     }
   </style>
 </head>
 <body>
+  <a class="insta-button" href="https://instagram.com/klyagency" target="_blank">@klyagency</a>
+
   <div class="container">
     <h1>¿trabajamos juntos?</h1>
     <p>cuéntanos qué tienes en mente</p>
@@ -126,9 +168,13 @@
   <script>
     const form = document.getElementById('form');
     const success = document.getElementById('success');
+    const btn = form.querySelector('button');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+
       const data = new FormData(form);
       const response = await fetch(form.action, {
         method: 'POST',
@@ -138,8 +184,11 @@
 
       if (response.ok) {
         form.reset();
-        success.style.display = 'block';
+        success.classList.add('show');
       }
+
+      btn.disabled = false;
+      btn.textContent = 'enviar mensaje';
     });
   </script>
 </body>

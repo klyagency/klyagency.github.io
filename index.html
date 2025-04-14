@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KLY agency</title>
   <style>
     :root {
-      --accent: #5551ff;
-      --dark: #111;
-      --gray: #666;
-      --light: #2b2d31;
+      --accent: #5865f2; /* Azul estilo Discord */
+      --dark: #ffffff;
+      --gray: #aaaaaa;
+      --light: #000000;
     }
 
     * {
@@ -57,7 +57,7 @@
     }
 
     .btn:hover {
-      background: #3e3aff;
+      background: #4752c4;
     }
 
     .tagline {
@@ -68,12 +68,11 @@
     }
 
     .footer {
-      margin-top: 20px;
+      margin-top: 10px;
       font-size: 13px;
-      color: #aaa;
+      color: #888;
     }
 
-    /* Logo section */
     .logo-container {
       overflow: hidden;
       width: 100%;
@@ -82,6 +81,7 @@
       border-radius: 20px;
       margin-bottom: 20px;
       position: relative;
+      touch-action: none;
     }
 
     .logo {
@@ -94,6 +94,7 @@
       transform: translate(-50%, -50%);
       cursor: grab;
       transition: 0.3s ease;
+      user-select: none;
     }
 
     .logo h1 {
@@ -108,24 +109,6 @@
       letter-spacing: 4px;
     }
 
-    .logo-container:hover .logo {
-      cursor: grab;
-    }
-
-    /* Desplazamiento con límite */
-    .logo-container:active .logo {
-      cursor: grabbing;
-    }
-
-    .logo-container {
-      touch-action: none;
-    }
-
-    .logo {
-      user-select: none;
-    }
-
-    /* Media query para móviles */
     @media (max-width: 600px) {
       .logo h1 {
         font-size: 3.5rem;
@@ -156,7 +139,7 @@
   <script>
     const logoContainer = document.querySelector('.logo-container');
     const logo = document.querySelector('.logo');
-    
+
     let isDragging = false;
     let startY = 0;
     let offsetY = 0;
@@ -170,12 +153,11 @@
     document.addEventListener('mousemove', (e) => {
       if (isDragging) {
         offsetY = e.clientY - startY;
-        if (offsetY > 0) {
-          logo.style.top = `${50 + offsetY / window.innerHeight * 100}%`;
-        }
-        if (offsetY < 0) {
-          logo.style.top = `${50 + offsetY / window.innerHeight * 100}%`;
-        }
+
+        const maxMove = window.innerHeight * 0.35;
+        offsetY = Math.max(Math.min(offsetY, maxMove), -maxMove);
+
+        logo.style.top = `calc(50% + ${offsetY}px)`;
       }
     });
 

@@ -7,9 +7,10 @@
   <style>
     :root {
       --primary: #ffffff;
-      --accent: #5551ff;
-      --bg: #313338; /* Gris estilo Discord */
-      --card-bg: #42434a;
+      --accent: #5865F2; /* Azul estilo Discord */
+      --bg: #000000;
+      --card-bg: #111111;
+      --gray: #aaaaaa;
       --radius: 20px;
     }
 
@@ -32,7 +33,7 @@
     .container {
       background: var(--card-bg);
       border-radius: var(--radius);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       padding: 40px;
       max-width: 420px;
       width: 100%;
@@ -55,7 +56,7 @@
     }
 
     p {
-      color: #ccc;
+      color: var(--gray);
       margin-bottom: 30px;
       font-size: 15px;
     }
@@ -64,10 +65,10 @@
       width: 100%;
       padding: 12px 15px;
       border-radius: 12px;
-      border: 1px solid #555;
+      border: 1px solid #444;
       font-size: 15px;
       margin-bottom: 15px;
-      background: #2b2d31;
+      background: #000000;
       color: white;
       transition: all 0.2s ease;
     }
@@ -86,14 +87,14 @@
     }
 
     button:hover {
-      background: #3e3aff;
+      background: #4752c4;
     }
 
     .footer {
       margin-top: 20px;
       text-align: center;
       font-size: 14px;
-      color: #888;
+      color: var(--gray);
     }
 
     .success-message {

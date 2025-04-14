@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot KLY Agency</title>
+  <style>
+    /* Estilos generales */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    /* Contenedor del chat */
+    #chat-container {
+      width: 100%;
+      max-width: 400px;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+    /* Cabecera del chat */
+    #chat-header {
+      background-color: #333;
+      padding: 10px;
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    /* Área de mensajes */
+    #chat-log {
+      padding: 15px;
+      height: 300px;
+      overflow-y: auto;
+      background-color: #121212;
+    }
+    /* Mensajes */
+    .message {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #333;
+    }
+    .message.bot {
+      background-color: #444;
+    }
+    /* Entrada de texto */
+    #user-input {
+      width: calc(100% - 20px);
+      padding: 10px;
+      border: none;
+      border-top: 1px solid #333;
+      background-color: #1e1e1e;
+      color: #fff;
+      font-size: 1em;
+      border-radius: 0 0 10px 10px;
+    }
+    /* Estilo para los enlaces */
+    a {
+      color: #1e90ff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="chat-container">
+    <div id="chat-header">KLY Agency Chatbot</div>
+    <div id="chat-log"></div>
+    <input type="text" id="user-input" placeholder="Escribe un mensaje..." onkeydown="if(event.key === 'Enter') sendMessage()">
+  </div>
+
+  <script>
+    const chatLog = document.getElementById('chat-log');
+    const userInput = document.getElementById('user-input');
+
+    function sendMessage() {
+      const message = userInput.value.trim();
+      if (message) {
+        displayMessage('Tú', message);
+        generateResponse(message);
+        userInput.value = '';
+      }
+    }
+
+    function displayMessage(sender, message) {
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message');
+      if (sender === 'KlyAgencyBot') {
+        messageElement.classList.add('bot');
+      }
+      messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+      chatLog.appendChild(messageElement);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function normalizeText(text) {
+      return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function generateResponse(message) {
+      const normalizedMessage = normalizeText(message);
+      let response = '';
+
+      const greetings = ['hola', 'buenos días', 'buenas tardes', 'buenas noches', 'qué tal', 'saludos', 'hey'];
+      const greetingsPattern = new RegExp(greetings.join('|'), 'i');
+      const contactKeywords = ['instagram', 'redes', 'contacto', 'correo', 'email'];
+      const contactPattern = new RegExp(contactKeywords.join('|'), 'i');
+
+      if (greetingsPattern.test(normalizedMessage)) {
+        response = '¡Hola! ¿Cómo puedo ayudarte hoy?';
+      }
+
+      if (contactPattern.test(normalizedMessage)) {
+        response += ' Nuestro Instagram es: @agencykly. También puedes contactarnos por correo electrónico en: contacto.klyagency@gmail.com';
+      }
+
+      if (normalizedMessage.includes('servicios')) {
+        response = 'Los servicios son personalizados. Para trabajar con nosotros, por favor ponte en contacto con nosotros. Te trasladaré a la página de contacto.';
+        setTimeout(() => {
+          window.location.href = "contacto.html";
+        }, 3000);
+      }
+
+      if (!response) {
+        response = '¡Perdón! No sé responder eso, informe sobre su duda al correo electrónico. ¡Muchas gracias!';
+      }
+
+      displayMessage('KlyAgencyBot', response);
+    }
+  </script>
+
+</body>
+</html>

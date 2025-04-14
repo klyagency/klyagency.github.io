@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chatbot KLY Agency</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- Para iconos -->
   <style>
     /* Estilos generales */
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Poppins', sans-serif;
       background-color: #121212;
       color: #fff;
       margin: 0;
@@ -16,53 +17,100 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      overflow: hidden;
     }
     /* Contenedor del chat */
     #chat-container {
       width: 100%;
-      max-width: 400px;
-      background-color: #1e1e1e;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 420px;
+      background: linear-gradient(to bottom, #1f1f1f, #292929);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
     }
     /* Cabecera del chat */
     #chat-header {
       background-color: #333;
-      padding: 10px;
+      padding: 15px;
       text-align: center;
-      font-size: 1.2em;
+      font-size: 1.4em;
       font-weight: bold;
+      color: #fff;
+      border-bottom: 1px solid #444;
     }
     /* Área de mensajes */
     #chat-log {
-      padding: 15px;
-      height: 300px;
+      padding: 20px;
+      height: 350px;
       overflow-y: auto;
       background-color: #121212;
+      transition: all 0.3s ease-in-out;
     }
-    /* Mensajes */
+    /* Estilos de mensajes */
     .message {
-      margin-bottom: 10px;
-      padding: 10px;
-      border-radius: 5px;
-      background-color: #333;
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 15px;
+      background-color: #444;
+      max-width: 75%;
+      line-height: 1.4;
+      font-size: 1.1em;
+      transition: all 0.3s ease-in-out;
     }
     .message.bot {
-      background-color: #444;
+      background-color: #555;
+      margin-left: 25%;
     }
     /* Entrada de texto */
     #user-input {
-      width: calc(100% - 20px);
-      padding: 10px;
+      width: 100%;
+      padding: 12px 15px;
       border: none;
-      border-top: 1px solid #333;
-      background-color: #1e1e1e;
+      background-color: #1f1f1f;
       color: #fff;
-      font-size: 1em;
-      border-radius: 0 0 10px 10px;
+      font-size: 1.1em;
+      border-top: 1px solid #333;
+      border-radius: 0 0 12px 12px;
+      transition: all 0.3s ease-in-out;
     }
-    /* Estilo para los enlaces */
+    /* Botón enviar */
+    #send-btn {
+      background-color: #1e90ff;
+      color: #fff;
+      font-size: 1.2em;
+      padding: 12px;
+      border: none;
+      border-radius: 50%;
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    #send-btn:hover {
+      background-color: #ff7f50;
+    }
+    /* Botón de refresh */
+    #refresh-btn {
+      background-color: #ff6347;
+      color: #fff;
+      font-size: 1.2em;
+      padding: 12px;
+      border: none;
+      border-radius: 50%;
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    #refresh-btn:hover {
+      background-color: #ff4500;
+    }
+    /* Estilo de los enlaces */
     a {
       color: #1e90ff;
       text-decoration: none;
@@ -78,6 +126,12 @@
     <div id="chat-header">KLY Agency Chatbot</div>
     <div id="chat-log"></div>
     <input type="text" id="user-input" placeholder="Escribe un mensaje..." onkeydown="if(event.key === 'Enter') sendMessage()">
+    <button id="send-btn" onclick="sendMessage()">
+      <span class="material-icons">send</span>
+    </button>
+    <button id="refresh-btn" onclick="resetChat()">
+      <span class="material-icons">refresh</span>
+    </button>
   </div>
 
   <script>
@@ -137,6 +191,12 @@
       }
 
       displayMessage('KlyAgencyBot', response);
+    }
+
+    // Función para reiniciar el chat
+    function resetChat() {
+      chatLog.innerHTML = '';
+      displayMessage('KlyAgencyBot', '¡Hola! ¿En qué puedo ayudarte hoy?');
     }
   </script>
 

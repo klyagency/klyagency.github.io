@@ -89,23 +89,25 @@
       bottom: 10px;
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease-in-out;
     }
     #send-btn:hover {
       background-color: #ff7f50;
     }
-    /* Botón de refresh */
+    /* Botón de refresh fuera del chat */
     #refresh-btn {
       background-color: #ff6347;
       color: #fff;
-      font-size: 1.2em;
+      font-size: 1.4em;
       padding: 12px;
       border: none;
       border-radius: 50%;
-      position: absolute;
-      left: 10px;
-      bottom: 10px;
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease-in-out;
     }
     #refresh-btn:hover {
       background-color: #ff4500;
@@ -129,10 +131,12 @@
     <button id="send-btn" onclick="sendMessage()">
       <span class="material-icons">send</span>
     </button>
-    <button id="refresh-btn" onclick="resetChat()">
-      <span class="material-icons">refresh</span>
-    </button>
   </div>
+
+  <!-- Botón de refrescar fuera del chat -->
+  <button id="refresh-btn" onclick="resetChat()">
+    <span class="material-icons">refresh</span>
+  </button>
 
   <script>
     const chatLog = document.getElementById('chat-log');

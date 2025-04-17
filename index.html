@@ -1,254 +1,307 @@
-<!DOCTYPE html>  
-<html lang="es">  
-<head>  
-  <meta charset="UTF-8" />  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+<!DOCTYPE html>    
+<html lang="es">    
+<head>    
+  <meta charset="UTF-8" />    
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />    
+  
+  <title>kly agency | marketing digital para restaurantes y marcas</title>    
+  <meta name="description" content="KLY Agency te ayuda a llevar tu negocio al siguiente nivel: páginas web, redes sociales estéticas y más. Resultados, no ruidos." />    
+  <meta name="keywords" content="agencia marketing, marketing digital, diseño web, redes sociales, restaurantes, marcas, landing pages, kly agency" />    
+  <meta name="author" content="KLY Agency" />    
+  <meta name="robots" content="index, follow" />    
+  
+  <link rel="canonical" href="https://klyagency.github.io/" />    
+  <link rel="icon" href="favicon.png" type="image/png" />    
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />    
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />  
+  <style>    
+    :root {    
+      --accent: #5865f2;     
+      --dark: #ffffff;    
+      --gray: #aaaaaa;    
+      --light: #000000;    
+    }    
+  
+    * {    
+      margin: 0;    
+      padding: 0;    
+      box-sizing: border-box;    
+    }    
+  
+    body {    
+      font-family: 'Segoe UI', sans-serif;    
+      background: var(--light);    
+      color: var(--dark);    
+      min-height: 100vh;    
+      text-align: center;    
+      padding: 40px 20px;    
+      overflow-x: hidden;    
+    }    
+  
+    @keyframes fadeIn {    
+      from { opacity: 0; transform: translateY(10px); }    
+      to { opacity: 1; transform: translateY(0); }    
+    }    
+  
+    .fade {    
+      opacity: 0;    
+      transform: translateY(20px);    
+      transition: all 0.6s ease-out;    
+    }    
+  
+    .fade.visible {    
+      opacity: 1;    
+      transform: translateY(0);    
+    }    
+  
+    h2 {    
+      font-weight: normal;    
+      font-size: 18px;    
+      color: var(--gray);    
+      margin-bottom: 40px;    
+    }    
+  
+    .btn {    
+      display: inline-block;    
+      background: var(--accent);    
+      color: white;    
+      padding: 14px 26px;    
+      border-radius: 14px;    
+      font-weight: 600;    
+      text-decoration: none;    
+      font-size: 16px;    
+      transition: 0.3s ease;    
+    }    
+  
+    .btn:hover {    
+      background: #4752c4;    
+    }    
+  
+    .tagline {    
+      margin-top: 60px;    
+      font-style: italic;    
+      color: var(--gray);    
+      font-size: 14px;    
+    }    
+  
+    .footer {    
+      margin-top: 10px;    
+      font-size: 13px;    
+      color: #888;    
+    }    
+  
+    .logo-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 700px;
+      height: 200px;
+      pointer-events: none;
+      z-index: 10;
+    }
 
-  <title>kly agency | marketing digital para restaurantes y marcas</title>  
-  <meta name="description" content="KLY Agency te ayuda a llevar tu negocio al siguiente nivel: páginas web, redes sociales estéticas y más. Resultados, no ruidos." />  
-  <meta name="keywords" content="agencia marketing, marketing digital, diseño web, redes sociales, restaurantes, marcas, landing pages, kly agency" />  
-  <meta name="author" content="KLY Agency" />  
-  <meta name="robots" content="index, follow" />  
+    .logo {
+      text-align: center;
+      letter-spacing: 2px;
+      font-weight: 600;
+      user-select: none;
+      pointer-events: auto;
+      cursor: grab;
+      transition: 0.3s ease;
+    }
 
-  <link rel="canonical" href="https://klyagency.github.io/" />  
-  <link rel="icon" href="favicon.png" type="image/png" />  
+    .logo h1 {    
+      font-size: 6rem;    
+      margin: 0;    
+    }    
+  
+    .logo span {    
+      font-size: 2rem;    
+      font-weight: 300;    
+      color: var(--gray);    
+      letter-spacing: 4px;    
+    }    
+  
+    @media (max-width: 600px) {    
+      .logo h1 {    
+        font-size: 3.5rem;    
+      }    
+  
+      .logo span {    
+        font-size: 1.5rem;    
+      }    
+  
+      .service-box {    
+        flex-direction: column;    
+        text-align: center;    
+      }    
+  
+      .service-box i {    
+        margin-bottom: 10px;    
+      }    
+    }    
+  
+    section {    
+      padding: 60px 20px;    
+      background: #222222;    
+      font-family: 'Poppins', sans-serif;    
+    }    
+  
+    .service-box {    
+      background: #333333;    
+      color: white;    
+      border-radius: 20px;    
+      padding: 20px;    
+      text-align: left;    
+      display: flex;    
+      align-items: center;    
+      gap: 15px;    
+    }    
+  
+    .service-box + .service-box {    
+      margin-top: 20px;    
+    }    
+  
+    footer {    
+      background: #000;    
+      color: #fff;    
+      padding: 40px 20px;    
+      text-align: center;    
+    }    
+  
+    footer a {    
+      color: #fff;    
+      text-decoration: none;    
+      display: flex;    
+      align-items: center;    
+      gap: 10px;    
+      transition: color 0.3s ease;    
+    }    
+  
+    footer a:hover {    
+      color: var(--accent);    
+    }    
+  </style>    
+</head>    
+<body>    
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />  
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
-  <style>  
-    :root {  
-      --accent: #5865f2;   
-      --dark: #ffffff;  
-      --gray: #aaaaaa;  
-      --light: #000000;  
-    }  
+  <div class="logo-container">    
+    <div class="logo">    
+      <h1>KLY</h1>    
+      <span>agency</span>    
+    </div>    
+  </div>    
 
-    * {  
-      margin: 0;  
-      padding: 0;  
-      box-sizing: border-box;  
-    }  
-
-    body {  
-      font-family: 'Segoe UI', sans-serif;  
-      background: var(--light);  
-      color: var(--dark);  
-      min-height: 100vh;  
-      text-align: center;  
-      padding: 40px 20px;  
-      overflow-x: hidden;  
-    }  
-
-    @keyframes fadeIn {  
-      from { opacity: 0; transform: translateY(10px); }  
-      to { opacity: 1; transform: translateY(0); }  
-    }  
-
-    .fade {  
-      opacity: 0;  
-      transform: translateY(20px);  
-      transition: all 0.6s ease-out;  
-    }  
-
-    .fade.visible {  
-      opacity: 1;  
-      transform: translateY(0);  
-    }  
-
-    h2 {  
-      font-weight: normal;  
-      font-size: 18px;  
-      color: var(--gray);  
-      margin-bottom: 40px;  
-    }  
-
-    .btn {  
-      display: inline-block;  
-      background: var(--accent);  
-      color: white;  
-      padding: 14px 26px;  
-      border-radius: 14px;  
-      font-weight: 600;  
-      text-decoration: none;  
-      font-size: 16px;  
-      transition: 0.3s ease;  
-    }  
-
-    .btn:hover {  
-      background: #4752c4;  
-    }  
-
-    .tagline {  
-      margin-top: 60px;  
-      font-style: italic;  
-      color: var(--gray);  
-      font-size: 14px;  
-    }  
-
-    .footer {  
-      margin-top: 10px;  
-      font-size: 13px;  
-      color: #888;  
-    }  
-
-    .logo-container {  
-      width: 100%;  
-      height: 200px;  
-      position: relative;  
-      display: flex;  
-      justify-content: center;  
-      align-items: center;  
-      margin-bottom: 20px;  
-    }  
-
-    .logo {  
-      letter-spacing: 2px;  
-      font-weight: 600;  
-      user-select: none;  
-    }  
-
-    .logo h1 {  
-      font-size: 6rem;  
-      margin: 0;  
-    }  
-
-    .logo span {  
-      font-size: 2rem;  
-      font-weight: 300;  
-      color: var(--gray);  
-      letter-spacing: 4px;  
-    }  
-
-    @media (max-width: 600px) {  
-      .logo h1 {  
-        font-size: 3.5rem;  
-      }  
-
-      .logo span {  
-        font-size: 1.5rem;  
-      }  
-
-      .service-box {  
-        flex-direction: column;  
-        text-align: center;  
-      }  
-
-      .service-box i {  
-        margin-bottom: 10px;  
-      }  
-    }  
-
-    section {  
-      padding: 60px 20px;  
-      background: #222222;  
-      font-family: 'Poppins', sans-serif;  
-    }  
-
-    .service-box {  
-      background: #333333;  
-      color: white;  
-      border-radius: 20px;  
-      padding: 20px;  
-      text-align: left;  
-      display: flex;  
-      align-items: center;  
-      gap: 15px;  
-    }  
-
-    .service-box + .service-box {  
-      margin-top: 20px;  
-    }  
-
-    footer {  
-      background: #000;  
-      color: #fff;  
-      padding: 40px 20px;  
-      text-align: center;  
-    }  
-
-    footer a {  
-      color: #fff;  
-      text-decoration: none;  
-      display: flex;  
-      align-items: center;  
-      gap: 10px;  
-      transition: color 0.3s ease;  
-    }  
-
-    footer a:hover {  
-      color: var(--accent);  
-    }  
-  </style>  
-</head>  
-<body>  
-
-  <div class="logo-container">  
-    <div class="logo">  
-      <h1>KLY</h1>  
-      <span>agency</span>  
-    </div>  
-  </div>  
-
-  <h2 class="fade">tú mejor ayuda.</h2>  
-  <a href="contacto.html" class="btn fade">trabaja con nosotros.</a>  
-  <div class="tagline fade">resultados, no ruidos.</div>  
-
-  <svg viewBox="0 0 1440 320" style="display:block; margin-top: 80px;">  
-    <path fill="#222222" fill-opacity="1"  
-      d="M0,160L48,149.3C96,139,192,117,288,128C384,139,480,181,576,186.7C672,192,768,160,864,165.3C960,171,1056,213,1152,229.3C1248,245,1344,235,1392,229.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">  
-    </path>  
-  </svg>  
-
-  <section>  
-    <h2 class="fade" style="font-size: 24px; color: white;">¿Quiénes somos?</h2>      
-    <p class="fade" style="max-width: 700px; margin: 0 auto; font-size: 16px; color: white;">  
-      No somos una agencia cualquiera, somos LA agencia que hará que tú negoció crezca y llegué a la cima del éxito.
-    </p>  
-
-    <h2 class="fade" style="font-size: 24px; margin-top: 80px; color: white;">Nuestros servicios</h2>        
-
-    <div class="service-box">  
-      <i class="bi bi-globe2" style="font-size: 24px;"></i>  
-      <div>  
-        <strong>página web</strong><br>  
-        te creamos tu landing page de tu negocio.  
-      </div>  
-    </div>  
-    <div class="service-box">  
-      <i class="bi bi-instagram" style="font-size: 24px;"></i>  
-      <div>  
-        <strong>control de tus redes</strong><br>  
-        te ayudamos a controlar tus redes sociales para hacerlas lo más estéticas posibles.  
-      </div>  
-    </div>  
-    <div class="service-box">  
-      <i class="bi bi-envelope-paper" style="font-size: 24px;"></i>  
-      <div>  
-        <strong>correo personalizado</strong><br>  
-        te crearemos un correo, responderemos tus mensajes y más.  
-      </div>  
-    </div>  
-    <div class="service-box">  
-      <i class="bi bi-question-circle" style="font-size: 24px;"></i>  
-      <div>  
-        <strong>¿servicio personalizado?</strong><br>  
-        rellena el formulario dando <a href="contacto.html" style="color: var(--accent); text-decoration: underline;">click aquí</a>.  
-      </div>  
-    </div>  
-  </section>  
-
-  <footer>  
-    <h3 style="margin-bottom: 20px;">síguenos o contáctanos</h3>  
-    <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">  
-      <a href="https://instagram.com/agencykly" target="_blank">  
-        <i class="bi bi-instagram" style="font-size: 20px;"></i> @agencykly  
-      </a>  
-      <a href="mailto:contacto.klyagency@gmail.com">  
-        <i class="bi bi-envelope" style="font-size: 20px;"></i> contacto.klyagency@gmail.com  
-      </a>  
-    </div>  
-    <div class="footer" style="margin-top: 20px;">© kly agency. todos los derechos reservados.</div>  
-  </footer>  
-
-</body>  
+  <div style="height: 250px;"></div>
+  
+  <h2 class="fade">tú mejor ayuda.</h2>    
+  <a href="contacto.html" class="btn fade">trabaja con nosotros.</a>    
+  <div class="tagline fade">resultados, no ruidos.</div>    
+  
+  <svg viewBox="0 0 1440 320" style="display:block; margin-top: 80px;">    
+    <path fill="#222222" fill-opacity="1"    
+      d="M0,160L48,149.3C96,139,192,117,288,128C384,139,480,181,576,186.7C672,192,768,160,864,165.3C960,171,1056,213,1152,229.3C1248,245,1344,235,1392,229.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">    
+    </path>    
+  </svg>    
+  
+  <section>    
+    <h2 class="fade" style="font-size: 24px; color: white;">¿Quiénes somos?</h2>        
+    <p class="fade" style="max-width: 700px; margin: 0 auto; font-size: 16px; color: white;">    
+      No somos una agencia cualquiera, somos LA agencia que hará que tú negoció crezca y llegué a la cima del éxito.  
+    </p>    
+  
+    <h2 class="fade" style="font-size: 24px; margin-top: 80px; color: white;">Nuestros servicios</h2>          
+  
+    <div class="service-box">    
+      <i class="bi bi-globe2" style="font-size: 24px;"></i>    
+      <div>    
+        <strong>página web</strong><br>    
+        te creamos tu landing page de tu negocio.    
+      </div>    
+    </div>    
+    <div class="service-box">    
+      <i class="bi bi-instagram" style="font-size: 24px;"></i>    
+      <div>    
+        <strong>control de tus redes</strong><br>    
+        te ayudamos a controlar tus redes sociales para hacerlas lo más estéticas posibles.    
+      </div>    
+    </div>    
+    <div class="service-box">    
+      <i class="bi bi-envelope-paper" style="font-size: 24px;"></i>    
+      <div>    
+        <strong>correo personalizado</strong><br>    
+        te crearemos un correo, responderemos tus mensajes y más.    
+      </div>    
+    </div>    
+    <div class="service-box">    
+      <i class="bi bi-question-circle" style="font-size: 24px;"></i>    
+      <div>    
+        <strong>¿servicio personalizado?</strong><br>    
+        rellena el formulario dando <a href="contacto.html" style="color: var(--accent); text-decoration: underline;">click aquí</a>.    
+      </div>    
+    </div>    
+  </section>    
+  
+  <footer>    
+    <h3 style="margin-bottom: 20px;">síguenos o contáctanos</h3>    
+    <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">    
+      <a href="https://instagram.com/agencykly" target="_blank">    
+        <i class="bi bi-instagram" style="font-size: 20px;"></i> @agencykly    
+      </a>    
+      <a href="mailto:contacto.klyagency@gmail.com">    
+        <i class="bi bi-envelope" style="font-size: 20px;"></i> contacto.klyagency@gmail.com    
+      </a>    
+    </div>    
+    <div class="footer" style="margin-top: 20px;">© kly agency. todos los derechos reservados.</div>    
+  </footer>    
+  
+  <script>    
+    const logoContainer = document.querySelector('.logo-container');    
+    const logo = document.querySelector('.logo');    
+  
+    let isDragging = false;    
+    let startY = 0;    
+    let offsetY = 0;    
+  
+    logo.addEventListener('mousedown', (e) => {    
+      isDragging = true;    
+      startY = e.clientY - offsetY;    
+      logo.style.cursor = 'grabbing';    
+    });    
+  
+    document.addEventListener('mousemove', (e) => {    
+      if (isDragging) {    
+        offsetY = e.clientY - startY;    
+        const maxMove = window.innerHeight * 0.35;    
+        offsetY = Math.max(Math.min(offsetY, maxMove), -maxMove);    
+        logo.style.top = `calc(50% + ${offsetY}px)`;    
+      }    
+    });    
+  
+    document.addEventListener('mouseup', () => {    
+      isDragging = false;    
+      logo.style.cursor = 'grab';    
+      logo.style.transition = 'top 0.4s ease';    
+      logo.style.top = '50%';    
+      offsetY = 0;    
+      setTimeout(() => logo.style.transition = '', 400);    
+    });    
+  
+    const observer = new IntersectionObserver((entries) => {    
+      entries.forEach(entry => {    
+        if (entry.isIntersecting) {    
+          entry.target.classList.add('visible');    
+        }    
+      });    
+    }, {    
+      threshold: 0.1    
+    });    
+  
+    document.querySelectorAll('.fade').forEach(el => observer.observe(el));    
+  </script>    
+  
+</body>    
 </html>

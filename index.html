@@ -91,31 +91,17 @@
       color: #888;    
     }    
   
-    .logo-container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      max-width: 700px;
-      height: 200px;
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    .logo {
-      text-align: center;
-      letter-spacing: 2px;
-      font-weight: 600;
-      user-select: none;
-      pointer-events: auto;
-      cursor: grab;
-      transition: 0.3s ease;
-    }
-
+    .logo {    
+      text-align: center;    
+      margin-bottom: 60px;    
+      user-select: none;    
+    }    
+  
     .logo h1 {    
       font-size: 6rem;    
       margin: 0;    
+      letter-spacing: 2px;    
+      font-weight: 600;    
     }    
   
     .logo span {    
@@ -187,15 +173,11 @@
   </style>    
 </head>    
 <body>    
-
-  <div class="logo-container">    
-    <div class="logo">    
-      <h1>KLY</h1>    
-      <span>agency</span>    
-    </div>    
+  
+  <div class="logo">    
+    <h1>KLY</h1>    
+    <span>agency</span>    
   </div>    
-
-  <div style="height: 250px;"></div>
   
   <h2 class="fade">tú mejor ayuda.</h2>    
   <a href="contacto.html" class="btn fade">trabaja con nosotros.</a>    
@@ -259,37 +241,6 @@
   </footer>    
   
   <script>    
-    const logoContainer = document.querySelector('.logo-container');    
-    const logo = document.querySelector('.logo');    
-  
-    let isDragging = false;    
-    let startY = 0;    
-    let offsetY = 0;    
-  
-    logo.addEventListener('mousedown', (e) => {    
-      isDragging = true;    
-      startY = e.clientY - offsetY;    
-      logo.style.cursor = 'grabbing';    
-    });    
-  
-    document.addEventListener('mousemove', (e) => {    
-      if (isDragging) {    
-        offsetY = e.clientY - startY;    
-        const maxMove = window.innerHeight * 0.35;    
-        offsetY = Math.max(Math.min(offsetY, maxMove), -maxMove);    
-        logo.style.top = `calc(50% + ${offsetY}px)`;    
-      }    
-    });    
-  
-    document.addEventListener('mouseup', () => {    
-      isDragging = false;    
-      logo.style.cursor = 'grab';    
-      logo.style.transition = 'top 0.4s ease';    
-      logo.style.top = '50%';    
-      offsetY = 0;    
-      setTimeout(() => logo.style.transition = '', 400);    
-    });    
-  
     const observer = new IntersectionObserver((entries) => {    
       entries.forEach(entry => {    
         if (entry.isIntersecting) {    

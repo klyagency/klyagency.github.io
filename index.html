@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>kly agency | marketing digital para restaurantes y marcas</title>
   <meta name="description" content="KLY Agency te ayuda a llevar tu negocio al siguiente nivel: páginas web, redes sociales estéticas y más. Resultados, no ruidos." />
   <meta name="keywords" content="agencia marketing, marketing digital, diseño web, redes sociales, restaurantes, marcas, landing pages, kly agency" />
@@ -12,7 +11,6 @@
 
   <link rel="canonical" href="https://klyagency.github.io/" />
   <link rel="icon" href="favicon.png" type="image/png" />
-
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
 
@@ -40,67 +38,14 @@
       overflow-x: hidden;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.6s ease-out;
-    }
-
-    .fade.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    h2 {
-      font-weight: normal;
-      font-size: 18px;
-      color: var(--gray);
-      margin-bottom: 40px;
-    }
-
-    .btn {
-      display: inline-block;
-      background: var(--accent);
-      color: white;
-      padding: 14px 26px;
-      border-radius: 14px;
-      font-weight: 600;
-      text-decoration: none;
-      font-size: 16px;
-      transition: 0.3s ease;
-    }
-
-    .btn:hover {
-      background: #4752c4;
-    }
-
-    .tagline {
-      margin-top: 60px;
-      font-style: italic;
-      color: var(--gray);
-      font-size: 14px;
-    }
-
-    .footer {
-      margin-top: 10px;
-      font-size: 13px;
-      color: #888;
-    }
-
     .logo {
       text-align: center;
-      margin-bottom: 60px;
+      margin-bottom: 40px;
       user-select: none;
     }
 
     .logo h1 {
       font-size: 6rem;
-      margin: 0;
       letter-spacing: 2px;
       font-weight: 600;
     }
@@ -112,51 +57,110 @@
       letter-spacing: 4px;
     }
 
-    @media (max-width: 600px) {
-      .logo h1 {
-        font-size: 3.5rem;
-      }
-
-      .logo span {
-        font-size: 1.5rem;
-      }
-
-      .service-box {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .service-box i {
-        margin-bottom: 10px;
-      }
+    .changer {
+      font-size: 32px;
+      font-weight: 600;
+      margin-top: 40px;
+      height: 50px;
+      overflow: hidden;
+      position: relative;
+      color: var(--gray);
     }
 
-    section {
-      padding: 60px 20px;
-      background: #222222;
-      font-family: 'Poppins', sans-serif;
+    .changer span {
+      display: block;
+      height: 50px;
+      animation: slide 8s infinite;
+    }
+
+    @keyframes slide {
+      0%, 20% { transform: translateY(0%); }
+      25%, 45% { transform: translateY(-100%); }
+      50%, 70% { transform: translateY(-200%); }
+      75%, 95% { transform: translateY(-300%); }
+      100% { transform: translateY(0%); }
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      padding: 14px 26px;
+      border-radius: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 16px;
+      margin-top: 40px;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #4752c4;
+    }
+
+    .tagline {
+      margin-top: 40px;
+      font-style: italic;
+      color: var(--gray);
+      font-size: 14px;
+    }
+
+    .separador {
+      width: 100%;
+      height: 100px;
+      background: #222;
+      margin-top: 80px;
+      opacity: 0%;
+    }
+section {
+  background: #222;
+  font-family: 'Poppins', sans-serif;
+  color: white;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding: 60px 0;
+}
+
+section > * {
+  padding: 0 20px;
+}
+    
+
+    section h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    section p {
+      max-width: 700px;
+      margin: 0 auto 60px;
+      font-size: 16px;
     }
 
     .service-box {
-      background: #333333;
+      background: #333;
       color: white;
       border-radius: 20px;
       padding: 20px;
-      text-align: left;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
       gap: 15px;
+      text-align: left;
     }
 
-    .service-box + .service-box {
-      margin-top: 20px;
+    .service-box i {
+      font-size: 24px;
     }
 
     footer {
       background: #000;
       color: #fff;
       padding: 40px 20px;
-      text-align: center;
     }
 
     footer a {
@@ -171,90 +175,175 @@
     footer a:hover {
       color: var(--accent);
     }
+
+    .footer {
+      font-size: 13px;
+      margin-top: 20px;
+      color: #888;
+    }
+
+    @media (max-width: 600px) {
+      .logo h1 {
+        font-size: 3.5rem;
+      }
+
+      .logo span {
+        font-size: 1.5rem;
+      }
+
+      .changer {
+        font-size: 24px;
+      }
+    }
   </style>
 </head>
+
 <body>
 
-  <div class="logo" style="margin-top: 40px;">
+  <div class="logo">
     <h1>KLY</h1>
     <span>agency</span>
   </div>
 
-  <h2 class="fade">tú mejor ayuda.</h2>
-  <a href="contacto.html" class="btn fade">trabaja con nosotros.</a>
-  <div class="tagline fade">resultados, no ruidos.</div>
-
-  <!-- OLA corregida -->
-  <div style="position: relative; width: 100%; overflow: hidden;">
-    <svg viewBox="0 0 1440 320" preserveAspectRatio="none" style="display: block; width: 100%; height: 100px;">
-      <path fill="#222222" fill-opacity="1" d="M0,160L48,149.3C96,139,192,117,288,128C384,139,480,181,576,186.7C672,192,768,160,864,165.3C960,171,1056,213,1152,229.3C1248,245,1344,235,1392,229.3L1440,224L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
-    </svg>
+  <div class="changer">
+    <span>tu mejor ayuda</span>
+    <span>tu mejor aliado</span>
+    <span>tu mejor agencia</span>
+    <span>tu mejor avance</span>
   </div>
 
-  <section>
-    <h2 class="fade" style="font-size: 24px; color: white;">¿Quiénes somos?</h2>
-    <p class="fade" style="max-width: 700px; margin: 0 auto; font-size: 16px; color: white;">
-      No somos una agencia cualquiera, somos LA agencia que hará que tu negocio crezca y llegue a la cima del éxito.
-    </p>
+  <a href="contacto.html" class="btn">trabaja con nosotros.</a>
+  <div class="tagline">resultados, no ruidos.</div>
 
-    <h2 class="fade" style="font-size: 24px; margin-top: 80px; color: white;">Nuestros servicios</h2>
+  <div class="separador"></div>
+
+  <section>
+    <h2>¿quiénes somos?</h2>
+    <p>No somos una agencia cualquiera, somos LA agencia que hará que tu negocio crezca y llegue a la cima del éxito.</p>
+
+    <h2>nuestros servicios</h2>
 
     <div class="service-box">
-      <i class="bi bi-globe2" style="font-size: 24px;"></i>
+      <i class="bi bi-globe2"></i>
       <div>
         <strong>página web</strong><br>
         te creamos tu landing page de tu negocio.
       </div>
     </div>
+
     <div class="service-box">
-      <i class="bi bi-instagram" style="font-size: 24px;"></i>
+      <i class="bi bi-instagram"></i>
       <div>
         <strong>control de tus redes</strong><br>
         te ayudamos a controlar tus redes sociales para hacerlas lo más estéticas posibles.
       </div>
     </div>
+
     <div class="service-box">
-      <i class="bi bi-envelope-paper" style="font-size: 24px;"></i>
+      <i class="bi bi-envelope-paper"></i>
       <div>
         <strong>correo personalizado</strong><br>
         te crearemos un correo, responderemos tus mensajes y más.
       </div>
     </div>
+
     <div class="service-box">
-      <i class="bi bi-question-circle" style="font-size: 24px;"></i>
+      <i class="bi bi-question-circle"></i>
       <div>
         <strong>¿servicio personalizado?</strong><br>
         rellena el formulario dando <a href="contacto.html" style="color: var(--accent); text-decoration: underline;">click aquí</a>.
       </div>
     </div>
   </section>
+<section style="background: #111; color: white; padding: 60px 20px; font-family: 'Poppins', sans-serif;">
+  <h2 class="fade" style="font-size: 24px; margin-bottom: 40px;">lo que dicen de nosotros</h2>
+  <div id="testimonios" style="max-width: 600px; margin: 0 auto; position: relative; min-height: 250px;">
+    <div class="testimonial" style="opacity: 1; transition: opacity 0.5s ease; background: white; border-radius: 20px; padding: 30px; color: #333; box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);">
+      <div class="estrellas" style="color: gold; font-size: 22px; margin-bottom: 10px;">
+        ★★★★★
+      </div>
+      <p style="font-size: 16px;">"kly agency llevó nuestro restaurante a otro nivel. los recomiendo 100%."</p>
+      <div style="margin-top: 10px; color: #666; font-size: 14px;">- maría gonzález</div>
+    </div>
+  </div>
+</section>
 
+<style>
+  @keyframes brillo {
+    0%, 100% {
+      text-shadow: 0 0 5px gold, 0 0 10px gold;
+    }
+    50% {
+      text-shadow: 0 0 15px gold, 0 0 30px gold;
+    }
+  }
+
+  .estrellas {
+    animation: brillo 2s infinite alternate;
+  }
+</style>
+
+<script>
+  const testimonios = [
+    {
+      texto: "kly agency llevó nuestro restaurante a otro nivel. los recomiendo 100%.",
+      autor: "- maría gonzález"
+    },
+    {
+      texto: "mi página web quedó increíble, rápida y estética.",
+      autor: "- juan pérez"
+    },
+    {
+      texto: "sus diseños para redes sociales son lo mejor que hemos tenido.",
+      autor: "- ana lópez"
+    },
+    {
+      texto: "servicio muy cercano y atento, volvería a contratarlos sin dudarlo.",
+      autor: "- carlos ruiz"
+    },
+    {
+      texto: "los resultados se ven desde el primer mes, muy profesionales.",
+      autor: "- sofía martínez"
+    }
+  ];
+
+  let indice = 0;
+  const contenedor = document.getElementById('testimonios');
+
+  function mostrarTestimonio() {
+    const { texto, autor } = testimonios[indice];
+    contenedor.innerHTML = `
+      <div class="testimonial" style="opacity: 0; transition: opacity 0.5s ease; background: white; border-radius: 20px; padding: 30px; color: #333; box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);">
+        <div class="estrellas" style="color: gold; font-size: 22px; margin-bottom: 10px; animation: brillo 2s infinite alternate;">
+          ★★★★★
+        </div>
+        <p style="font-size: 16px;">"${texto}"</p>
+        <div style="margin-top: 10px; color: #666; font-size: 14px;">${autor}</div>
+      </div>
+    `;
+
+    setTimeout(() => {
+      const testimonial = document.querySelector('.testimonial');
+      testimonial.style.opacity = 1;
+    }, 50);
+
+    indice = (indice + 1) % testimonios.length;
+  }
+
+  setInterval(mostrarTestimonio, 4000);
+</script>
   <footer>
     <h3 style="margin-bottom: 20px;">síguenos o contáctanos</h3>
     <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
       <a href="https://instagram.com/agencykly" target="_blank">
-        <i class="bi bi-instagram" style="font-size: 20px;"></i> @agencykly
+        <i class="bi bi-instagram"></i> @agencykly
       </a>
       <a href="mailto:contacto.klyagency@gmail.com">
-        <i class="bi bi-envelope" style="font-size: 20px;"></i> contacto.klyagency@gmail.com
+        <i class="bi bi-envelope"></i> contacto.klyagency@gmail.com
       </a>
     </div>
-    <div class="footer" style="margin-top: 20px;">© kly agency. todos los derechos reservados.</div>
+    <div class="footer">© kly agency. todos los derechos reservados.</div>
   </footer>
-
-  <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, {
-      threshold: 0.1
-    });
-
-    document.querySelectorAll('.fade').forEach(el => observer.observe(el));
-  </script>
 
 </body>
 </html>

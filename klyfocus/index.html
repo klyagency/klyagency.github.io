@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kly focus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <link rel="manifest" href="/manifest.json" />
+  <style>
+    body {
+      margin: 0;
+      background-color: #0d0d0d;
+      color: #e0e0e0;
+      font-family: 'Poppins', sans-serif;
+      padding-bottom: 60px;
+    }
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 30px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    nav a {
+      color: #ccc;
+      font-size: 1.5rem;
+      text-decoration: none;
+    }
+    nav a:hover {
+      color: #fff;
+    }
+    header {
+      text-align: center;
+      padding: 3rem 1rem 1rem;
+    }
+    header h1 {
+      font-size: 3rem;
+      font-weight: 600;
+      background: linear-gradient(to right, #fff 0%, #888 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    header hr {
+      width: 80px;
+      height: 3px;
+      margin: 1rem auto 0;
+      background: linear-gradient(to right, #fff, transparent);
+      border: none;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .frase-box,
+    .diario,
+    .pomodoro,
+    .discord,
+    .ebook-container {
+      background-color: #1a1a1a;
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .frase-box p {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .frase-box button,
+    .discord button,
+    .pomodoro button,
+    .ebook-container button {
+      background-color: #2a2a2a;
+      border: none;
+      color: #eee;
+      padding: 0.5rem 1.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0.5rem;
+    }
+    .frase-box button:hover,
+    .discord button:hover,
+    .pomodoro button:hover,
+    .ebook-container button:hover {
+      background-color: #444;
+    }
+    .diario textarea {
+      width: 100%;
+      height: 200px;
+      background-color: #0d0d0d;
+      color: #e0e0e0;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 1rem;
+      resize: none;
+      font-family: 'Poppins', sans-serif;
+    }
+    .pomodoro h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .pomodoro #timer {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    #reader {
+      margin-top: 2rem;
+      background-color: #1a1a1a;
+      padding: 1rem;
+      border-radius: 6px;
+      text-align: center;
+    }
+    canvas {
+      width: 100%;
+      border-radius: 6px;
+    }
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    footer a {
+      color: #888;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: #ccc;
+    }
+    .hidden {
+      display: none;
+    }
+    #fullscreenControls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 12px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>kly focus</h1>
+    <hr />
+  </header>
+
+  <div class="container">
+    <div id="inicio">
+      <div class="frase-box">
+        <p id="fraseTexto">"tu enfoque determina tu realidad" – qui-gon jinn</p>
+        <button onclick="cambiarFrase()">cambiar frase</button>
+      </div>
+    </div>
+
+    <div id="enfoque" class="hidden">
+      <div class="pomodoro">
+        <h2>temporizador pomodoro</h2>
+        <div id="timer">25:00</div>
+        <button onclick="iniciarPomodoro()">iniciar</button>
+        <button onclick="reiniciarPomodoro()">reiniciar</button>
+      </div>
+    </div>
+
+    <div id="diario" class="hidden">
+      <div class="diario">
+        <p>escribe lo que sientes, nadie lo verá.</p>
+        <textarea placeholder="escribe aquí..."></textarea>
+      </div>
+    </div>
+
+    <div id="ebook" class="hidden">
+      <div class="ebook-container">
+        <h1>lector de ebooks</h1>
+        <h2>selecciona un archivo PDF</h2>
+        <input type="file" id="fileInput" accept="application/pdf" />
+        <div id="reader">
+          <canvas id="pdfCanvas"></canvas>
+        </div>
+        <div id="controls" class="hidden">
+          <button onclick="prevPDF()">anterior</button>
+          <button onclick="nextPDF()">siguiente</button>
+          <button onclick="toggleFullscreen()">pantalla completa</button>
+          <span id="pageInfo"></span>
+        </div>
+        <div id="fullscreenControls" class="hidden">
+          <button onclick="prevPDF()">←</button>
+          <button onclick="nextPDF()">→</button>
+          <button onclick="exitFullscreen()">salir</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="discord" class="hidden">
+      <div class="discord">
+        <p>¡Ayuda en la creacion de la APP uniendote al discord!</p>
+        <button onclick="window.open('https://discord.gg/nT6MnfP63G', '_blank')">únete</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    hecho con calma por <a href="https://klyagency.github.io" target="_blank">kly agency</a>
+  </footer>
+
+  <nav>
+    <a href="#" onclick="mostrarSeccion('inicio')"><i class="bi bi-house-door"></i></a>
+    <a href="#" onclick="mostrarSeccion('enfoque')"><i class="bi bi-clock"></i></a>
+    <a href="#" onclick="mostrarSeccion('diario')"><i class="bi bi-pencil-square"></i></a>
+    <a href="#" onclick="mostrarSeccion('discord')"><i class="bi bi-discord"></i></a>
+    <a href="#" onclick="mostrarSeccion('ebook')"><i class="bi bi-book"></i></a>
+  </nav>
+
+  <script>
+    const frases = [
+      "el dolor es temporal, el legado es eterno. – david goggins",
+      "disciplina es hacer lo que odias como si lo amaras. – mike tyson",
+      "hazlo con miedo, pero hazlo. – jocko willink",
+      "si estás cansado, hazlo cansado. – kly focus",
+      "la acción vence al miedo. – séneca",
+      "tu enfoque determina tu realidad. – qui-gon jinn",
+      "no compitas con otros, compite con tu versión de ayer. – kly focus",
+"no esperes a sentirte listo, actúa y el impulso llegará. – kly focus",
+"nadie se vuelve fuerte evitando la dificultad. – kly focus",
+"el sufrimiento consciente forja carácter inquebrantable. – david goggins",
+"conviértete en alguien que hace lo correcto aunque nadie mire. – kly focus",
+"cuando tengas dudas, haz lo difícil. – kly focus",
+"los ganadores entrenan, los perdedores se quejan. – eric thomas",
+"si no puedes cambiarlo, supéralo. – jocko willink",
+"la disciplina pesa gramos, el arrepentimiento toneladas. – jim rohn",
+"quien domina su mente, domina su vida. – kly focus",
+"tu cuerpo se cansa, tu alma no. – kly focus",
+"el proceso no se negocia, se respeta. – kly focus",
+"si quieres resultados distintos, haz cosas distintas. – albert einstein",
+"cada día cuenta, aunque no lo parezca. – kly focus",
+"quien aguanta más, gana más. – david goggins",
+"la consistencia rompe límites. – kly focus",
+"tu mayor arma es la constancia silenciosa. – kly focus",
+"no hay atajos a donde vale la pena llegar. – beverly sills",
+"deja de buscar excusas y empieza a buscar tiempo. – kly focus",
+"el sacrificio de hoy es el éxito de mañana. – kly focus",
+"las metas grandes exigen compromisos grandes. – kly focus",
+"si te rindes hoy, el dolor habrá sido en vano. – kly focus",
+"actúa como si tu vida dependiera de ello, porque depende. – david goggins",
+"nunca subestimes el poder de la repetición. – kly focus",
+"no pares hasta que el cansancio no te detenga, el objetivo te impulse. – kly focus",
+"conviértete en tu propio estándar. – kly focus",
+"haz que el esfuerzo sea tu zona de confort. – kly focus",
+"lo difícil no es empezar, es seguir cuando nadie te aplaude. – kly focus",
+"el enfoque mata al ruido. – kly focus",
+"todo mejora cuando tú mejoras. – kly focus",
+"no compitas con otros, compite con tu versión de ayer. – kly focus",
+"el valor no es la ausencia de miedo, es avanzar con miedo. – nelson mandela",
+"ser disciplinado es un superpoder. – kly focus",
+"si el camino es duro, vas en la dirección correcta. – kly focus",
+"si fuera fácil, todos lo harían. – tom hanks",
+"el hambre de mejorar no se sacia, se cultiva. – kly focus",
+"deja que tus acciones griten lo que tus palabras callan. – kly focus",
+"nunca eres demasiado joven para empezar, ni demasiado viejo para mejorar. – kly focus",
+"tu día perfecto empieza con una decisión imperfecta: levantarte. – kly focus",
+"no necesitas motivación, necesitas decisión. – kly focus",
+"el trabajo en silencio siempre se nota después. – kly focus",
+"lucha por lo que quieres, o vive con lo que te tocó. – kly focus",
+"lo que te cuesta ahora, te hará imparable después. – kly focus",
+"tu mayor obstáculo vive en tu cabeza. – kly focus",
+"no te detengas por sentirte lento; incluso lento es mejor que quieto. – kly focus",
+"cada día que sigues, estás más cerca. – kly focus",
+"la incomodidad es el precio del crecimiento. – kly focus",
+"entrena tu mente a obedecerte, no a sabotearte. – kly focus",
+"la meta no es que sea fácil, es que tú seas más fuerte. – kly focus",
+"no busques excusas, busca el por qué. – kly focus",
+"el momento perfecto no llega, se construye. – kly focus",
+      
+    ];
+
+    function cambiarFrase() {
+      const indice = Math.floor(Math.random() * frases.length);
+      document.getElementById("fraseTexto").textContent = frases[indice];
+    }
+
+    function mostrarSeccion(id) {
+      ['inicio', 'enfoque', 'diario', 'discord', 'ebook'].forEach(seccion => {
+        document.getElementById(seccion).classList.add('hidden');
+      });
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    let tiempo = 1500;
+    let intervalo;
+    function iniciarPomodoro() {
+      if (!intervalo) {
+        intervalo = setInterval(() => {
+          tiempo--;
+          const minutos = Math.floor(tiempo / 60);
+          const segundos = tiempo % 60;
+          document.getElementById('timer').textContent = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+          if (tiempo <= 0) {
+            clearInterval(intervalo);
+            intervalo = null;
+          }
+        }, 1000);
+      }
+    }
+    function reiniciarPomodoro() {
+      clearInterval(intervalo);
+      intervalo = null;
+      tiempo = 1500;
+      document.getElementById('timer').textContent = '25:00';
+    }
+
+    let pdfDoc = null, currentPage = 1, canvas = document.getElementById('pdfCanvas'), ctx = canvas.getContext('2d');
+
+    document.getElementById('fileInput').addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const typedarray = new Uint8Array(e.target.result);
+          pdfjsLib.getDocument(typedarray).promise.then(function (pdf) {
+            pdfDoc = pdf;
+            currentPage = 1;
+            renderPage(currentPage);
+            document.getElementById('controls').classList.remove('hidden');
+          });
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    });
+
+    function renderPage(num) {
+      pdfDoc.getPage(num).then(function (page) {
+        const viewport = page.getViewport({ scale: 1.5 });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        page.render({ canvasContext: ctx, viewport: viewport });
+        document.getElementById('pageInfo').textContent = `página ${num} de ${pdfDoc.numPages}`;
+      });
+    }
+
+    function nextPDF() {
+      if (currentPage < pdfDoc.numPages) {
+        currentPage++;
+        renderPage(currentPage);
+      }
+    }
+
+    function prevPDF() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderPage(currentPage);
+      }
+    }
+
+    function toggleFullscreen() {
+      document.getElementById('fullscreenControls').classList.remove('hidden');
+      document.getElementById('reader').requestFullscreen();
+    }
+
+    function exitFullscreen() {
+      document.exitFullscreen();
+      document.getElementById('fullscreenControls').classList.add('hidden');
+    }
+  </script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+          console.log('Service Worker registrado con éxito:', registration);
+        })
+        .catch((error) => {
+          console.log('Error al registrar el Service Worker:', error);
+        });
+    });
+  }
+</script>
+</body>
+  </html>

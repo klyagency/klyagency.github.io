@@ -1,7 +1,7 @@
 {
-  "name": "Kly Focus",
-  "short_name": "Kly Focus",
-  "description": "Una app para mejorar tu enfoque y productividad.",
+  "name": "kly focus",
+  "short_name": "kly focus",
+  "description": "enfocate.",
   "start_url": "/klyfocus/index.html",
   "display": "standalone",
   "background_color": "#0d0d0d",

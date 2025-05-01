@@ -14,6 +14,8 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME).then(cache => {
       console.log('[Service Worker] Cacheando archivos...');
       return cache.addAll(urlsToCache);
+    }).catch(error => {
+      console.error('[Service Worker] Error al cachear archivos:', error);
     })
   );
 });
@@ -25,6 +27,8 @@ self.addEventListener('fetch', event => {
         // Retorna una página offline si falla la solicitud
         return caches.match('/klyfocus/offline.html');
       });
+    }).catch(error => {
+      console.error('[Service Worker] Error en fetch:', error);
     })
   );
 });
@@ -42,6 +46,8 @@ self.addEventListener('activate', event => {
           }
         })
       );
+    }).catch(error => {
+      console.error('[Service Worker] Error al activar:', error);
     })
   );
 });

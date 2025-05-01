@@ -1,50 +1,38 @@
-const CACHE_NAME = 'kly-focus-cache-v1';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/app.js',
-  '/favicon.ico',
-  '/icon-192x192.png',
-  '/icon-512x512.png'
-];
-
-// Instalar el service worker
-self.addEventListener('install', (event) => {
+// service-worker.js
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Cacheando archivos...');
-        return cache.addAll(urlsToCache);
-      })
+    caches.open('kly-focus-cache').then(cache => {
+      return cache.addAll([
+        '/', // La raíz del proyecto
+        'index.html', // Asegúrate de poner tus archivos estáticos
+        'manifest.json',
+        'web-app-manifest-192x192.png',
+        'web-app-manifest-512x512.png',
+        // Aquí puedes añadir más recursos que quieras cachear
+      ]);
+    })
   );
 });
 
-// Activar el service worker y eliminar caches antiguos
-self.addEventListener('activate', (event) => {
-  const cacheWhitelist = [CACHE_NAME];
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
+  );
+});
+
+self.addEventListener('activate', event => {
+  const cacheWhitelist = ['kly-focus-cache'];
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map((cacheName) => {
+        cacheNames.map(cacheName => {
           if (!cacheWhitelist.includes(cacheName)) {
             return caches.delete(cacheName);
           }
         })
       );
     })
-  );
-});
-
-// Manejar las peticiones de la red
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((cachedResponse) => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        return fetch(event.request);
-      })
   );
 });

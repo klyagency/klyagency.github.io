@@ -1,14 +1,19 @@
 {
-  "name": "kly focus",
-  "short_name": "kly focus",
-  "description": "enfocate.",
-  "start_url": "/index.html",
+  "name": "Kly Focus",
+  "short_name": "Kly Focus",
+  "description": "Tu app de enfoque",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0d0d0d",
   "theme_color": "#0d0d0d",
   "icons": [
     {
-      "src": "logo.jpg",
+      "src": "web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

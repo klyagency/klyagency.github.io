@@ -392,6 +392,16 @@
         });
     });
   }
+
+</script>
+<script>
+  // Crear el elemento <link>
+  var link = document.createElement("link");
+  link.rel = "manifest";
+  link.href = "manifest.json";  // Asegúrate de que la ruta sea correcta
+
+  // Agregar el elemento al <head>
+  document.head.appendChild(link);
 </script>
 </body>
   </html>

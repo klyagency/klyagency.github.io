@@ -1,7 +1,7 @@
 {
   "name": "kly focus",
   "short_name": "kly focus",
-  "description": "enfocate.",
+  "description": "APP para leer ebooks.",
   "start_url": "/klyfocus/index.html",
   "display": "standalone",
   "background_color": "#0d0d0d",

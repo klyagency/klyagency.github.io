@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>eBook Reader PWA</title>
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.88/dist/epub.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
   <style>
     body, html {
       height: 100%;
@@ -40,9 +41,17 @@
       justify-content: center;
       align-items: center;
       z-index: 9999;
+      color: #ccc;
     }
     input[type="file"] {
       display: none;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background-color: #000;
+      color: #ccc;
     }
   </style>
 </head>
@@ -57,11 +66,11 @@
       <label for="fileInput" class="btn btn-secondary m-1">
         <i class="bi bi-upload"></i> Seleccionar Archivo
       </label>
-      <input type="file" id="fileInput" accept=".txt,.pdf">
+      <input type="file" id="fileInput" accept=".txt,.pdf,.epub">
       <button id="fullscreenBtn" class="btn btn-secondary m-1">
         <i class="bi bi-arrows-fullscreen"></i> Leer libro.
       </button>
-      <button id="toggleTheme" class="btn btn-secondary m-1">
+      <button id="toggleTheme" class="btn btn-secondary m-1" style="display: none;">
         <i class="bi bi-moon"></i> Modo Claro/Oscuro
       </button>
       <label for="fontSize" class="form-label m-1">Tamaño letra</label>
@@ -97,41 +106,65 @@
     let currentPage = 0;
     let pageSize = 1000;
     let pdfDoc = null;
+    let epubBook = null;
     const readerDiv = document.getElementById('reader');
     const fullscreenContainer = document.getElementById('fullscreenContainer');
 
     document.getElementById('fileInput').addEventListener('change', (e) => {
       const file = e.target.files[0];
-      if (file.type === 'application/pdf') {
-        const fileReader = new FileReader();
-        fileReader.onload = function() {
+      if (!file) return;
+
+      const ext = file.name.split('.').pop().toLowerCase();
+
+      if (ext === 'pdf') {
+        const reader = new FileReader();
+        reader.onload = function () {
           const typedarray = new Uint8Array(this.result);
-          pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
+          pdfjsLib.getDocument(typedarray).promise.then(function (pdf) {
             pdfDoc = pdf;
             currentPage = 1;
             renderPDFPage();
+            enterFullscreen();
           });
         };
-        fileReader.readAsArrayBuffer(file);
+        reader.readAsArrayBuffer(file);
+      } else if (ext === 'epub') {
+        const reader = new FileReader();
+        reader.onload = function () {
+          fullscreenContainer.innerHTML = '';
+          const book = ePub(this.result);
+          epubBook = book;
+          const rendition = book.renderTo(fullscreenContainer, {
+            width: "100%",
+            height: "100%",
+            flow: "paginated"
+          });
+          rendition.themes.default({ 'body': { 'background': '#000', 'color': '#ccc' } });
+          rendition.display();
+          enterFullscreen();
+        };
+        reader.readAsArrayBuffer(file);
       } else {
-        const readerFile = new FileReader();
-        readerFile.onload = function(event) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
           ebookContent = event.target.result;
           currentPage = 0;
           renderTextPage();
+          enterFullscreen();
         };
-        readerFile.readAsText(file);
+        reader.readAsText(file);
       }
     });
 
     function renderTextPage() {
-      fullscreenContainer.innerHTML = '<pre>' + ebookContent.slice(currentPage * pageSize, (currentPage + 1) * pageSize) + '</pre>';
-      readerDiv.innerHTML = '<pre>' + ebookContent.slice(currentPage * pageSize, (currentPage + 1) * pageSize) + '</pre>';
+      const text = ebookContent.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
+      fullscreenContainer.innerHTML = '<pre style="white-space: pre-wrap; font-size: 16px;">' + text + '</pre>';
+      readerDiv.innerHTML = '<pre style="white-space: pre-wrap; font-size: 16px;">' + text + '</pre>';
       localStorage.setItem('lastPage', currentPage);
     }
 
     function renderPDFPage() {
-      pdfDoc.getPage(currentPage).then(function(page) {
+      pdfDoc.getPage(currentPage).then(function (page) {
         const viewport = page.getViewport({ scale: 1.5 });
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
@@ -146,27 +179,38 @@
       });
     }
 
-    document.getElementById('prevPage').addEventListener('click', prevPage);
-    document.getElementById('nextPage').addEventListener('click', nextPage);
-
-    function prevPage() {
-      if (pdfDoc) {
-        if (currentPage > 1) currentPage--;
-        renderPDFPage();
-      } else {
-        if (currentPage > 0) currentPage--;
-        renderTextPage();
-      }
+    function enterFullscreen() {
+      fullscreenContainer.style.display = 'flex';
     }
 
-    function nextPage() {
-      if (pdfDoc) {
-        if (currentPage < pdfDoc.numPages) currentPage++;
-        renderPDFPage();
-      } else {
-        if ((currentPage + 1) * pageSize < ebookContent.length) currentPage++;
-        renderTextPage();
-      }
+    fullscreenContainer.addEventListener('click', () => {
+      fullscreenContainer.style.display = 'none';
+    });
+
+    document.getElementById('fullscreenBtn').addEventListener('click', () => {
+      fullscreenContainer.style.display = 'flex';
+      if (pdfDoc) renderPDFPage();
+      else if (epubBook) {
+        epubBook.rendition.display();
+      } else renderTextPage();
+    });
+
+    document.getElementById('prevPage').addEventListener('click', () => {
+      if (pdfDoc && currentPage > 1) currentPage--;
+      else if (!pdfDoc && currentPage > 0) currentPage--;
+      render();
+    });
+
+    document.getElementById('nextPage').addEventListener('click', () => {
+      if (pdfDoc && currentPage < pdfDoc.numPages) currentPage++;
+      else if (!pdfDoc && (currentPage + 1) * pageSize < ebookContent.length) currentPage++;
+      render();
+    });
+
+    function render() {
+      if (pdfDoc) renderPDFPage();
+      else if (epubBook) epubBook.rendition.display();
+      else renderTextPage();
     }
 
     document.getElementById('bookmark').addEventListener('click', () => {
@@ -178,23 +222,8 @@
       const bookmark = localStorage.getItem('bookmark');
       if (bookmark !== null) {
         currentPage = parseInt(bookmark);
-        if (pdfDoc) renderPDFPage();
-        else renderTextPage();
+        render();
       }
-    });
-
-    document.getElementById('toggleTheme').addEventListener('click', () => {
-      if (document.body.style.backgroundColor === 'white') {
-        document.body.style.backgroundColor = '#000';
-        document.body.style.color = '#ccc';
-      } else {
-        document.body.style.backgroundColor = 'white';
-        document.body.style.color = 'black';
-      }
-    });
-
-    document.getElementById('fontSize').addEventListener('input', (e) => {
-      readerDiv.style.fontSize = e.target.value + 'px';
     });
 
     document.getElementById('searchBtn').addEventListener('click', () => {
@@ -208,18 +237,13 @@
           alert('Texto no encontrado');
         }
       } else {
-        alert('La búsqueda en PDF no está implementada.');
+        alert('La búsqueda en PDF/EPUB no está implementada.');
       }
     });
 
-    document.getElementById('fullscreenBtn').addEventListener('click', () => {
-      fullscreenContainer.style.display = 'flex';
-      if (pdfDoc) renderPDFPage();
-      else renderTextPage();
-    });
-
-    fullscreenContainer.addEventListener('click', () => {
-      fullscreenContainer.style.display = 'none';
+    document.getElementById('fontSize').addEventListener('input', (e) => {
+      readerDiv.style.fontSize = e.target.value + 'px';
+      fullscreenContainer.style.fontSize = e.target.value + 'px';
     });
 
     let startX = 0;
@@ -229,16 +253,9 @@
 
     fullscreenContainer.addEventListener('touchend', (e) => {
       const endX = e.changedTouches[0].clientX;
-      if (startX - endX > 50) {
-        nextPage();
-      } else if (endX - startX > 50) {
-        prevPage();
-      }
+      if (startX - endX > 50) document.getElementById('nextPage').click();
+      else if (endX - startX > 50) document.getElementById('prevPage').click();
     });
-
-    if (localStorage.getItem('lastPage')) {
-      currentPage = parseInt(localStorage.getItem('lastPage'));
-    }
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js');

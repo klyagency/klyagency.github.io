@@ -1,0 +1,152 @@
+<!DOCTYPE html><html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>velazquezcutz</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #111;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    section {
+      width: 100%;
+    }
+    .main-section {
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    .profile-container {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1rem auto;
+    }
+    .profile-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .icon-row i {
+      font-size: 1.5rem;
+      margin: 0 10px;
+      color: #fff;
+    }
+    .link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 0.5rem auto;
+      width: 90%;
+      max-width: 400px;
+      padding: 0.75rem;
+      background-color: #222;
+      border: 1px solid #444;
+      border-radius: 12px;
+      color: #fff;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    .link-btn:hover {
+      background-color: #333;
+    }.transition-section {
+  height: 100vh;
+  background: linear-gradient(to bottom, #111, #b9975b);
+}
+.promo-section {
+  background: linear-gradient(to bottom, #b9975b, #b9975b);
+  padding: 4rem 1rem 2rem;
+  text-align: center;
+  color: #000;
+}
+.promo-img-container {
+  transition: transform 1s ease, opacity 1s ease;
+  transform: scale(1.2);
+  opacity: 0;
+}
+.promo-img-container.visible {
+  transform: scale(1);
+  opacity: 1;
+}
+.promo-section img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+.promo-section h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  
+}
+.promo-section p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  
+
+}
+.promo-section .link-btn {
+  background-color: #111;
+  color: #fff;
+  border: none;
+}
+.promo-section .link-btn:hover {
+  background-color: #222;
+}
+
+  </style>
+</head>
+<body>  <section class="main-section">
+    <div class="profile-container">
+      <img src="https://i.ibb.co/PzYFR5X6/photo.jpg" alt="Shalom" class="profile-img">
+    </div><div class="mb-3">
+  <strong><a href="https://www.instagram.com/shalomprofessional" target="_blank" style="color: white; text-decoration: none;">@shalomprofessional</a></strong><br>
+  HAIR CUT & GROOMING & STYLING<br>
+  ▢ Cuidado personal | Consejos y tendencias
+</div>
+
+<div class="icon-row mb-4">
+  <a href="https://instagram.com/velazquezcutz" target="_blank"><i class="bi bi-instagram"></i></a>
+  <a href="mailto:professionalshalom@gmail.com"><i class="bi bi-envelope"></i></a>
+  <a href="https://www.tiktok.com/@velazquezcutz" target="_blank"><i class="bi bi-tiktok"></i></a>
+  <a href="https://www.youtube.com/@shalomprofessional" target="_blank"><i class="bi bi-youtube"></i></a>
+</div>
+
+<a class="link-btn" href="https://www.instagram.com/channel/Aba81Qh330NhF7Nk/?igsh=YXV1Mmpzc2U5cDJ0" target="_blank">
+  <i class="bi bi-people"></i> Comunidad de barberos
+</a>
+<a class="link-btn" href="https://shalomprofessional.com/pre-landing" target="_blank">
+  <i class="bi bi-mortarboard"></i> Masterclass Táper fade (Free)
+</a>
+<a class="link-btn" href="http://shalomprofessional.booksy.com/a/" target="_blank">
+  <i class="bi bi-calendar-check"></i> Reserva citas barbería
+</a>
+<a class="link-btn" href="https://www.instagram.com/shalomprofessional?igsh=MTZhMjhxem00dDN3aA%3D%3D&utm_source=qr" target="_blank">
+  <i class="bi bi-scissors"></i> Shalom Profesional
+</a>
+
+  </section>  <section class="transition-section"></section>  <section class="promo-section">
+    <div class="promo-img-container" id="promoImage">
+      <img src="https://i.ibb.co/Tx70wKZT/noesperesmas.png" alt="No esperes más">
+    </div>
+    <h2>SHALOM PROFESSIONAL</h2>
+    <p>No esperes más a encontrar tu corte perfecto y dar tu glow up</p>
+    <a class="link-btn" href="http://shalomprofessional.booksy.com/a/" target="_blank">
+      <i class="bi bi-calendar-check"></i> Reserva citas barbería
+    </a>
+  </section>  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          document.getElementById('promoImage').classList.add('visible');
+        }
+      });
+    });
+    observer.observe(document.getElementById('promoImage'));
+  </script></body>
+</html>

@@ -100,6 +100,33 @@
   </footer>
 
   <div id="fullscreenContainer" style="display:none;"></div>
+<!--- pop Up rico --->
+div class="modal fade" id="pwaInstallModal" tabindex="-1" aria-labelledby="pwaInstallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pwaInstallModalLabel">
+          <i class="bi bi-cloud-download me-2"></i> ¡Descarga la App PWA!
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>Para una mejor experiencia, instala nuestra app en tu dispositivo.</p>
+        <ul>
+          <li><strong>Android:</strong> Toca <i class="bi bi-three-dots-vertical"></i> y selecciona <em>Agregar a la pantalla de inicio</em>.</li>
+          <li><strong>iPhone/iPad:</strong> Toca <i class="bi bi-share-fill"></i> y luego selecciona <em>Agregar a pantalla de inicio</em>.</li>
+          <li><strong>PC:</strong> Busca el icono <i class="bi bi-plus-square"></i> en la barra de direcciones o usa las opciones del navegador.</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+          <i class="bi bi-check-circle"></i> Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--- fin pop --->
 
   <script>
     let ebookContent = '';
@@ -260,8 +287,26 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js');
     }
-  </script>
+
+ </script>
+
+<script>
+  // Detección si está dentro de una PWA
+  function isInStandaloneMode() {
+    return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true);
+  }
+
+  // Mostrar modal si está en el navegador (no en PWA)
+  window.addEventListener('load', () => {
+    if (!isInStandaloneMode()) {
+      const installModal = new bootstrap.Modal(document.getElementById('pwaInstallModal'));
+      installModal.show();
+    }
+  });
+</script>
+
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

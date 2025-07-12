@@ -2,12 +2,35 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <title>Wallapop Web</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#00a082" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wallapop Web</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: white;
+      color: #333;
+      flex-direction: column;
+    }
+    button {
+      background: #00a082;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
-  <p>Abriendo Wallapop...</p>
+  <h1>Wallapop Web</h1>
+  <p>Abre Wallapop desde aquí:</p>
+  <button onclick="window.location.href='https://es.wallapop.com'">Entrar</button>
 </body>
 </html>

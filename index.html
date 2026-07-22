@@ -1,349 +1,305 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kly agency | marketing digital para restaurantes y marcas</title>
-  <meta name="description" content="KLY Agency te ayuda a llevar tu negocio al siguiente nivel: páginas web, redes sociales estéticas y más. Resultados, no ruidos." />
-  <meta name="keywords" content="agencia marketing, marketing digital, diseño web, redes sociales, restaurantes, marcas, landing pages, kly agency" />
-  <meta name="author" content="KLY Agency" />
-  <meta name="robots" content="index, follow" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KLY Agency | Cuenta atrás</title>
 
-  <link rel="canonical" href="https://klyagency.github.io/" />
-  <link rel="icon" href="favicon.png" type="image/png" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
-
-  <style>
-    :root {
-      --accent: #5865f2;
-      --dark: #ffffff;
-      --gray: #aaaaaa;
-      --light: #000000;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--light);
-      color: var(--dark);
-      min-height: 100vh;
-      text-align: center;
-      padding: 40px 20px;
-      overflow-x: hidden;
-    }
-
-    .logo {
-      text-align: center;
-      margin-bottom: 40px;
-      user-select: none;
-    }
-
-    .logo h1 {
-      font-size: 6rem;
-      letter-spacing: 2px;
-      font-weight: 600;
-    }
-
-    .logo span {
-      font-size: 2rem;
-      font-weight: 300;
-      color: var(--gray);
-      letter-spacing: 4px;
-    }
-
-    .changer {
-      font-size: 32px;
-      font-weight: 600;
-      margin-top: 40px;
-      height: 50px;
-      overflow: hidden;
-      position: relative;
-      color: var(--gray);
-    }
-
-    .changer span {
-      display: block;
-      height: 50px;
-      animation: slide 8s infinite;
-    }
-
-    @keyframes slide {
-      0%, 20% { transform: translateY(0%); }
-      25%, 45% { transform: translateY(-100%); }
-      50%, 70% { transform: translateY(-200%); }
-      75%, 95% { transform: translateY(-300%); }
-      100% { transform: translateY(0%); }
-    }
-
-    .btn {
-      display: inline-block;
-      background: var(--accent);
-      color: white;
-      padding: 14px 26px;
-      border-radius: 14px;
-      font-weight: 600;
-      text-decoration: none;
-      font-size: 16px;
-      margin-top: 40px;
-      transition: background 0.3s ease;
-    }
-
-    .btn:hover {
-      background: #4752c4;
-    }
-
-    .tagline {
-      margin-top: 40px;
-      font-style: italic;
-      color: var(--gray);
-      font-size: 14px;
-    }
-
-    .separador {
-      width: 100%;
-      height: 100px;
-      background: #222;
-      margin-top: 80px;
-      opacity: 0%;
-    }
-section {
-  background: #222;
-  font-family: 'Poppins', sans-serif;
-  color: white;
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  padding: 60px 0;
-}
-
-section > * {
-  padding: 0 20px;
-}
     
+    <link rel="icon" type="image/png" href="favicon.png">
 
-    section h2 {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    section p {
-      max-width: 700px;
-      margin: 0 auto 60px;
-      font-size: 16px;
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .service-box {
-      background: #333;
-      color: white;
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      text-align: left;
-    }
+        html,
+        body {
+            height: 100%;
+            background: #000;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            /* padding más ajustado en móvil */
+            overflow: hidden;
+            position: relative;
+        }
 
-    .service-box i {
-      font-size: 24px;
-    }
+        /* Canvas de partículas */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-    footer {
-      background: #000;
-      color: #fff;
-      padding: 40px 20px;
-    }
+        .container {
+            max-width: 720px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            animation: fadeIn 1.2s ease forwards;
+            padding: 10px 0;
+            /* Centrado perfecto con flex del body */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            /* Ocupa la mayor parte de la pantalla */
+        }
 
-    footer a {
-      color: #fff;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: color 0.3s ease;
-    }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    footer a:hover {
-      color: var(--accent);
-    }
+        .logo {
+            width: 85px;
+            margin-bottom: 35px;
+            opacity: .9;
+            transition: opacity 0.3s ease;
+            flex-shrink: 0;
+        }
 
-    .footer {
-      font-size: 13px;
-      margin-top: 20px;
-      color: #888;
-    }
+        .logo:hover {
+            opacity: 1;
+        }
 
-    @media (max-width: 600px) {
-      .logo h1 {
-        font-size: 3.5rem;
-      }
+        .small {
+            color: #777;
+            font-size: clamp(0.7rem, 2.5vw, 1rem);
+            letter-spacing: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
 
-      .logo span {
-        font-size: 1.5rem;
-      }
+        .title {
+            font-size: clamp(3.2rem, 12vw, 6rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin: 6px 0 35px 0;
+            letter-spacing: 2px;
+        }
 
-      .changer {
-        font-size: 24px;
-      }
-    }
-  </style>
+        .divider {
+            width: 50px;
+            height: 1px;
+            background: #2a2a2a;
+            margin: 0 auto 30px;
+            flex-shrink: 0;
+        }
+
+        .message {
+            color: #bdbdbd;
+            font-size: clamp(0.95rem, 2.8vw, 1.15rem);
+            line-height: 2;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 5px;
+        }
+
+        .message strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .year-highlight {
+            display: inline-block;
+            color: #fff;
+            transition: text-shadow 0.3s ease;
+        }
+
+        .year-highlight:hover {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.12);
+        }
+
+        /* Ajustes específicos para móviles muy pequeños */
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+                align-items: center;
+            }
+
+            .container {
+                min-height: 70vh;
+                padding: 5px 0;
+            }
+
+            .logo {
+                width: 70px;
+                margin-bottom: 25px;
+            }
+
+            .small {
+                letter-spacing: 4px;
+                font-size: 0.65rem;
+            }
+
+            .title {
+                font-size: clamp(2.6rem, 14vw, 3.8rem);
+                margin: 2px 0 25px 0;
+            }
+
+            .divider {
+                width: 40px;
+                margin-bottom: 22px;
+            }
+
+            .message {
+                font-size: 0.9rem;
+                line-height: 1.9;
+                padding: 0 3px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .title {
+                font-size: 2.4rem;
+            }
+            .message {
+                font-size: 0.8rem;
+                line-height: 1.8;
+            }
+            .logo {
+                width: 60px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Para pantallas muy altas o anchas, mantener centrado */
+        @media (min-height: 900px) {
+            .container {
+                min-height: 60vh;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-  <div class="logo">
-    <h1>KLY</h1>
-    <span>agency</span>
-  </div>
+    <canvas id="particles-canvas"></canvas>
 
-  <div class="changer">
-    <span>tu mejor ayuda</span>
-    <span>tu mejor aliado</span>
-    <span>tu mejor agencia</span>
-    <span>tu mejor avance</span>
-  </div>
+    <div class="container">
 
-  <a href="contacto.html" class="btn">trabaja con nosotros.</a>
-  <div class="tagline">resultados, no ruidos.</div>
+        <img src="favicon.png" alt="KLY Agency" class="logo">
 
-  <div class="separador"></div>
-
-  <section>
-    <h2>¿quiénes somos?</h2>
-    <p>No somos una agencia cualquiera, somos LA agencia que hará que tu negocio crezca y llegue a la cima del éxito.</p>
-
-    <h2>nuestros servicios</h2>
-
-    <div class="service-box">
-      <i class="bi bi-globe2"></i>
-      <div>
-        <strong>página web</strong><br>
-        te creamos tu landing page de tu negocio.
-      </div>
-    </div>
-
-    <div class="service-box">
-      <i class="bi bi-instagram"></i>
-      <div>
-        <strong>control de tus redes</strong><br>
-        te ayudamos a controlar tus redes sociales para hacerlas lo más estéticas posibles.
-      </div>
-    </div>
-
-    <div class="service-box">
-      <i class="bi bi-envelope-paper"></i>
-      <div>
-        <strong>correo personalizado</strong><br>
-        te crearemos un correo, responderemos tus mensajes y más.
-      </div>
-    </div>
-
-    <div class="service-box">
-      <i class="bi bi-question-circle"></i>
-      <div>
-        <strong>¿servicio personalizado?</strong><br>
-        rellena el formulario dando <a href="contacto.html" style="color: var(--accent); text-decoration: underline;">click aquí</a>.
-      </div>
-    </div>
-  </section>
-<section style="background: #111; color: white; padding: 60px 20px; font-family: 'Poppins', sans-serif;">
-  <h2 class="fade" style="font-size: 24px; margin-bottom: 40px;">lo que dicen de nosotros</h2>
-  <div id="testimonios" style="max-width: 600px; margin: 0 auto; position: relative; min-height: 250px;">
-    <div class="testimonial" style="opacity: 1; transition: opacity 0.5s ease; background: white; border-radius: 20px; padding: 30px; color: #333; box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);">
-      <div class="estrellas" style="color: gold; font-size: 22px; margin-bottom: 10px;">
-        ★★★★★
-      </div>
-      <p style="font-size: 16px;">"kly agency llevó nuestro restaurante a otro nivel. los recomiendo 100%."</p>
-      <div style="margin-top: 10px; color: #666; font-size: 14px;">- maría gonzález</div>
-    </div>
-  </div>
-</section>
-
-<style>
-  @keyframes brillo {
-    0%, 100% {
-      text-shadow: 0 0 5px gold, 0 0 10px gold;
-    }
-    50% {
-      text-shadow: 0 0 15px gold, 0 0 30px gold;
-    }
-  }
-
-  .estrellas {
-    animation: brillo 2s infinite alternate;
-  }
-</style>
-
-<script>
-  const testimonios = [
-    {
-      texto: "kly agency llevó nuestro restaurante a otro nivel. los recomiendo 100%.",
-      autor: "- maría gonzález"
-    },
-    {
-      texto: "mi página web quedó increíble, rápida y estética.",
-      autor: "- juan pérez"
-    },
-    {
-      texto: "sus diseños para redes sociales son lo mejor que hemos tenido.",
-      autor: "- ana lópez"
-    },
-    {
-      texto: "servicio muy cercano y atento, volvería a contratarlos sin dudarlo.",
-      autor: "- carlos ruiz"
-    },
-    {
-      texto: "los resultados se ven desde el primer mes, muy profesionales.",
-      autor: "- sofía martínez"
-    }
-  ];
-
-  let indice = 0;
-  const contenedor = document.getElementById('testimonios');
-
-  function mostrarTestimonio() {
-    const { texto, autor } = testimonios[indice];
-    contenedor.innerHTML = `
-      <div class="testimonial" style="opacity: 0; transition: opacity 0.5s ease; background: white; border-radius: 20px; padding: 30px; color: #333; box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);">
-        <div class="estrellas" style="color: gold; font-size: 22px; margin-bottom: 10px; animation: brillo 2s infinite alternate;">
-          ★★★★★
+        <div class="small">
+            ESTAMOS EN
         </div>
-        <p style="font-size: 16px;">"${texto}"</p>
-        <div style="margin-top: 10px; color: #666; font-size: 14px;">${autor}</div>
-      </div>
-    `;
 
-    setTimeout(() => {
-      const testimonial = document.querySelector('.testimonial');
-      testimonial.style.opacity = 1;
-    }, 50);
+        <h1 class="title">
+            CUENTA ATRÁS
+        </h1>
 
-    indice = (indice + 1) % testimonios.length;
-  }
+        <div class="divider"></div>
 
-  setInterval(mostrarTestimonio, 4000);
-</script>
-  <footer>
-    <h3 style="margin-bottom: 20px;">síguenos o contáctanos</h3>
-    <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
-      <a href="https://instagram.com/agencykly" target="_blank">
-        <i class="bi bi-instagram"></i> @agencykly
-      </a>
-      <a href="mailto:contacto.klyagency@gmail.com">
-        <i class="bi bi-envelope"></i> contacto.klyagency@gmail.com
-      </a>
+        <p class="message">
+            2026 quizá no fue nuestro año.<br><br>
+
+            La agencia no fue nuestro objetivo principal.<br><br>
+
+            En el verano de <strong class="year-highlight">2027</strong>, todo va a cambiar:<br>
+            el rumbo, el objetivo, el nicho...<br>
+            <strong>Todo.</strong><br><br>
+
+            Tiempo al tiempo.
+        </p>
+
     </div>
-    <div class="footer">© kly agency. todos los derechos reservados.</div>
-  </footer>
+
+    <script>
+        // === PARTÍCULAS BLANCAS ===
+        (function() {
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+            const PARTICLE_COUNT = 50;
+            const MAX_SPEED = 0.2;
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.size = Math.random() * 1.6 + 0.6;
+                    this.speedX = (Math.random() - 0.5) * MAX_SPEED * 2;
+                    this.speedY = (Math.random() - 0.5) * MAX_SPEED * 2;
+                    this.opacity = Math.random() * 0.4 + 0.15;
+                }
+
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+
+                    if (this.x < 0 || this.x > width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > height) this.speedY *= -1;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                    ctx.fill();
+                }
+            }
+
+            function initParticles() {
+                particles = [];
+                for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                for (const p of particles) {
+                    p.update();
+                    p.draw();
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', () => {
+                resize();
+                initParticles();
+            });
+
+            resize();
+            initParticles();
+            animate();
+        })();
+    </script>
 
 </body>
 </html>

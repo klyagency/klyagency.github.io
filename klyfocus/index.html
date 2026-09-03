@@ -7,13 +7,13 @@
 
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#121212">
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="web-app-manifest-192x192.png">
 
     <style>
         :root {
             --bg-color: #121212;
             --card-bg: #1e1e1e;
-            --accent: #00ff88; /* Verde neón */
+            --accent: #00ff88;
             --text-main: #ffffff;
             --text-muted: #a0a0a0;
         }
@@ -26,7 +26,6 @@
             padding: 20px;
             display: flex;
             justify-content: center;
-            /* Evita el scroll elástico molesto en móviles */
             overscroll-behavior-y: none; 
         }
 
@@ -145,7 +144,7 @@
         <div class="workout-card">
             <h2 class="workout-title" id="workout-name">Cargando...</h2>
             <ul class="exercise-list" id="exercise-list">
-                </ul>
+            </ul>
             <button class="btn-completar" onclick="completarEntrenamiento()">COMPLETADO 🔥</button>
         </div>
 
@@ -242,7 +241,6 @@
             sesionActual = (sesionActual + 1) % rutina.length;
             localStorage.setItem('sesionActual', sesionActual);
             
-            // Un pequeño scroll hacia arriba y recarga la vista
             window.scrollTo(0, 0);
             cargarEntrenamiento();
         }
@@ -255,7 +253,6 @@
             }
         }
 
-        // Iniciar
         cargarEntrenamiento();
     </script>
 </body>

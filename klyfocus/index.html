@@ -221,6 +221,32 @@ h1 {
     font-size: .82rem;
 }
 
+.test-mode-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 11px 13px;
+    border: 1px solid #806b27;
+    border-radius: 12px;
+    background: rgba(212,175,55,.08);
+    color: var(--gold-light);
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+.test-mode-banner button {
+    flex: 0 0 auto;
+    border: 1px solid #806b27;
+    border-radius: 8px;
+    padding: 7px 9px;
+    background: transparent;
+    color: var(--gold-light);
+    font-size: .7rem;
+    font-weight: 900;
+}
+
 /* =========================
    NAV
 ========================= */
@@ -684,6 +710,15 @@ h1 {
             <button class="btn-secondary" onclick="completarEntrenamiento(true)">
                 Marcar sesión completada
             </button>
+
+            <button class="btn-secondary" onclick="iniciarModoPrueba()">
+                MODO DE PRUEBA — no guardar nada
+            </button>
+
+            <div id="test-mode-banner" class="test-mode-banner hidden">
+                <span>Modo de prueba activo · nada se guardará</span>
+                <button onclick="salirModoPrueba()">SALIR</button>
+            </div>
 
         </div>
 
@@ -1276,6 +1311,8 @@ if (!datos) {
 }
 
 let sesionActual = datos.sesionActual || 0;
+let modoPrueba = false;
+let sesionPruebaInicial = sesionActual;
 
 let ejerciciosHechos = [];
 let ejercicioSeleccionado = null;
@@ -1291,6 +1328,9 @@ let timerPaused = false;
 ========================================================= */
 
 function guardarDatos() {
+
+    // El modo de prueba nunca escribe en localStorage.
+    if (modoPrueba) return;
 
     datos.sesionActual = sesionActual;
 
@@ -1318,6 +1358,12 @@ function obtenerDatosEjercicio(nombre) {
     const key = claveEjercicio(nombre);
 
     if (!datos.ejercicios[key]) {
+
+        // En prueba se devuelve un objeto temporal para no contaminar
+        // el estado persistente, ni siquiera en memoria.
+        if (modoPrueba) {
+            return { nombre: nombre, sesiones: [] };
+        }
 
         datos.ejercicios[key] = {
             nombre: nombre,
@@ -1423,6 +1469,41 @@ function iniciarEntrenamiento() {
         ).fill(false);
 
     mostrarLista();
+
+}
+
+
+function iniciarModoPrueba() {
+
+    if (modoPrueba) return;
+
+    modoPrueba = true;
+    sesionPruebaInicial = sesionActual;
+    actualizarIndicadorModoPrueba();
+    iniciarEntrenamiento();
+
+}
+
+
+function salirModoPrueba() {
+
+    if (!modoPrueba) return;
+
+    modoPrueba = false;
+    sesionActual = sesionPruebaInicial;
+    ejerciciosHechos = [];
+    seriesActuales = [];
+    cerrarTimer();
+    actualizarIndicadorModoPrueba();
+    mostrarInicio();
+
+}
+
+
+function actualizarIndicadorModoPrueba() {
+
+    const banner = document.getElementById("test-mode-banner");
+    if (banner) banner.classList.toggle("hidden", !modoPrueba);
 
 }
 
@@ -1829,6 +1910,8 @@ function terminarEjercicio() {
 
 function guardarHistorialEntrenamiento() {
 
+    if (modoPrueba) return;
+
     datos.historial.push({
 
         fecha: new Date().toISOString(),
@@ -1850,6 +1933,14 @@ function guardarHistorialEntrenamiento() {
 
 
 function completarEntrenamiento(desdeInicio = false) {
+
+    if (modoPrueba) {
+        sesionActual = (sesionActual + 1) % rutina.length;
+        cerrarTimer();
+        window.scrollTo(0,0);
+        mostrarInicio();
+        return;
+    }
 
     if (desdeInicio) {
 
@@ -2053,6 +2144,11 @@ function exportarDatos() {
 
 function importarDatos(event) {
 
+    if (modoPrueba) {
+        alert("La importación está desactivada durante el Modo de prueba para no guardar ni modificar datos.");
+        return;
+    }
+
     const file =
         event.target.files[0];
 
@@ -2111,6 +2207,11 @@ function importarDatos(event) {
 
 
 function borrarDatos() {
+
+    if (modoPrueba) {
+        alert("El borrado de datos está desactivado durante el Modo de prueba.");
+        return;
+    }
 
     if (
         !confirm(
@@ -2267,6 +2368,7 @@ function cerrarTimer() {
 ========================================================= */
 
 cargarVistaPrincipal();
+actualizarIndicadorModoPrueba();
 
 </script>
 

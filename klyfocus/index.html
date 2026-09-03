@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mi Rutina Gym</title>
+    <title>Mi Rutina Gym Pro</title>
 
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#121212">
@@ -14,95 +14,50 @@
             --bg-color: #121212;
             --card-bg: #1e1e1e;
             --accent: #00ff88;
+            --accent-hover: #00cc6a;
             --text-main: #ffffff;
             --text-muted: #a0a0a0;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
-            overscroll-behavior-y: none; 
+            overscroll-behavior-y: none;
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 500px;
             width: 100%;
             padding-bottom: 40px;
+            position: relative;
         }
 
-        h1 {
-            text-align: center;
-            font-size: 2.2rem;
-            margin-bottom: 5px;
-            letter-spacing: -0.5px;
+        /* VISTAS */
+        #main-view, #workout-view {
+            transition: opacity 0.3s ease;
+        }
+        #workout-view {
+            display: none;
         }
 
-        .subtitle {
-            text-align: center;
-            color: var(--accent);
-            font-weight: 700;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .workout-card {
+        h1 { text-align: center; font-size: 2.2rem; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: var(--accent); font-weight: 700; margin-bottom: 30px; text-transform: uppercase; }
+        
+        .main-card {
             background-color: var(--card-bg);
             border-radius: 20px;
             padding: 25px;
+            text-align: center;
             box-shadow: 0 8px 24px rgba(0,0,0,0.6);
         }
 
-        .workout-title {
-            font-size: 1.4rem;
-            border-bottom: 2px solid #333;
-            padding-bottom: 15px;
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #fff;
-        }
-
-        .exercise-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .exercise-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-            border-bottom: 1px solid #2a2a2a;
-        }
-
-        .exercise-item:last-child {
-            border-bottom: none;
-        }
-
-        .exercise-name {
-            font-weight: 500;
-            font-size: 1.05rem;
-        }
-
-        .muscle-group {
-            font-size: 0.8rem;
-            color: #121212;
-            background: var(--accent);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-            white-space: nowrap;
-            margin-left: 15px;
-        }
-
-        .btn-completar {
+        .btn-entrenar {
             width: 100%;
             background-color: var(--accent);
             color: #000;
@@ -112,148 +67,339 @@
             font-weight: 800;
             border-radius: 12px;
             cursor: pointer;
-            margin-top: 30px;
-            transition: transform 0.2s, background-color 0.2s;
+            margin-top: 15px;
             box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
         }
 
-        .btn-completar:active {
-            transform: scale(0.98);
-            background-color: #00cc6a;
+        .btn-completar-rapido {
+            width: 100%;
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 2px solid #333;
+            padding: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 15px;
         }
 
-        .btn-reset {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            text-decoration: underline;
-            cursor: pointer;
-            display: block;
-            margin: 30px auto 0 auto;
-            font-size: 0.95rem;
-            padding: 10px;
+        /* ESTILO TARJETAS TINDER (WORKOUT) */
+        .progress-bar {
+            width: 100%;
+            background-color: #333;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
         }
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .exercise-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            position: relative;
+            transform-origin: center bottom;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .exercise-card.swipe-out {
+            transform: translateX(-150%) rotate(-10deg);
+            opacity: 0;
+        }
+        .exercise-card.swipe-in {
+            animation: slideIn 0.4s forwards;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(150%) rotate(10deg); opacity: 0; }
+            to { transform: translateX(0) rotate(0); opacity: 1; }
+        }
+
+        .ex-muscle {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .ex-title {
+            font-size: 1.8rem;
+            margin: 0 0 15px 0;
+            line-height: 1.2;
+        }
+
+        .ex-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background: #2a2a2a;
+            padding: 10px 15px;
+            border-radius: 10px;
+            flex: 1;
+            text-align: center;
+        }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 3px;}
+        .stat-value { font-size: 1.2rem; font-weight: 700; color: #fff;}
+
+        .ex-steps {
+            background: #181818;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+        .ex-steps h4 { margin-top: 0; margin-bottom: 10px; font-size: 1rem;}
+        .ex-steps p { margin: 0; font-size: 0.95rem; line-height: 1.5; color: #ccc;}
+
+        .btn-swipe {
+            width: 100%;
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 25px;
+        }
+        .btn-swipe.finish { background-color: #ff3366; color: white;}
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Rutina Hipertrofia</h1>
-        <div class="subtitle" id="day-counter">Día 1 de 4</div>
-        
-        <div class="workout-card">
-            <h2 class="workout-title" id="workout-name">Cargando...</h2>
-            <ul class="exercise-list" id="exercise-list">
-            </ul>
-            <button class="btn-completar" onclick="completarEntrenamiento()">COMPLETADO 🔥</button>
+        <div id="main-view">
+            <h1>Rutina Hipertrofia</h1>
+            <div class="subtitle" id="day-counter">Día 1 de 4</div>
+            
+            <div class="main-card">
+                <h2 style="margin-top: 0;" id="workout-name-main">Cargando...</h2>
+                <p style="color: var(--text-muted); margin-bottom: 30px;" id="workout-summary">...</p>
+                
+                <button class="btn-entrenar" onclick="iniciarEntrenamiento()">¡ENTRENARLO! 🚀</button>
+                <button class="btn-completar-rapido" onclick="completarEntrenamiento(true)">Solo marcar completado ✓</button>
+            </div>
+            <button style="background:none; border:none; color: #666; text-decoration: underline; margin: 30px auto; display:block; cursor:pointer;" onclick="reiniciarCiclo()">Reiniciar ciclo</button>
         </div>
 
-        <button class="btn-reset" onclick="reiniciarCiclo()">Empezar ciclo desde cero</button>
+        <div id="workout-view">
+            <div class="subtitle" id="workout-title-active">Entrenando</div>
+            <div class="progress-bar"><div class="progress-fill" id="progress-bar"></div></div>
+
+            <div class="exercise-card" id="card-container">
+                <span class="ex-muscle" id="ex-muscle">Pecho</span>
+                <h2 class="ex-title" id="ex-title">Press de Banca</h2>
+                
+                <div class="ex-stats">
+                    <div class="stat-box">
+                        <span class="stat-label">SERIES</span>
+                        <span class="stat-value" id="ex-sets">3-4</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">REPS (Hipertrofia)</span>
+                        <span class="stat-value" id="ex-reps">8-12</span>
+                    </div>
+                </div>
+
+                <div class="ex-steps">
+                    <h4>Técnica:</h4>
+                    <p id="ex-steps-text">Retrae las escápulas. Baja controlando y empuja fuerte.</p>
+                </div>
+
+                <button class="btn-swipe" id="btn-next" onclick="siguienteEjercicio()">Siguiente ➡️</button>
+            </div>
+        </div>
     </div>
 
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./service-worker.js')
-            .then(reg => console.log('Service Worker OK', reg))
-            .catch(err => console.error('Error Service Worker', err));
+          navigator.serviceWorker.register('./service-worker.js').catch(err => console.error(err));
         });
       }
     </script>
 
     <script>
+        // BASE DE DATOS PRO: Con series, reps e instrucciones detalladas
         const rutina = [
             {
                 nombre: "Pecho + Espalda + Bíceps",
                 ejercicios: [
-                    { nombre: "Press de banca plano", musculo: "Pecho" },
-                    { nombre: "Press inclinado", musculo: "Pecho Sup." },
-                    { nombre: "Peck deck", musculo: "Pecho" },
-                    { nombre: "Jalón al pecho", musculo: "Dorsal" },
-                    { nombre: "Remo pecho apoyado", musculo: "Espalda Med." },
-                    { nombre: "Curl predicador", musculo: "Bíceps" },
-                    { nombre: "Curl inclinado", musculo: "Bíceps" }
+                    { nombre: "Press de banca plano", musculo: "Pecho", series: "3-4", reps: "8-12", pasos: "Retrae escápulas sacando pecho. Baja la barra controladamente en 3 segundos hasta rozar el pecho y empuja explosivo." },
+                    { nombre: "Press inclinado", musculo: "Pecho Sup.", series: "3", reps: "8-12", pasos: "Banco a 30-45 grados. Enfócate en estirar el pectoral superior al bajar. No bloquees los codos arriba del todo." },
+                    { nombre: "Peck deck", musculo: "Pecho aislam.", series: "3", reps: "10-15", pasos: "Mantén el pecho alto. Aprieta un segundo al juntar las manos y controla mucho la fase excéntrica (al abrir)." },
+                    { nombre: "Jalón al pecho", musculo: "Dorsal", series: "3-4", reps: "8-12", pasos: "Inclínate ligeramente hacia atrás. Tira de la barra hacia tu esternón intentando juntar los codos en tu espalda." },
+                    { nombre: "Remo pecho apoyado", musculo: "Espalda Med.", series: "3", reps: "8-12", pasos: "Deja que el peso estire tu espalda por completo abajo. Al subir, aprieta fuerte las escápulas juntas." },
+                    { nombre: "Curl predicador", musculo: "Bíceps", series: "3", reps: "10-12", pasos: "Apoya bien las axilas. Baja el peso lentamente (3 segs) hasta casi extender el brazo, sube contrayendo fuerte." },
+                    { nombre: "Curl inclinado", musculo: "Bíceps", series: "3", reps: "10-12", pasos: "Siéntate en banco reclinado. Deja colgar los brazos para máximo estiramiento. Sube las mancuernas sin mover los codos de su sitio." }
                 ]
             },
             {
                 nombre: "Pecho + Hombros + Tríceps",
                 ejercicios: [
-                    { nombre: "Press inclinado", musculo: "Pecho Sup." },
-                    { nombre: "Press máquina", musculo: "Pecho" },
-                    { nombre: "Elevaciones laterales", musculo: "Hombro Lat." },
-                    { nombre: "Press de hombros", musculo: "Hombro" },
-                    { nombre: "Extensión tríceps polea", musculo: "Tríceps" },
-                    { nombre: "Extensión sobre cabeza", musculo: "Tríceps" }
+                    { nombre: "Press inclinado", musculo: "Pecho Sup.", series: "3-4", reps: "8-10", pasos: "Controla el peso. Baja hasta la parte alta del pecho. Empuja conectando mente-músculo." },
+                    { nombre: "Press pecho máquina", musculo: "Pecho", series: "3", reps: "10-12", pasos: "Aprovecha la estabilidad de la máquina para ir al fallo o muy cerca. Máximo recorrido." },
+                    { nombre: "Elevaciones laterales", musculo: "Hombro Lat.", series: "4", reps: "12-15", pasos: "Piensa en empujar el peso hacia LAS PAREDES, no hacia el techo. Codos ligeramente flexionados." },
+                    { nombre: "Press de hombros", musculo: "Hombro", series: "3", reps: "8-12", pasos: "Baja las mancuernas hasta la altura de las orejas. Empuja sin chocar las mancuernas arriba." },
+                    { nombre: "Extensión tríceps polea", musculo: "Tríceps", series: "3", reps: "10-15", pasos: "Pega los codos a las costillas y no los muevas. Al extender abajo, separa un poco la cuerda." },
+                    { nombre: "Extensión sobre cabeza", musculo: "Tríceps", series: "3", reps: "10-15", pasos: "Busca el estiramiento máximo del tríceps bajando bien detrás de la nuca. Extiende fuerte." }
                 ]
             },
             {
                 nombre: "Espalda + Bíceps + Tríceps",
                 ejercicios: [
-                    { nombre: "Dominadas / Jalón", musculo: "Dorsal" },
-                    { nombre: "Remo en máquina", musculo: "Espalda Med." },
-                    { nombre: "Curl martillo", musculo: "Bíceps" },
-                    { nombre: "Curl en polea", musculo: "Bíceps" },
-                    { nombre: "Extensión tríceps polea", musculo: "Tríceps" }
+                    { nombre: "Dominadas / Jalón", musculo: "Dorsal", series: "4", reps: "8-12", pasos: "Inicia el movimiento bajando los hombros, luego tira con los brazos. Intenta llevar el pecho a la barra." },
+                    { nombre: "Remo en máquina", musculo: "Espalda Med.", series: "3", reps: "10-12", pasos: "Pecho bien pegado al cojín. Tira con los codos hacia atrás y aprieta la espalda 1 segundo." },
+                    { nombre: "Curl martillo", musculo: "Bíceps/Braquial", series: "3", reps: "10-12", pasos: "Agarre neutro. Sube alternando o a la vez, sin balancear el torso. Excelente para dar grosor al brazo." },
+                    { nombre: "Curl en polea", musculo: "Bíceps", series: "3", reps: "12-15", pasos: "Tensión constante gracias al cable. Mantén la postura firme y concéntrate solo en el bíceps." },
+                    { nombre: "Extensión tríceps polea", musculo: "Tríceps", series: "4", reps: "10-12", pasos: "Movimiento estricto. Codos anclados al cuerpo. Quema el músculo a altas repeticiones." }
                 ]
             },
             {
                 nombre: "Pecho + Espalda + Hombros",
                 ejercicios: [
-                    { nombre: "Press de banca plano", musculo: "Pecho" },
-                    { nombre: "Press inclinado mancuernas", musculo: "Pecho Sup." },
-                    { nombre: "Peck deck", musculo: "Pecho" },
-                    { nombre: "Remo en máquina", musculo: "Espalda Med." },
-                    { nombre: "Pullover en polea", musculo: "Dorsal" },
-                    { nombre: "Elevaciones laterales", musculo: "Hombro Lat." },
-                    { nombre: "Reverse pec deck", musculo: "Hombro Post." }
+                    { nombre: "Press de banca plano", musculo: "Pecho", series: "3-4", reps: "8-12", pasos: "Día de frecuencia 2. Concéntrate en la técnica y mejora el peso o repeticiones de la sesión anterior." },
+                    { nombre: "Press inclinado mancuernas", musculo: "Pecho Sup.", series: "3", reps: "8-12", pasos: "Las mancuernas permiten mayor rango de recorrido que la barra. Baja profundo sintiendo el estiramiento." },
+                    { nombre: "Peck deck", musculo: "Pecho", series: "3", reps: "12-15", pasos: "Serie de bombeo final para el pecho. Céntrate totalmente en la congestión muscular." },
+                    { nombre: "Remo en máquina", musculo: "Espalda Med.", series: "3-4", reps: "8-12", pasos: "Movimiento pesado. Asegúrate de estirar bien al volver y tirar con fuerza." },
+                    { nombre: "Pullover en polea", musculo: "Dorsal", series: "3", reps: "12-15", pasos: "Brazos casi estirados. Piensa en hacer un arco empujando el cable desde arriba hasta tus muslos." },
+                    { nombre: "Elevaciones laterales", musculo: "Hombro Lat.", series: "4", reps: "15-20", pasos: "Altas repeticiones para destrozar el hombro lateral. Aguanta el dolor y controla la bajada." },
+                    { nombre: "Reverse pec deck", musculo: "Hombro Post.", series: "3", reps: "12-15", pasos: "Para la parte posterior del hombro. Movimiento corto, tira hacia atrás sin juntar las escápulas del todo." }
                 ]
             }
         ];
 
-        let sesionActual = localStorage.getItem('sesionActual');
-        if (sesionActual === null) {
-            sesionActual = 0;
-        } else {
-            sesionActual = parseInt(sesionActual);
-        }
+        let sesionActual = parseInt(localStorage.getItem('sesionActual') || '0');
+        let ejercicioActualIndex = 0;
+        let ejerciciosActuales = [];
 
-        function cargarEntrenamiento() {
+        // Inicializar la vista principal
+        function cargarVistaPrincipal() {
             const entreno = rutina[sesionActual];
-            
             document.getElementById('day-counter').innerText = `Sesión ${sesionActual + 1} de 4`;
-            document.getElementById('workout-name').innerText = entreno.nombre;
+            document.getElementById('workout-name-main').innerText = entreno.nombre;
+            document.getElementById('workout-summary').innerText = `${entreno.ejercicios.length} ejercicios enfocados en hipertrofia.`;
             
-            const lista = document.getElementById('exercise-list');
-            lista.innerHTML = ''; 
-
-            entreno.ejercicios.forEach(ej => {
-                const li = document.createElement('li');
-                li.className = 'exercise-item';
-                li.innerHTML = `
-                    <span class="exercise-name">${ej.nombre}</span>
-                    <span class="muscle-group">${ej.musculo}</span>
-                `;
-                lista.appendChild(li);
-            });
+            document.getElementById('main-view').style.display = 'block';
+            document.getElementById('workout-view').style.display = 'none';
         }
 
-        function completarEntrenamiento() {
+        // Pasar al modo Tinder/Tarjetas
+        function iniciarEntrenamiento() {
+            ejerciciosActuales = rutina[sesionActual].ejercicios;
+            ejercicioActualIndex = 0;
+            
+            document.getElementById('main-view').style.display = 'none';
+            document.getElementById('workout-view').style.display = 'block';
+            document.getElementById('workout-title-active').innerText = rutina[sesionActual].nombre;
+            
+            mostrarTarjeta();
+        }
+
+        // Cargar los datos en la tarjeta
+        function mostrarTarjeta() {
+            const ej = ejerciciosActuales[ejercicioActualIndex];
+            const card = document.getElementById('card-container');
+            const btnNext = document.getElementById('btn-next');
+            
+            // Animación de entrada
+            card.classList.remove('swipe-out');
+            card.classList.add('swipe-in');
+            
+            setTimeout(() => card.classList.remove('swipe-in'), 400);
+
+            // Actualizar textos
+            document.getElementById('ex-muscle').innerText = ej.musculo;
+            document.getElementById('ex-title').innerText = ej.nombre;
+            document.getElementById('ex-sets').innerText = ej.series;
+            document.getElementById('ex-reps').innerText = ej.reps;
+            document.getElementById('ex-steps-text').innerText = ej.pasos;
+
+            // Barra de progreso
+            const progress = ((ejercicioActualIndex) / ejerciciosActuales.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            // Botón final
+            if (ejercicioActualIndex === ejerciciosActuales.length - 1) {
+                btnNext.innerText = "¡Finalizar Entreno! 🏆";
+                btnNext.classList.add('finish');
+            } else {
+                btnNext.innerText = "Siguiente ➡️";
+                btnNext.classList.remove('finish');
+            }
+        }
+
+        // Lógica de deslizar/siguiente
+        function siguienteEjercicio() {
+            const card = document.getElementById('card-container');
+            
+            // Animación de salida hacia la izquierda
+            card.classList.add('swipe-out');
+
+            setTimeout(() => {
+                ejercicioActualIndex++;
+                if (ejercicioActualIndex < ejerciciosActuales.length) {
+                    mostrarTarjeta();
+                } else {
+                    completarEntrenamiento(false);
+                }
+            }, 400); // Espera a que termine la animación
+        }
+
+        // Completar el día y rotar
+        function completarEntrenamiento(desdeInicio = false) {
             sesionActual = (sesionActual + 1) % rutina.length;
             localStorage.setItem('sesionActual', sesionActual);
             
+            if(!desdeInicio) alert("¡Brutal! Has reventado el entrenamiento. Descansa y aliméntate bien.");
+            
             window.scrollTo(0, 0);
-            cargarEntrenamiento();
+            cargarVistaPrincipal();
         }
 
         function reiniciarCiclo() {
             if(confirm("¿Seguro que quieres volver a la Sesión 1?")) {
                 sesionActual = 0;
                 localStorage.setItem('sesionActual', 0);
-                cargarEntrenamiento();
+                cargarVistaPrincipal();
             }
         }
 
-        cargarEntrenamiento();
+        // LOGICA DE SWIPE TÁCTIL (Deslizar con el dedo)
+        let touchstartX = 0;
+        let touchendX = 0;
+        
+        document.getElementById('card-container').addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        });
+
+        document.getElementById('card-container').addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            // Si desliza el dedo hacia la izquierda significativamente (más de 50px)
+            if (touchstartX - touchendX > 50) {
+                siguienteEjercicio();
+            }
+        }
+
+        // Arrancar
+        cargarVistaPrincipal();
     </script>
 </body>
 </html>

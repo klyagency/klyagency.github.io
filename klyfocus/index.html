@@ -1,312 +1,262 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>eBook Reader PWA</title>
-  <link rel="manifest" href="manifest.json" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.88/dist/epub.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
-  <style>
-    body, html {
-      height: 100%;
-      overflow: hidden;
-      background-color: #000;
-      color: #ccc;
-    }
-    header, footer {
-      padding: 10px;
-      background-color: #222;
-    }
-    #reader {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: calc(100% - 120px);
-    }
-    canvas, pre {
-      max-width: 100%;
-      max-height: 100%;
-      width: auto;
-      height: auto;
-    }
-    #fullscreenContainer {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      color: #ccc;
-    }
-    input[type="file"] {
-      display: none;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background-color: #000;
-      color: #ccc;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mi Rutina Gym</title>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --accent: #00ff88; /* Verde neón */
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            /* Evita el scroll elástico molesto en móviles */
+            overscroll-behavior-y: none; 
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            padding-bottom: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .workout-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+        }
+
+        .workout-title {
+            font-size: 1.4rem;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .exercise-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .exercise-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .exercise-item:last-child {
+            border-bottom: none;
+        }
+
+        .exercise-name {
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
+
+        .muscle-group {
+            font-size: 0.8rem;
+            color: #121212;
+            background: var(--accent);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            white-space: nowrap;
+            margin-left: 15px;
+        }
+
+        .btn-completar {
+            width: 100%;
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .btn-completar:active {
+            transform: scale(0.98);
+            background-color: #00cc6a;
+        }
+
+        .btn-reset {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            text-decoration: underline;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0 auto;
+            font-size: 0.95rem;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
-  <header class="d-flex flex-wrap align-items-center justify-content-between">
-    <a href="https://discord.gg/nT6MnfP63G" target="_blank" class="text-decoration-none text-primary d-flex align-items-center">
-      <i class="bi bi-discord fs-3 me-2"></i>
-      <span>CONSIGUE LIBROS GRATIS EN NUESTRO DISCORD</span>
-    </a>
-    <h1 class="w-100 text-center fs-3 my-2">Lector de ebooks</h1>
-    <div class="d-flex flex-wrap align-items-center justify-content-center w-100">
-      <label for="fileInput" class="btn btn-secondary m-1">
-        <i class="bi bi-upload"></i> Seleccionar Archivo
-      </label>
-      <input type="file" id="fileInput" accept=".txt,.pdf,.epub">
-      <button id="fullscreenBtn" class="btn btn-secondary m-1">
-        <i class="bi bi-arrows-fullscreen"></i> Leer libro.
-      </button>
-      <button id="toggleTheme" class="btn btn-secondary m-1" style="display: none;">
-        <i class="bi bi-moon"></i> Modo Claro/Oscuro
-      </button>
-      <label for="fontSize" class="form-label m-1">Tamaño letra</label>
-      <input type="range" id="fontSize" min="12" max="32" value="16" class="form-range w-auto m-1">
+
+    <div class="container">
+        <h1>Rutina Hipertrofia</h1>
+        <div class="subtitle" id="day-counter">Día 1 de 4</div>
+        
+        <div class="workout-card">
+            <h2 class="workout-title" id="workout-name">Cargando...</h2>
+            <ul class="exercise-list" id="exercise-list">
+                </ul>
+            <button class="btn-completar" onclick="completarEntrenamiento()">COMPLETADO 🔥</button>
+        </div>
+
+        <button class="btn-reset" onclick="reiniciarCiclo()">Empezar ciclo desde cero</button>
     </div>
-  </header>
 
-  <div id="reader"></div>
-
-  <footer class="d-flex flex-wrap align-items-center justify-content-center">
-    <button id="prevPage" class="btn btn-secondary m-1">
-      <i class="bi bi-arrow-left"></i> Anterior
-    </button>
-    <button id="nextPage" class="btn btn-secondary m-1">
-      Siguiente <i class="bi bi-arrow-right"></i>
-    </button>
-    <button id="bookmark" class="btn btn-secondary m-1">
-      <i class="bi bi-bookmark"></i> Guardar Marcador
-    </button>
-    <button id="goBookmark" class="btn btn-secondary m-1">
-      <i class="bi bi-journal-arrow-up"></i> Ir a Marcador
-    </button>
-    <input type="text" id="searchText" placeholder="Buscar texto" class="form-control m-1 w-auto">
-    <button id="searchBtn" class="btn btn-secondary m-1">
-      <i class="bi bi-search"></i> Buscar
-    </button>
-  </footer>
-
-  <div id="fullscreenContainer" style="display:none;"></div>
-<!--- pop Up rico --->
-div class="modal fade" id="pwaInstallModal" tabindex="-1" aria-labelledby="pwaInstallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content bg-dark text-white">
-      <div class="modal-header">
-        <h5 class="modal-title" id="pwaInstallModalLabel">
-          <i class="bi bi-cloud-download me-2"></i> ¡Descarga la App PWA!
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <p>Para una mejor experiencia, instala nuestra app en tu dispositivo.</p>
-        <ul>
-          <li><strong>Android:</strong> Toca <i class="bi bi-three-dots-vertical"></i> y selecciona <em>Agregar a la pantalla de inicio</em>.</li>
-          <li><strong>iPhone/iPad:</strong> Toca <i class="bi bi-share-fill"></i> y luego selecciona <em>Agregar a pantalla de inicio</em>.</li>
-          <li><strong>PC:</strong> Busca el icono <i class="bi bi-plus-square"></i> en la barra de direcciones o usa las opciones del navegador.</li>
-        </ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" data-bs-dismiss="modal">
-          <i class="bi bi-check-circle"></i> Entendido
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<!--- fin pop --->
-
-  <script>
-    let ebookContent = '';
-    let currentPage = 0;
-    let pageSize = 1000;
-    let pdfDoc = null;
-    let epubBook = null;
-    const readerDiv = document.getElementById('reader');
-    const fullscreenContainer = document.getElementById('fullscreenContainer');
-
-    document.getElementById('fileInput').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const ext = file.name.split('.').pop().toLowerCase();
-
-      if (ext === 'pdf') {
-        const reader = new FileReader();
-        reader.onload = function () {
-          const typedarray = new Uint8Array(this.result);
-          pdfjsLib.getDocument(typedarray).promise.then(function (pdf) {
-            pdfDoc = pdf;
-            currentPage = 1;
-            renderPDFPage();
-            enterFullscreen();
-          });
-        };
-        reader.readAsArrayBuffer(file);
-      } else if (ext === 'epub') {
-        const reader = new FileReader();
-        reader.onload = function () {
-          fullscreenContainer.innerHTML = '';
-          const book = ePub(this.result);
-          epubBook = book;
-          const rendition = book.renderTo(fullscreenContainer, {
-            width: "100%",
-            height: "100%",
-            flow: "paginated"
-          });
-          rendition.themes.default({ 'body': { 'background': '#000', 'color': '#ccc' } });
-          rendition.display();
-          enterFullscreen();
-        };
-        reader.readAsArrayBuffer(file);
-      } else {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-          ebookContent = event.target.result;
-          currentPage = 0;
-          renderTextPage();
-          enterFullscreen();
-        };
-        reader.readAsText(file);
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./service-worker.js')
+            .then(reg => console.log('Service Worker OK', reg))
+            .catch(err => console.error('Error Service Worker', err));
+        });
       }
-    });
+    </script>
 
-    function renderTextPage() {
-      const text = ebookContent.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
-      fullscreenContainer.innerHTML = '<pre style="white-space: pre-wrap; font-size: 16px;">' + text + '</pre>';
-      readerDiv.innerHTML = '<pre style="white-space: pre-wrap; font-size: 16px;">' + text + '</pre>';
-      localStorage.setItem('lastPage', currentPage);
-    }
+    <script>
+        const rutina = [
+            {
+                nombre: "Pecho + Espalda + Bíceps",
+                ejercicios: [
+                    { nombre: "Press de banca plano", musculo: "Pecho" },
+                    { nombre: "Press inclinado", musculo: "Pecho Sup." },
+                    { nombre: "Peck deck", musculo: "Pecho" },
+                    { nombre: "Jalón al pecho", musculo: "Dorsal" },
+                    { nombre: "Remo pecho apoyado", musculo: "Espalda Med." },
+                    { nombre: "Curl predicador", musculo: "Bíceps" },
+                    { nombre: "Curl inclinado", musculo: "Bíceps" }
+                ]
+            },
+            {
+                nombre: "Pecho + Hombros + Tríceps",
+                ejercicios: [
+                    { nombre: "Press inclinado", musculo: "Pecho Sup." },
+                    { nombre: "Press máquina", musculo: "Pecho" },
+                    { nombre: "Elevaciones laterales", musculo: "Hombro Lat." },
+                    { nombre: "Press de hombros", musculo: "Hombro" },
+                    { nombre: "Extensión tríceps polea", musculo: "Tríceps" },
+                    { nombre: "Extensión sobre cabeza", musculo: "Tríceps" }
+                ]
+            },
+            {
+                nombre: "Espalda + Bíceps + Tríceps",
+                ejercicios: [
+                    { nombre: "Dominadas / Jalón", musculo: "Dorsal" },
+                    { nombre: "Remo en máquina", musculo: "Espalda Med." },
+                    { nombre: "Curl martillo", musculo: "Bíceps" },
+                    { nombre: "Curl en polea", musculo: "Bíceps" },
+                    { nombre: "Extensión tríceps polea", musculo: "Tríceps" }
+                ]
+            },
+            {
+                nombre: "Pecho + Espalda + Hombros",
+                ejercicios: [
+                    { nombre: "Press de banca plano", musculo: "Pecho" },
+                    { nombre: "Press inclinado mancuernas", musculo: "Pecho Sup." },
+                    { nombre: "Peck deck", musculo: "Pecho" },
+                    { nombre: "Remo en máquina", musculo: "Espalda Med." },
+                    { nombre: "Pullover en polea", musculo: "Dorsal" },
+                    { nombre: "Elevaciones laterales", musculo: "Hombro Lat." },
+                    { nombre: "Reverse pec deck", musculo: "Hombro Post." }
+                ]
+            }
+        ];
 
-    function renderPDFPage() {
-      pdfDoc.getPage(currentPage).then(function (page) {
-        const viewport = page.getViewport({ scale: 1.5 });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        fullscreenContainer.innerHTML = '';
-        fullscreenContainer.appendChild(canvas);
-        readerDiv.innerHTML = '';
-        readerDiv.appendChild(canvas.cloneNode());
-        page.render({ canvasContext: fullscreenContainer.firstChild.getContext('2d'), viewport: viewport });
-        page.render({ canvasContext: readerDiv.firstChild.getContext('2d'), viewport: viewport });
-      });
-    }
-
-    function enterFullscreen() {
-      fullscreenContainer.style.display = 'flex';
-    }
-
-    fullscreenContainer.addEventListener('click', () => {
-      fullscreenContainer.style.display = 'none';
-    });
-
-    document.getElementById('fullscreenBtn').addEventListener('click', () => {
-      fullscreenContainer.style.display = 'flex';
-      if (pdfDoc) renderPDFPage();
-      else if (epubBook) {
-        epubBook.rendition.display();
-      } else renderTextPage();
-    });
-
-    document.getElementById('prevPage').addEventListener('click', () => {
-      if (pdfDoc && currentPage > 1) currentPage--;
-      else if (!pdfDoc && currentPage > 0) currentPage--;
-      render();
-    });
-
-    document.getElementById('nextPage').addEventListener('click', () => {
-      if (pdfDoc && currentPage < pdfDoc.numPages) currentPage++;
-      else if (!pdfDoc && (currentPage + 1) * pageSize < ebookContent.length) currentPage++;
-      render();
-    });
-
-    function render() {
-      if (pdfDoc) renderPDFPage();
-      else if (epubBook) epubBook.rendition.display();
-      else renderTextPage();
-    }
-
-    document.getElementById('bookmark').addEventListener('click', () => {
-      localStorage.setItem('bookmark', currentPage);
-      alert('Marcador guardado en página ' + currentPage);
-    });
-
-    document.getElementById('goBookmark').addEventListener('click', () => {
-      const bookmark = localStorage.getItem('bookmark');
-      if (bookmark !== null) {
-        currentPage = parseInt(bookmark);
-        render();
-      }
-    });
-
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      const query = document.getElementById('searchText').value;
-      if (!pdfDoc && ebookContent) {
-        const index = ebookContent.indexOf(query);
-        if (index !== -1) {
-          currentPage = Math.floor(index / pageSize);
-          renderTextPage();
+        let sesionActual = localStorage.getItem('sesionActual');
+        if (sesionActual === null) {
+            sesionActual = 0;
         } else {
-          alert('Texto no encontrado');
+            sesionActual = parseInt(sesionActual);
         }
-      } else {
-        alert('La búsqueda en PDF/EPUB no está implementada.');
-      }
-    });
 
-    document.getElementById('fontSize').addEventListener('input', (e) => {
-      readerDiv.style.fontSize = e.target.value + 'px';
-      fullscreenContainer.style.fontSize = e.target.value + 'px';
-    });
+        function cargarEntrenamiento() {
+            const entreno = rutina[sesionActual];
+            
+            document.getElementById('day-counter').innerText = `Sesión ${sesionActual + 1} de 4`;
+            document.getElementById('workout-name').innerText = entreno.nombre;
+            
+            const lista = document.getElementById('exercise-list');
+            lista.innerHTML = ''; 
 
-    let startX = 0;
-    fullscreenContainer.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-    });
+            entreno.ejercicios.forEach(ej => {
+                const li = document.createElement('li');
+                li.className = 'exercise-item';
+                li.innerHTML = `
+                    <span class="exercise-name">${ej.nombre}</span>
+                    <span class="muscle-group">${ej.musculo}</span>
+                `;
+                lista.appendChild(li);
+            });
+        }
 
-    fullscreenContainer.addEventListener('touchend', (e) => {
-      const endX = e.changedTouches[0].clientX;
-      if (startX - endX > 50) document.getElementById('nextPage').click();
-      else if (endX - startX > 50) document.getElementById('prevPage').click();
-    });
+        function completarEntrenamiento() {
+            sesionActual = (sesionActual + 1) % rutina.length;
+            localStorage.setItem('sesionActual', sesionActual);
+            
+            // Un pequeño scroll hacia arriba y recarga la vista
+            window.scrollTo(0, 0);
+            cargarEntrenamiento();
+        }
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
-    }
+        function reiniciarCiclo() {
+            if(confirm("¿Seguro que quieres volver a la Sesión 1?")) {
+                sesionActual = 0;
+                localStorage.setItem('sesionActual', 0);
+                cargarEntrenamiento();
+            }
+        }
 
- </script>
-
-<script>
-  // Detección si está dentro de una PWA
-  function isInStandaloneMode() {
-    return (window.matchMedia('(display-mode: standalone)').matches) || (window.navigator.standalone === true);
-  }
-
-  // Mostrar modal si está en el navegador (no en PWA)
-  window.addEventListener('load', () => {
-    if (!isInStandaloneMode()) {
-      const installModal = new bootstrap.Modal(document.getElementById('pwaInstallModal'));
-      installModal.show();
-    }
-  });
-</script>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+        // Iniciar
+        cargarEntrenamiento();
+    </script>
 </body>
 </html>

@@ -1,19 +1,19 @@
 {
-  "name": "kly focus",
-  "short_name": "kly focus",
-  "description": "APP para leer ebooks.",
-  "start_url": "/klyfocus/index.html",
+  "name": "Mi Rutina Gym",
+  "short_name": "klyapp",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0d0d0d",
-  "theme_color": "#0d0d0d",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "description": "App secuencial para mi rutina de hipertrofia",
   "icons": [
     {
-      "src": "/klyfocus/web-app-manifest-192x192.png",
+      "src": "web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/klyfocus/web-app-manifest-512x512.png",
+      "src": "web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }

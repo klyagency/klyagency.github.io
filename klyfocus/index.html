@@ -1,405 +1,2274 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mi Rutina Gym Pro</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#121212">
-    <link rel="apple-touch-icon" href="web-app-manifest-192x192.png">
+<title>BLACK GOLD — Gym Tracker</title>
 
-    <style>
-        :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --accent: #00ff88;
-            --accent-hover: #00cc6a;
-            --text-main: #ffffff;
-            --text-muted: #a0a0a0;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            overscroll-behavior-y: none;
-            overflow-x: hidden;
-        }
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#050505">
+<link rel="apple-touch-icon" href="web-app-manifest-192x192.png">
 
-        .container {
-            max-width: 500px;
-            width: 100%;
-            padding-bottom: 40px;
-            position: relative;
-        }
+<style>
+:root {
+    --bg: #050505;
+    --bg-soft: #0a0a0a;
+    --card: #101010;
+    --card-2: #151515;
+    --border: #242424;
 
-        /* VISTAS */
-        #main-view, #workout-view {
-            transition: opacity 0.3s ease;
-        }
-        #workout-view {
-            display: none;
-        }
+    --gold: #d4af37;
+    --gold-light: #f1d675;
+    --gold-dark: #8f7420;
 
-        h1 { text-align: center; font-size: 2.2rem; margin-bottom: 5px; }
-        .subtitle { text-align: center; color: var(--accent); font-weight: 700; margin-bottom: 30px; text-transform: uppercase; }
-        
-        .main-card {
-            background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-        }
+    --white: #f7f7f7;
+    --muted: #858585;
+    --danger: #a33a3a;
 
-        .btn-entrenar {
-            width: 100%;
-            background-color: var(--accent);
-            color: #000;
-            border: none;
-            padding: 18px;
-            font-size: 1.2rem;
-            font-weight: 800;
-            border-radius: 12px;
-            cursor: pointer;
-            margin-top: 15px;
-            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
-        }
+    --radius: 18px;
+}
 
-        .btn-completar-rapido {
-            width: 100%;
-            background-color: transparent;
-            color: var(--text-muted);
-            border: 2px solid #333;
-            padding: 15px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
-        /* ESTILO TARJETAS TINDER (WORKOUT) */
-        .progress-bar {
-            width: 100%;
-            background-color: #333;
-            height: 8px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: var(--accent);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
+body {
+    margin: 0;
+    padding: 18px;
+    background:
+        radial-gradient(circle at top, #15120a 0%, var(--bg) 38%);
+    color: var(--white);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Oxygen,
+        sans-serif;
+    min-height: 100vh;
+    overscroll-behavior-y: none;
+}
 
-        .exercise-card {
-            background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 30px 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            position: relative;
-            transform-origin: center bottom;
-            transition: transform 0.4s ease, opacity 0.4s ease;
-        }
+button,
+input {
+    font: inherit;
+}
 
-        .exercise-card.swipe-out {
-            transform: translateX(-150%) rotate(-10deg);
-            opacity: 0;
-        }
-        .exercise-card.swipe-in {
-            animation: slideIn 0.4s forwards;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(150%) rotate(10deg); opacity: 0; }
-            to { transform: translateX(0) rotate(0); opacity: 1; }
-        }
+button {
+    cursor: pointer;
+}
 
-        .ex-muscle {
-            color: var(--accent);
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-            display: block;
-        }
+.container {
+    width: 100%;
+    max-width: 520px;
+    margin: auto;
+    padding-bottom: 50px;
+}
 
-        .ex-title {
-            font-size: 1.8rem;
-            margin: 0 0 15px 0;
-            line-height: 1.2;
-        }
+/* =========================
+   GENERAL
+========================= */
 
-        .ex-stats {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .stat-box {
-            background: #2a2a2a;
-            padding: 10px 15px;
-            border-radius: 10px;
-            flex: 1;
-            text-align: center;
-        }
-        .stat-label { font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 3px;}
-        .stat-value { font-size: 1.2rem; font-weight: 700; color: #fff;}
+.view {
+    animation: appear .2s ease;
+}
 
-        .ex-steps {
-            background: #181818;
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 4px solid var(--accent);
-        }
-        .ex-steps h4 { margin-top: 0; margin-bottom: 10px; font-size: 1rem;}
-        .ex-steps p { margin: 0; font-size: 0.95rem; line-height: 1.5; color: #ccc;}
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
 
-        .btn-swipe {
-            width: 100%;
-            background-color: var(--accent);
-            color: #000;
-            border: none;
-            padding: 18px;
-            font-size: 1.2rem;
-            font-weight: 800;
-            border-radius: 12px;
-            cursor: pointer;
-            margin-top: 25px;
-        }
-        .btn-swipe.finish { background-color: #ff3366; color: white;}
-    </style>
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo {
+    text-align: center;
+    letter-spacing: 5px;
+    font-size: .75rem;
+    font-weight: 800;
+    color: var(--gold);
+    margin-top: 5px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.15rem;
+    margin: 8px 0 4px;
+    letter-spacing: -1px;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--gold);
+    font-weight: 800;
+    font-size: .78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.section-title {
+    font-size: .78rem;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 800;
+    margin: 25px 2px 10px;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.main-card {
+    margin-top: 25px;
+    background:
+        linear-gradient(145deg, #171717, #0b0b0b);
+    border: 1px solid #292929;
+    border-radius: 24px;
+    padding: 28px 22px;
+    text-align: center;
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.65),
+        inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+.session-number {
+    color: var(--gold);
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.workout-name {
+    font-size: 1.7rem;
+    line-height: 1.15;
+    margin: 10px 0;
+}
+
+.workout-summary {
+    color: var(--muted);
+    margin: 0 0 25px;
+}
+
+.gold-line {
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--gold),
+        transparent
+    );
+    margin: 22px 0;
+    opacity: .55;
+}
+
+.btn-primary {
+    width: 100%;
+    border: 0;
+    border-radius: 13px;
+    padding: 17px;
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold-light),
+            var(--gold)
+        );
+    color: #080808;
+    font-weight: 900;
+    font-size: 1.05rem;
+    letter-spacing: .5px;
+    box-shadow:
+        0 8px 25px rgba(212,175,55,.15);
+}
+
+.btn-primary:active {
+    transform: scale(.98);
+}
+
+.btn-secondary {
+    width: 100%;
+    border: 1px solid #303030;
+    border-radius: 13px;
+    padding: 14px;
+    margin-top: 10px;
+    background: #0c0c0c;
+    color: #ddd;
+}
+
+.btn-secondary:active {
+    background: #181818;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.quick-btn {
+    border: 1px solid #252525;
+    background: #0c0c0c;
+    color: var(--muted);
+    padding: 13px 8px;
+    border-radius: 12px;
+    font-size: .82rem;
+}
+
+/* =========================
+   NAV
+========================= */
+
+.bottom-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+    margin-top: 25px;
+}
+
+.nav-btn {
+    background: #0b0b0b;
+    border: 1px solid #202020;
+    color: #777;
+    border-radius: 12px;
+    padding: 11px 5px;
+    font-size: .72rem;
+    font-weight: 700;
+}
+
+.nav-btn.active {
+    color: var(--gold);
+    border-color: #5d4b1b;
+}
+
+/* =========================
+   EXERCISE LIST
+========================= */
+
+.ex-select-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.ex-select-item {
+    background: linear-gradient(145deg, #151515, #0d0d0d);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 17px;
+    margin-bottom: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    transition: .15s;
+}
+
+.ex-select-item:active {
+    transform: scale(.985);
+}
+
+.ex-select-item.done {
+    border-color: #806b27;
+}
+
+.ex-name {
+    font-size: .98rem;
+}
+
+.ex-meta {
+    color: var(--muted);
+    font-size: .75rem;
+    margin-top: 5px;
+}
+
+.done-badge {
+    color: var(--gold);
+    font-size: 1.2rem;
+}
+
+/* =========================
+   EXERCISE
+========================= */
+
+.exercise-card {
+    background: linear-gradient(145deg, #151515, #0b0b0b);
+    border: 1px solid #292929;
+    border-radius: 23px;
+    padding: 22px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.65);
+}
+
+.ex-muscle {
+    color: var(--gold);
+    font-size: .75rem;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.ex-title {
+    font-size: 1.85rem;
+    line-height: 1.1;
+    margin: 7px 0 18px;
+}
+
+.ex-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.stat-box {
+    background: #0b0b0b;
+    border: 1px solid #222;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    color: var(--muted);
+    font-size: .67rem;
+    letter-spacing: 1px;
+}
+
+.stat-value {
+    display: block;
+    color: var(--gold-light);
+    font-size: 1.15rem;
+    font-weight: 900;
+    margin-top: 3px;
+}
+
+.tech-box {
+    margin-top: 15px;
+    background: #0a0a0a;
+    border-left: 3px solid var(--gold);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.tech-box small {
+    display: block;
+    color: var(--gold);
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.tech-box p {
+    margin: 0;
+    color: #c2c2c2;
+    font-size: .9rem;
+    line-height: 1.45;
+}
+
+/* =========================
+   LAST SESSION
+========================= */
+
+.last-session {
+    margin-top: 18px;
+    background: #0a0a0a;
+    border: 1px solid #202020;
+    border-radius: 13px;
+    padding: 14px;
+}
+
+.last-title {
+    color: var(--gold);
+    font-size: .68rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.last-data {
+    color: #ccc;
+    font-size: .9rem;
+    margin-top: 5px;
+}
+
+/* =========================
+   SET TRACKER
+========================= */
+
+.sets-title {
+    margin-top: 22px;
+    margin-bottom: 9px;
+    color: #bbb;
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.set-row {
+    display: grid;
+    grid-template-columns: 34px 1fr 1fr 58px;
+    gap: 7px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.set-number {
+    color: var(--muted);
+    text-align: center;
+    font-weight: 800;
+}
+
+.set-input {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid #292929;
+    background: #090909;
+    color: white;
+    border-radius: 9px;
+    padding: 11px 7px;
+    text-align: center;
+    outline: none;
+}
+
+.set-input:focus {
+    border-color: var(--gold-dark);
+}
+
+.set-input::placeholder {
+    color: #555;
+}
+
+.set-done {
+    height: 42px;
+    border: 1px solid #292929;
+    border-radius: 9px;
+    background: #0c0c0c;
+    color: #666;
+    font-weight: 900;
+}
+
+.set-done.active {
+    color: #080808;
+    background: var(--gold);
+    border-color: var(--gold);
+}
+
+.add-set {
+    width: 100%;
+    margin-top: 5px;
+    border: 1px dashed #444;
+    background: transparent;
+    color: var(--gold);
+    border-radius: 10px;
+    padding: 11px;
+    font-weight: 800;
+}
+
+.exercise-actions {
+    margin-top: 18px;
+}
+
+/* =========================
+   REST TIMER
+========================= */
+
+.timer {
+    position: fixed;
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    z-index: 100;
+
+    background: rgba(12,12,12,.97);
+    border: 1px solid #5e4c1d;
+    border-radius: 17px;
+    padding: 13px;
+
+    box-shadow: 0 15px 40px rgba(0,0,0,.8);
+    backdrop-filter: blur(15px);
+}
+
+.timer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.timer-label {
+    color: var(--gold);
+    font-size: .68rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.timer-value {
+    font-size: 1.6rem;
+    font-weight: 900;
+}
+
+.timer-buttons {
+    display: flex;
+    gap: 7px;
+    margin-top: 8px;
+}
+
+.timer-buttons button {
+    flex: 1;
+    border: 1px solid #292929;
+    background: #151515;
+    color: #ddd;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: .75rem;
+}
+
+/* =========================
+   HISTORY
+========================= */
+
+.history-card {
+    background: #101010;
+    border: 1px solid #242424;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.history-date {
+    color: var(--gold);
+    font-size: .72rem;
+    font-weight: 900;
+}
+
+.history-name {
+    font-size: 1rem;
+    font-weight: 800;
+    margin-top: 4px;
+}
+
+.history-info {
+    color: var(--muted);
+    font-size: .78rem;
+    margin-top: 5px;
+}
+
+/* =========================
+   DATA
+========================= */
+
+.data-card {
+    background: #101010;
+    border: 1px solid #242424;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 12px;
+}
+
+.data-card h3 {
+    margin: 0 0 7px;
+    font-size: 1rem;
+}
+
+.data-card p {
+    color: var(--muted);
+    font-size: .82rem;
+    line-height: 1.45;
+}
+
+.file-input {
+    display: none;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.78);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 200;
+    padding: 15px;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 520px;
+    background: #111;
+    border: 1px solid #3a3018;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 13px;
+    background: #080808;
+    border: 1px solid #292929;
+    color: white;
+    border-radius: 10px;
+    outline: none;
+    margin: 7px 0;
+}
+
+/* =========================
+   GOLD DETAIL
+========================= */
+
+.gold-text {
+    color: var(--gold);
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (min-width: 600px) {
+    body {
+        padding-top: 35px;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <div class="container">
-        <div id="main-view">
-            <h1>Rutina Hipertrofia</h1>
-            <div class="subtitle" id="day-counter">Día 1 de 4</div>
-            
-            <div class="main-card">
-                <h2 style="margin-top: 0;" id="workout-name-main">Cargando...</h2>
-                <p style="color: var(--text-muted); margin-bottom: 30px;" id="workout-summary">...</p>
-                
-                <button class="btn-entrenar" onclick="iniciarEntrenamiento()">¡ENTRENARLO! 🚀</button>
-                <button class="btn-completar-rapido" onclick="completarEntrenamiento(true)">Solo marcar completado ✓</button>
-            </div>
-            <button style="background:none; border:none; color: #666; text-decoration: underline; margin: 30px auto; display:block; cursor:pointer;" onclick="reiniciarCiclo()">Reiniciar ciclo</button>
+<div class="container">
+
+    <!-- ================= HOME ================= -->
+
+    <section id="home-view" class="view">
+
+        <div class="logo">BLACK GOLD</div>
+
+        <h1>Rutina Hipertrofia</h1>
+
+        <div class="subtitle" id="session-counter">
+            SESIÓN 01 / 04
         </div>
 
-        <div id="workout-view">
-            <div class="subtitle" id="workout-title-active">Entrenando</div>
-            <div class="progress-bar"><div class="progress-fill" id="progress-bar"></div></div>
+        <div class="main-card">
 
-            <div class="exercise-card" id="card-container">
-                <span class="ex-muscle" id="ex-muscle">Pecho</span>
-                <h2 class="ex-title" id="ex-title">Press de Banca</h2>
-                
-                <div class="ex-stats">
-                    <div class="stat-box">
-                        <span class="stat-label">SERIES</span>
-                        <span class="stat-value" id="ex-sets">3-4</span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-label">REPS (Hipertrofia)</span>
-                        <span class="stat-value" id="ex-reps">8-12</span>
-                    </div>
-                </div>
-
-                <div class="ex-steps">
-                    <h4>Técnica:</h4>
-                    <p id="ex-steps-text">Retrae las escápulas. Baja controlando y empuja fuerte.</p>
-                </div>
-
-                <button class="btn-swipe" id="btn-next" onclick="siguienteEjercicio()">Siguiente ➡️</button>
+            <div class="session-number" id="session-label">
+                SESSION 01
             </div>
+
+            <div class="workout-name" id="workout-name">
+                Cargando...
+            </div>
+
+            <div class="workout-summary" id="workout-summary">
+                ...
+            </div>
+
+            <div class="gold-line"></div>
+
+            <button class="btn-primary" onclick="iniciarEntrenamiento()">
+                INICIAR ENTRENAMIENTO
+            </button>
+
+            <button class="btn-secondary" onclick="completarEntrenamiento(true)">
+                Marcar sesión completada
+            </button>
+
         </div>
+
+        <div class="section-title">
+            Acciones
+        </div>
+
+        <div class="quick-actions">
+
+            <button class="quick-btn" onclick="mostrarHistorial()">
+                📊 Historial
+            </button>
+
+            <button class="quick-btn" onclick="mostrarDatos()">
+                💾 Datos
+            </button>
+
+        </div>
+
+        <button
+            class="btn-secondary"
+            style="margin-top:25px;color:#777;"
+            onclick="reiniciarCiclo()">
+            Reiniciar ciclo de 4 sesiones
+        </button>
+
+        <div class="bottom-nav">
+            <button class="nav-btn active" onclick="mostrarInicio()">INICIO</button>
+            <button class="nav-btn" onclick="mostrarHistorial()">HISTORIAL</button>
+            <button class="nav-btn" onclick="mostrarDatos()">DATOS</button>
+        </div>
+
+    </section>
+
+
+    <!-- ================= LIST ================= -->
+
+    <section id="list-view" class="view hidden">
+
+        <div class="logo">BLACK GOLD</div>
+
+        <div class="subtitle" id="list-title">
+            ENTRENAMIENTO
+        </div>
+
+        <div class="section-title">
+            Ejercicios
+        </div>
+
+        <ul class="ex-select-list" id="ex-select-list"></ul>
+
+        <button class="btn-secondary" onclick="volverAInicio()">
+            ← Salir del entrenamiento
+        </button>
+
+    </section>
+
+
+    <!-- ================= EXERCISE ================= -->
+
+    <section id="exercise-view" class="view hidden">
+
+        <div class="exercise-card">
+
+            <span class="ex-muscle" id="ex-muscle">
+                PECHO
+            </span>
+
+            <h2 class="ex-title" id="ex-title">
+                Press de banca plano
+            </h2>
+
+            <div class="ex-stats">
+
+                <div class="stat-box">
+                    <span class="stat-label">OBJETIVO SERIES</span>
+                    <span class="stat-value" id="ex-sets">3-4</span>
+                </div>
+
+                <div class="stat-box">
+                    <span class="stat-label">OBJETIVO REPS</span>
+                    <span class="stat-value" id="ex-reps">8-12</span>
+                </div>
+
+            </div>
+
+            <div class="last-session">
+                <div class="last-title">
+                    ÚLTIMA SESIÓN
+                </div>
+
+                <div class="last-data" id="last-session-data">
+                    Sin datos todavía.
+                </div>
+            </div>
+
+            <div class="tech-box">
+
+                <small>TÉCNICA</small>
+
+                <p id="ex-steps-text">
+                    ...
+                </p>
+
+            </div>
+
+
+            <div class="sets-title">
+                SERIES DE HOY
+            </div>
+
+            <div id="sets-container"></div>
+
+            <button class="add-set" onclick="agregarSerie()">
+                + AÑADIR SERIE
+            </button>
+
+            <div class="exercise-actions">
+
+                <button
+                    class="btn-primary"
+                    onclick="terminarEjercicio()">
+                    TERMINAR EJERCICIO
+                </button>
+
+                <button
+                    class="btn-secondary"
+                    onclick="volverALista()">
+                    ← Volver a ejercicios
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= HISTORY ================= -->
+
+    <section id="history-view" class="view hidden">
+
+        <div class="logo">BLACK GOLD</div>
+
+        <h1>Historial</h1>
+
+        <div class="subtitle">
+            Tus entrenamientos
+        </div>
+
+        <div id="history-container"></div>
+
+        <button class="btn-secondary" onclick="mostrarInicio()">
+            ← Volver
+        </button>
+
+    </section>
+
+
+    <!-- ================= DATA ================= -->
+
+    <section id="data-view" class="view hidden">
+
+        <div class="logo">BLACK GOLD</div>
+
+        <h1>Datos</h1>
+
+        <div class="subtitle">
+            Seguridad y almacenamiento
+        </div>
+
+        <div class="data-card">
+
+            <h3>💾 Almacenamiento local</h3>
+
+            <p>
+                Tus pesos, repeticiones, RIR, sesiones e historial
+                se guardan automáticamente en este dispositivo.
+            </p>
+
+        </div>
+
+        <div class="data-card">
+
+            <h3>📤 Exportar datos</h3>
+
+            <p>
+                Guarda una copia de seguridad de todos tus datos
+                en un archivo JSON.
+            </p>
+
+            <button class="btn-primary" onclick="exportarDatos()">
+                EXPORTAR DATOS
+            </button>
+
+        </div>
+
+        <div class="data-card">
+
+            <h3>📥 Importar datos</h3>
+
+            <p>
+                Recupera tus entrenamientos desde una copia
+                de seguridad anterior.
+            </p>
+
+            <input
+                id="import-file"
+                class="file-input"
+                type="file"
+                accept=".json"
+                onchange="importarDatos(event)">
+
+            <button
+                class="btn-secondary"
+                onclick="document.getElementById('import-file').click()">
+                IMPORTAR COPIA
+            </button>
+
+        </div>
+
+        <div class="data-card">
+
+            <h3>⚠️ Borrar todos los datos</h3>
+
+            <p>
+                Esta acción elimina pesos, repeticiones, historial
+                y configuración guardada.
+            </p>
+
+            <button
+                class="btn-secondary"
+                style="color:#c66;border-color:#4a2222;"
+                onclick="borrarDatos()">
+                BORRAR DATOS
+            </button>
+
+        </div>
+
+        <button class="btn-secondary" onclick="mostrarInicio()">
+            ← Volver
+        </button>
+
+    </section>
+
+</div>
+
+
+<!-- ================= TIMER ================= -->
+
+<div id="timer" class="timer hidden">
+
+    <div class="timer-top">
+
+        <span class="timer-label">
+            DESCANSO
+        </span>
+
+        <span id="timer-value" class="timer-value">
+            02:00
+        </span>
+
     </div>
 
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./service-worker.js').catch(err => console.error(err));
-        });
-      }
-    </script>
+    <div class="timer-buttons">
 
-    <script>
-        // BASE DE DATOS PRO: Con series, reps e instrucciones detalladas
-        const rutina = [
+        <button onclick="sumarDescanso(-30)">
+            −30s
+        </button>
+
+        <button onclick="pausarTimer()" id="timer-pause">
+            PAUSAR
+        </button>
+
+        <button onclick="sumarDescanso(30)">
+            +30s
+        </button>
+
+        <button onclick="cerrarTimer()">
+            CERRAR
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SERVICE WORKER
+========================================================= */
+
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker
+            .register("./service-worker.js")
+            .catch(err => console.error(err));
+    });
+}
+
+
+/* =========================================================
+   RUTINA
+========================================================= */
+
+const rutina = [
+
+    {
+        nombre: "Pecho + Espalda + Bíceps",
+
+        ejercicios: [
+
             {
-                nombre: "Pecho + Espalda + Bíceps",
-                ejercicios: [
-                    { nombre: "Press de banca plano", musculo: "Pecho", series: "3-4", reps: "8-12", pasos: "Retrae escápulas sacando pecho. Baja la barra controladamente en 3 segundos hasta rozar el pecho y empuja explosivo." },
-                    { nombre: "Press inclinado", musculo: "Pecho Sup.", series: "3", reps: "8-12", pasos: "Banco a 30-45 grados. Enfócate en estirar el pectoral superior al bajar. No bloquees los codos arriba del todo." },
-                    { nombre: "Peck deck", musculo: "Pecho aislam.", series: "3", reps: "10-15", pasos: "Mantén el pecho alto. Aprieta un segundo al juntar las manos y controla mucho la fase excéntrica (al abrir)." },
-                    { nombre: "Jalón al pecho", musculo: "Dorsal", series: "3-4", reps: "8-12", pasos: "Inclínate ligeramente hacia atrás. Tira de la barra hacia tu esternón intentando juntar los codos en tu espalda." },
-                    { nombre: "Remo pecho apoyado", musculo: "Espalda Med.", series: "3", reps: "8-12", pasos: "Deja que el peso estire tu espalda por completo abajo. Al subir, aprieta fuerte las escápulas juntas." },
-                    { nombre: "Curl predicador", musculo: "Bíceps", series: "3", reps: "10-12", pasos: "Apoya bien las axilas. Baja el peso lentamente (3 segs) hasta casi extender el brazo, sube contrayendo fuerte." },
-                    { nombre: "Curl inclinado", musculo: "Bíceps", series: "3", reps: "10-12", pasos: "Siéntate en banco reclinado. Deja colgar los brazos para máximo estiramiento. Sube las mancuernas sin mover los codos de su sitio." }
-                ]
+                nombre: "Press de banca plano",
+                musculo: "Pecho",
+                series: "3-4",
+                reps: "8-12",
+                descanso: 150,
+                pasos: "Retrae las escápulas y mantén el pecho estable. Baja la barra de forma controlada hasta el pecho y empuja manteniendo una trayectoria estable."
             },
+
             {
-                nombre: "Pecho + Hombros + Tríceps",
-                ejercicios: [
-                    { nombre: "Press inclinado", musculo: "Pecho Sup.", series: "3-4", reps: "8-10", pasos: "Controla el peso. Baja hasta la parte alta del pecho. Empuja conectando mente-músculo." },
-                    { nombre: "Press pecho máquina", musculo: "Pecho", series: "3", reps: "10-12", pasos: "Aprovecha la estabilidad de la máquina para ir al fallo o muy cerca. Máximo recorrido." },
-                    { nombre: "Elevaciones laterales", musculo: "Hombro Lat.", series: "4", reps: "12-15", pasos: "Piensa en empujar el peso hacia LAS PAREDES, no hacia el techo. Codos ligeramente flexionados." },
-                    { nombre: "Press de hombros", musculo: "Hombro", series: "3", reps: "8-12", pasos: "Baja las mancuernas hasta la altura de las orejas. Empuja sin chocar las mancuernas arriba." },
-                    { nombre: "Extensión tríceps polea", musculo: "Tríceps", series: "3", reps: "10-15", pasos: "Pega los codos a las costillas y no los muevas. Al extender abajo, separa un poco la cuerda." },
-                    { nombre: "Extensión sobre cabeza", musculo: "Tríceps", series: "3", reps: "10-15", pasos: "Busca el estiramiento máximo del tríceps bajando bien detrás de la nuca. Extiende fuerte." }
-                ]
+                nombre: "Press inclinado",
+                musculo: "Pecho superior",
+                series: "3",
+                reps: "8-12",
+                descanso: 150,
+                pasos: "Utiliza una inclinación aproximada de 30°. Baja de forma controlada buscando un buen estiramiento del pectoral superior y empuja sin perder la posición."
             },
+
             {
-                nombre: "Espalda + Bíceps + Tríceps",
-                ejercicios: [
-                    { nombre: "Dominadas / Jalón", musculo: "Dorsal", series: "4", reps: "8-12", pasos: "Inicia el movimiento bajando los hombros, luego tira con los brazos. Intenta llevar el pecho a la barra." },
-                    { nombre: "Remo en máquina", musculo: "Espalda Med.", series: "3", reps: "10-12", pasos: "Pecho bien pegado al cojín. Tira con los codos hacia atrás y aprieta la espalda 1 segundo." },
-                    { nombre: "Curl martillo", musculo: "Bíceps/Braquial", series: "3", reps: "10-12", pasos: "Agarre neutro. Sube alternando o a la vez, sin balancear el torso. Excelente para dar grosor al brazo." },
-                    { nombre: "Curl en polea", musculo: "Bíceps", series: "3", reps: "12-15", pasos: "Tensión constante gracias al cable. Mantén la postura firme y concéntrate solo en el bíceps." },
-                    { nombre: "Extensión tríceps polea", musculo: "Tríceps", series: "4", reps: "10-12", pasos: "Movimiento estricto. Codos anclados al cuerpo. Quema el músculo a altas repeticiones." }
-                ]
+                nombre: "Peck deck",
+                musculo: "Pecho",
+                series: "3",
+                reps: "10-15",
+                descanso: 90,
+                pasos: "Mantén el pecho estable. Junta los brazos controladamente y aprieta el pectoral. Regresa lentamente para aprovechar el estiramiento."
             },
+
             {
-                nombre: "Pecho + Espalda + Hombros",
-                ejercicios: [
-                    { nombre: "Press de banca plano", musculo: "Pecho", series: "3-4", reps: "8-12", pasos: "Día de frecuencia 2. Concéntrate en la técnica y mejora el peso o repeticiones de la sesión anterior." },
-                    { nombre: "Press inclinado mancuernas", musculo: "Pecho Sup.", series: "3", reps: "8-12", pasos: "Las mancuernas permiten mayor rango de recorrido que la barra. Baja profundo sintiendo el estiramiento." },
-                    { nombre: "Peck deck", musculo: "Pecho", series: "3", reps: "12-15", pasos: "Serie de bombeo final para el pecho. Céntrate totalmente en la congestión muscular." },
-                    { nombre: "Remo en máquina", musculo: "Espalda Med.", series: "3-4", reps: "8-12", pasos: "Movimiento pesado. Asegúrate de estirar bien al volver y tirar con fuerza." },
-                    { nombre: "Pullover en polea", musculo: "Dorsal", series: "3", reps: "12-15", pasos: "Brazos casi estirados. Piensa en hacer un arco empujando el cable desde arriba hasta tus muslos." },
-                    { nombre: "Elevaciones laterales", musculo: "Hombro Lat.", series: "4", reps: "15-20", pasos: "Altas repeticiones para destrozar el hombro lateral. Aguanta el dolor y controla la bajada." },
-                    { nombre: "Reverse pec deck", musculo: "Hombro Post.", series: "3", reps: "12-15", pasos: "Para la parte posterior del hombro. Movimiento corto, tira hacia atrás sin juntar las escápulas del todo." }
-                ]
+                nombre: "Jalón al pecho",
+                musculo: "Dorsal",
+                series: "3-4",
+                reps: "8-12",
+                descanso: 150,
+                pasos: "Inclínate ligeramente hacia atrás. Lleva los codos hacia abajo y atrás hasta acercar la barra a la parte superior del pecho."
+            },
+
+            {
+                nombre: "Remo pecho apoyado",
+                musculo: "Espalda media",
+                series: "3",
+                reps: "8-12",
+                descanso: 150,
+                pasos: "Deja que los brazos se estiren al inicio. Tira llevando los codos hacia atrás y controla completamente la vuelta."
+            },
+
+            {
+                nombre: "Curl predicador",
+                musculo: "Bíceps",
+                series: "3",
+                reps: "10-12",
+                descanso: 90,
+                pasos: "Apoya bien los brazos. Baja de forma lenta y controlada hasta conseguir un buen estiramiento y sube sin despegar los brazos."
+            },
+
+            {
+                nombre: "Curl inclinado",
+                musculo: "Bíceps",
+                series: "3",
+                reps: "10-12",
+                descanso: 90,
+                pasos: "Mantén los brazos detrás del torso para conseguir un buen estiramiento. Flexiona el codo sin balancear el cuerpo."
             }
+
+        ]
+    },
+
+
+    {
+        nombre: "Pecho + Hombros + Tríceps",
+
+        ejercicios: [
+
+            {
+                nombre: "Press inclinado",
+                musculo: "Pecho superior",
+                series: "3-4",
+                reps: "8-10",
+                descanso: 150,
+                pasos: "Baja la carga de forma controlada hacia la parte alta del pecho. Mantén los hombros estables y empuja con control."
+            },
+
+            {
+                nombre: "Press pecho máquina",
+                musculo: "Pecho",
+                series: "3",
+                reps: "10-12",
+                descanso: 120,
+                pasos: "Ajusta el asiento para que las asas queden aproximadamente a la altura del pecho. Utiliza un recorrido amplio y controlado."
+            },
+
+            {
+                nombre: "Elevaciones laterales",
+                musculo: "Hombro lateral",
+                series: "4",
+                reps: "12-15",
+                descanso: 75,
+                pasos: "Mantén los codos ligeramente flexionados. Eleva los brazos hacia los lados sin utilizar impulso y controla la bajada."
+            },
+
+            {
+                nombre: "Press de hombros",
+                musculo: "Hombros",
+                series: "3",
+                reps: "8-12",
+                descanso: 120,
+                pasos: "Mantén el torso estable. Baja las mancuernas de forma controlada y vuelve a empujar sin perder la posición."
+            },
+
+            {
+                nombre: "Extensión tríceps polea",
+                musculo: "Tríceps",
+                series: "3",
+                reps: "10-15",
+                descanso: 90,
+                pasos: "Mantén los codos estables junto al cuerpo. Extiende completamente y vuelve lentamente a la posición inicial."
+            },
+
+            {
+                nombre: "Extensión sobre cabeza",
+                musculo: "Tríceps",
+                series: "3",
+                reps: "10-15",
+                descanso: 90,
+                pasos: "Mantén los codos apuntando hacia delante. Baja la carga detrás de la cabeza para conseguir un buen estiramiento y extiende con control."
+            }
+
+        ]
+    },
+
+
+    {
+        nombre: "Espalda + Bíceps + Tríceps",
+
+        ejercicios: [
+
+            {
+                nombre: "Dominadas / Jalón",
+                musculo: "Dorsal",
+                series: "4",
+                reps: "8-12",
+                descanso: 150,
+                pasos: "Comienza estabilizando los hombros y lleva los codos hacia abajo. Evita balancear el cuerpo."
+            },
+
+            {
+                nombre: "Remo en máquina",
+                musculo: "Espalda media",
+                series: "3",
+                reps: "10-12",
+                descanso: 120,
+                pasos: "Mantén el pecho apoyado. Deja que la espalda se estire y después lleva los codos hacia atrás de forma controlada."
+            },
+
+            {
+                nombre: "Curl martillo",
+                musculo: "Bíceps / Braquial",
+                series: "3",
+                reps: "10-12",
+                descanso: 90,
+                pasos: "Utiliza un agarre neutro. Mantén los codos relativamente estables y evita balancear el torso."
+            },
+
+            {
+                nombre: "Curl en polea",
+                musculo: "Bíceps",
+                series: "3",
+                reps: "12-15",
+                descanso: 90,
+                pasos: "Mantén tensión durante todo el recorrido. Flexiona el codo sin mover excesivamente los hombros."
+            },
+
+            {
+                nombre: "Extensión tríceps polea",
+                musculo: "Tríceps",
+                series: "4",
+                reps: "10-12",
+                descanso: 90,
+                pasos: "Mantén los codos estables y extiende completamente. Regresa lentamente manteniendo tensión."
+            }
+
+        ]
+    },
+
+
+    {
+        nombre: "Pecho + Espalda + Hombros",
+
+        ejercicios: [
+
+            {
+                nombre: "Press de banca plano",
+                musculo: "Pecho",
+                series: "3-4",
+                reps: "8-12",
+                descanso: 150,
+                pasos: "Mantén las escápulas estables y controla la bajada. Busca mejorar progresivamente respecto a sesiones anteriores."
+            },
+
+            {
+                nombre: "Press inclinado mancuernas",
+                musculo: "Pecho superior",
+                series: "3",
+                reps: "8-12",
+                descanso: 150,
+                pasos: "Baja las mancuernas con control buscando un buen estiramiento. Empuja manteniendo los hombros estables."
+            },
+
+            {
+                nombre: "Peck deck",
+                musculo: "Pecho",
+                series: "3",
+                reps: "12-15",
+                descanso: 90,
+                pasos: "Controla especialmente la apertura. Junta los brazos sin perder la posición del torso."
+            },
+
+            {
+                nombre: "Remo en máquina",
+                musculo: "Espalda media",
+                series: "3-4",
+                reps: "8-12",
+                descanso: 150,
+                pasos: "Realiza un recorrido amplio. Tira con los codos y controla la fase de retorno."
+            },
+
+            {
+                nombre: "Pullover en polea",
+                musculo: "Dorsal",
+                series: "3",
+                reps: "12-15",
+                descanso: 90,
+                pasos: "Mantén los brazos ligeramente flexionados. Lleva la barra hacia los muslos utilizando principalmente el movimiento del hombro."
+            },
+
+            {
+                nombre: "Elevaciones laterales",
+                musculo: "Hombro lateral",
+                series: "4",
+                reps: "15-20",
+                descanso: 75,
+                pasos: "Usa una carga que permita controlar todo el movimiento. Eleva hacia los lados y controla la bajada."
+            },
+
+            {
+                nombre: "Reverse pec deck",
+                musculo: "Hombro posterior",
+                series: "3",
+                reps: "12-15",
+                descanso: 90,
+                pasos: "Mantén el torso estable y lleva los brazos hacia atrás utilizando principalmente el hombro posterior."
+            }
+
+        ]
+    }
+
+];
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+const STORAGE_KEY = "blackGoldGymData_v2";
+
+let datos = JSON.parse(
+    localStorage.getItem(STORAGE_KEY) || "null"
+);
+
+if (!datos) {
+
+    datos = {
+        sesionActual: 0,
+        historial: [],
+        ejercicios: {}
+    };
+
+}
+
+let sesionActual = datos.sesionActual || 0;
+
+let ejerciciosHechos = [];
+let ejercicioSeleccionado = null;
+let seriesActuales = [];
+
+let timerInterval = null;
+let timerSeconds = 0;
+let timerPaused = false;
+
+
+/* =========================================================
+   STORAGE HELPERS
+========================================================= */
+
+function guardarDatos() {
+
+    datos.sesionActual = sesionActual;
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(datos)
+    );
+
+}
+
+
+function claveEjercicio(nombre) {
+
+    return nombre
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "_");
+
+}
+
+
+function obtenerDatosEjercicio(nombre) {
+
+    const key = claveEjercicio(nombre);
+
+    if (!datos.ejercicios[key]) {
+
+        datos.ejercicios[key] = {
+            nombre: nombre,
+            sesiones: []
+        };
+
+    }
+
+    return datos.ejercicios[key];
+
+}
+
+
+/* =========================================================
+   VIEWS
+========================================================= */
+
+function ocultarVistas() {
+
+    document
+        .querySelectorAll(".view")
+        .forEach(v => v.classList.add("hidden"));
+
+}
+
+
+function mostrarInicio() {
+
+    ocultarVistas();
+
+    document
+        .getElementById("home-view")
+        .classList.remove("hidden");
+
+    cargarVistaPrincipal();
+
+}
+
+
+function volverAInicio() {
+    mostrarInicio();
+}
+
+
+function mostrarLista() {
+
+    ocultarVistas();
+
+    document
+        .getElementById("list-view")
+        .classList.remove("hidden");
+
+    renderizarLista();
+
+}
+
+
+function volverALista() {
+
+    ocultarVistas();
+
+    document
+        .getElementById("list-view")
+        .classList.remove("hidden");
+
+    renderizarLista();
+
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+function cargarVistaPrincipal() {
+
+    const entreno = rutina[sesionActual];
+
+    document.getElementById("session-counter").innerText =
+        `SESIÓN ${String(sesionActual + 1).padStart(2,"0")} / 04`;
+
+    document.getElementById("session-label").innerText =
+        `SESSION ${String(sesionActual + 1).padStart(2,"0")}`;
+
+    document.getElementById("workout-name").innerText =
+        entreno.nombre;
+
+    document.getElementById("workout-summary").innerText =
+        `${entreno.ejercicios.length} ejercicios · hipertrofia`;
+
+}
+
+
+/* =========================================================
+   START WORKOUT
+========================================================= */
+
+function iniciarEntrenamiento() {
+
+    ejerciciosHechos =
+        new Array(
+            rutina[sesionActual].ejercicios.length
+        ).fill(false);
+
+    mostrarLista();
+
+}
+
+
+function renderizarLista() {
+
+    const entreno = rutina[sesionActual];
+
+    document.getElementById("list-title").innerText =
+        entreno.nombre;
+
+    const container =
+        document.getElementById("ex-select-list");
+
+    container.innerHTML = "";
+
+    entreno.ejercicios.forEach((ej, index) => {
+
+        const li = document.createElement("li");
+
+        li.className =
+            "ex-select-item " +
+            (ejerciciosHechos[index] ? "done" : "");
+
+        li.onclick = () =>
+            abrirEjercicio(index);
+
+        const historial =
+            obtenerDatosEjercicio(ej.nombre);
+
+        let ultimo = "";
+
+        if (
+            historial.sesiones.length &&
+            historial.sesiones.at(-1).series.length
+        ) {
+
+            const s =
+                historial.sesiones.at(-1).series[0];
+
+            ultimo =
+                `${s.peso || "-"} kg × ${s.reps || "-"} reps`;
+
+        }
+
+        li.innerHTML = `
+
+            <div>
+
+                <strong class="ex-name">
+                    ${ej.nombre}
+                </strong>
+
+                <div class="ex-meta">
+                    ${ej.musculo} · ${ej.series} series
+                    ${ultimo ? " · Último: " + ultimo : ""}
+                </div>
+
+            </div>
+
+            <span class="done-badge">
+                ${ejerciciosHechos[index] ? "✓" : "›"}
+            </span>
+
+        `;
+
+        container.appendChild(li);
+
+    });
+
+}
+
+
+/* =========================================================
+   OPEN EXERCISE
+========================================================= */
+
+function abrirEjercicio(index) {
+
+    ejercicioSeleccionado = index;
+
+    const ej =
+        rutina[sesionActual].ejercicios[index];
+
+    ocultarVistas();
+
+    document
+        .getElementById("exercise-view")
+        .classList.remove("hidden");
+
+    document.getElementById("ex-muscle").innerText =
+        ej.musculo;
+
+    document.getElementById("ex-title").innerText =
+        ej.nombre;
+
+    document.getElementById("ex-sets").innerText =
+        ej.series;
+
+    document.getElementById("ex-reps").innerText =
+        ej.reps;
+
+    document.getElementById("ex-steps-text").innerText =
+        ej.pasos;
+
+    cargarUltimaSesion(ej.nombre);
+
+    crearSeries();
+
+    window.scrollTo(0,0);
+
+}
+
+
+/* =========================================================
+   LAST SESSION
+========================================================= */
+
+function cargarUltimaSesion(nombre) {
+
+    const ex = obtenerDatosEjercicio(nombre);
+
+    const el =
+        document.getElementById("last-session-data");
+
+    if (!ex.sesiones.length) {
+
+        el.innerText =
+            "Sin datos todavía. Esta será tu primera sesión.";
+
+        return;
+
+    }
+
+    const ultima =
+        ex.sesiones.at(-1);
+
+    if (!ultima.series.length) {
+
+        el.innerText =
+            "Sin series registradas.";
+
+        return;
+
+    }
+
+    const texto =
+        ultima.series
+            .map(s => {
+
+                let result =
+                    `${s.peso || "-"} kg × ${s.reps || "-"} reps`;
+
+                if (
+                    s.rir !== "" &&
+                    s.rir !== null &&
+                    s.rir !== undefined
+                ) {
+
+                    result += ` · RIR ${s.rir}`;
+
+                }
+
+                return result;
+
+            })
+            .join("  |  ");
+
+    el.innerText = texto;
+
+}
+
+
+/* =========================================================
+   SETS
+========================================================= */
+
+function crearSeries() {
+
+    const ej =
+        rutina[sesionActual].ejercicios[
+            ejercicioSeleccionado
         ];
 
-        let sesionActual = parseInt(localStorage.getItem('sesionActual') || '0');
-        let ejercicioActualIndex = 0;
-        let ejerciciosActuales = [];
+    let cantidad = 3;
 
-        // Inicializar la vista principal
-        function cargarVistaPrincipal() {
-            const entreno = rutina[sesionActual];
-            document.getElementById('day-counter').innerText = `Sesión ${sesionActual + 1} de 4`;
-            document.getElementById('workout-name-main').innerText = entreno.nombre;
-            document.getElementById('workout-summary').innerText = `${entreno.ejercicios.length} ejercicios enfocados en hipertrofia.`;
-            
-            document.getElementById('main-view').style.display = 'block';
-            document.getElementById('workout-view').style.display = 'none';
+    if (ej.series.includes("4")) {
+        cantidad = 4;
+    }
+
+    seriesActuales = [];
+
+    for (let i = 0; i < cantidad; i++) {
+
+        seriesActuales.push({
+            peso: "",
+            reps: "",
+            rir: "",
+            done: false
+        });
+
+    }
+
+    renderizarSeries();
+
+}
+
+
+function agregarSerie() {
+
+    seriesActuales.push({
+        peso: "",
+        reps: "",
+        rir: "",
+        done: false
+    });
+
+    renderizarSeries();
+
+}
+
+
+function renderizarSeries() {
+
+    const container =
+        document.getElementById("sets-container");
+
+    container.innerHTML = "";
+
+    seriesActuales.forEach((serie, index) => {
+
+        const row =
+            document.createElement("div");
+
+        row.className = "set-row";
+
+        row.innerHTML = `
+
+            <div class="set-number">
+                ${index + 1}
+            </div>
+
+            <input
+                class="set-input"
+                type="number"
+                step="0.5"
+                inputmode="decimal"
+                placeholder="kg"
+                value="${serie.peso}"
+                oninput="actualizarSerie(${index}, 'peso', this.value)"
+            >
+
+            <input
+                class="set-input"
+                type="number"
+                inputmode="numeric"
+                placeholder="reps"
+                value="${serie.reps}"
+                oninput="actualizarSerie(${index}, 'reps', this.value)"
+            >
+
+            <button
+                class="set-done ${serie.done ? "active" : ""}"
+                onclick="completarSerie(${index})">
+                ${serie.done ? "✓" : "RIR"}
+            </button>
+
+        `;
+
+        container.appendChild(row);
+
+        if (serie.done) {
+
+            const rir =
+                document.createElement("div");
+
+            rir.style.gridColumn = "2 / 4";
+
+            rir.innerHTML = `
+
+                <input
+                    class="set-input"
+                    type="number"
+                    min="0"
+                    max="5"
+                    inputmode="numeric"
+                    placeholder="RIR (0-5)"
+                    value="${serie.rir}"
+                    oninput="actualizarSerie(${index}, 'rir', this.value)"
+                >
+
+            `;
+
+            container.appendChild(rir);
+
         }
 
-        // Pasar al modo Tinder/Tarjetas
-        function iniciarEntrenamiento() {
-            ejerciciosActuales = rutina[sesionActual].ejercicios;
-            ejercicioActualIndex = 0;
-            
-            document.getElementById('main-view').style.display = 'none';
-            document.getElementById('workout-view').style.display = 'block';
-            document.getElementById('workout-title-active').innerText = rutina[sesionActual].nombre;
-            
-            mostrarTarjeta();
-        }
+    });
 
-        // Cargar los datos en la tarjeta
-        function mostrarTarjeta() {
-            const ej = ejerciciosActuales[ejercicioActualIndex];
-            const card = document.getElementById('card-container');
-            const btnNext = document.getElementById('btn-next');
-            
-            // Animación de entrada
-            card.classList.remove('swipe-out');
-            card.classList.add('swipe-in');
-            
-            setTimeout(() => card.classList.remove('swipe-in'), 400);
+}
 
-            // Actualizar textos
-            document.getElementById('ex-muscle').innerText = ej.musculo;
-            document.getElementById('ex-title').innerText = ej.nombre;
-            document.getElementById('ex-sets').innerText = ej.series;
-            document.getElementById('ex-reps').innerText = ej.reps;
-            document.getElementById('ex-steps-text').innerText = ej.pasos;
 
-            // Barra de progreso
-            const progress = ((ejercicioActualIndex) / ejerciciosActuales.length) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
+function actualizarSerie(index, campo, valor) {
 
-            // Botón final
-            if (ejercicioActualIndex === ejerciciosActuales.length - 1) {
-                btnNext.innerText = "¡Finalizar Entreno! 🏆";
-                btnNext.classList.add('finish');
-            } else {
-                btnNext.innerText = "Siguiente ➡️";
-                btnNext.classList.remove('finish');
+    seriesActuales[index][campo] = valor;
+
+}
+
+
+function completarSerie(index) {
+
+    seriesActuales[index].done =
+        !seriesActuales[index].done;
+
+    if (seriesActuales[index].done) {
+
+        const ej =
+            rutina[sesionActual].ejercicios[
+                ejercicioSeleccionado
+            ];
+
+        iniciarTimer(ej.descanso);
+
+    }
+
+    renderizarSeries();
+
+}
+
+
+/* =========================================================
+   FINISH EXERCISE
+========================================================= */
+
+function terminarEjercicio() {
+
+    const ej =
+        rutina[sesionActual].ejercicios[
+            ejercicioSeleccionado
+        ];
+
+    const seriesValidas =
+        seriesActuales.filter(s =>
+            s.peso !== "" ||
+            s.reps !== ""
+        );
+
+    if (!seriesValidas.length) {
+
+        alert("Registra al menos una serie.");
+
+        return;
+
+    }
+
+    const ex =
+        obtenerDatosEjercicio(ej.nombre);
+
+    ex.sesiones.push({
+
+        fecha: new Date().toISOString(),
+
+        sesion:
+            sesionActual + 1,
+
+        series:
+            seriesValidas.map(s => ({
+                peso: s.peso,
+                reps: s.reps,
+                rir: s.rir
+            }))
+
+    });
+
+    guardarDatos();
+
+    ejerciciosHechos[ejercicioSeleccionado] = true;
+
+    if (
+        ejerciciosHechos.every(Boolean)
+    ) {
+
+        guardarHistorialEntrenamiento();
+
+        alert(
+            "ENTRENAMIENTO COMPLETADO\n\n" +
+            "Todos los ejercicios han sido registrados."
+        );
+
+        completarEntrenamiento(false);
+
+        return;
+
+    }
+
+    volverALista();
+
+}
+
+
+/* =========================================================
+   WORKOUT HISTORY
+========================================================= */
+
+function guardarHistorialEntrenamiento() {
+
+    datos.historial.push({
+
+        fecha: new Date().toISOString(),
+
+        sesion:
+            sesionActual + 1,
+
+        nombre:
+            rutina[sesionActual].nombre,
+
+        ejercicios:
+            rutina[sesionActual].ejercicios.length
+
+    });
+
+    guardarDatos();
+
+}
+
+
+function completarEntrenamiento(desdeInicio = false) {
+
+    if (desdeInicio) {
+
+        datos.historial.push({
+
+            fecha: new Date().toISOString(),
+
+            sesion:
+                sesionActual + 1,
+
+            nombre:
+                rutina[sesionActual].nombre,
+
+            ejercicios: 0,
+
+            rapido: true
+
+        });
+
+    }
+
+    sesionActual =
+        (sesionActual + 1) % rutina.length;
+
+    datos.sesionActual =
+        sesionActual;
+
+    guardarDatos();
+
+    cerrarTimer();
+
+    window.scrollTo(0,0);
+
+    mostrarInicio();
+
+}
+
+
+/* =========================================================
+   RESET CYCLE
+========================================================= */
+
+function reiniciarCiclo() {
+
+    if (
+        !confirm(
+            "¿Volver a la Sesión 1?\n\n" +
+            "Tu historial y pesos NO se borrarán."
+        )
+    ) return;
+
+    sesionActual = 0;
+
+    datos.sesionActual = 0;
+
+    guardarDatos();
+
+    mostrarInicio();
+
+}
+
+
+/* =========================================================
+   HISTORY VIEW
+========================================================= */
+
+function mostrarHistorial() {
+
+    ocultarVistas();
+
+    document
+        .getElementById("history-view")
+        .classList.remove("hidden");
+
+    renderizarHistorial();
+
+}
+
+
+function renderizarHistorial() {
+
+    const container =
+        document.getElementById("history-container");
+
+    container.innerHTML = "";
+
+    if (!datos.historial.length) {
+
+        container.innerHTML = `
+
+            <div class="data-card">
+                <h3>Sin entrenamientos todavía</h3>
+                <p>
+                    Cuando completes una sesión aparecerá
+                    aquí.
+                </p>
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+    [...datos.historial]
+        .reverse()
+        .forEach(h => {
+
+            const div =
+                document.createElement("div");
+
+            div.className = "history-card";
+
+            const fecha =
+                new Date(h.fecha);
+
+            div.innerHTML = `
+
+                <div class="history-date">
+                    ${fecha.toLocaleDateString(
+                        "es-ES",
+                        {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric"
+                        }
+                    )}
+                </div>
+
+                <div class="history-name">
+                    Sesión ${String(h.sesion).padStart(2,"0")}
+                    · ${h.nombre}
+                </div>
+
+                <div class="history-info">
+                    ${h.rapido
+                        ? "Marcada como completada rápidamente"
+                        : h.ejercicios +
+                          " ejercicios registrados"}
+                </div>
+
+            `;
+
+            container.appendChild(div);
+
+        });
+
+}
+
+
+/* =========================================================
+   DATA VIEW
+========================================================= */
+
+function mostrarDatos() {
+
+    ocultarVistas();
+
+    document
+        .getElementById("data-view")
+        .classList.remove("hidden");
+
+}
+
+
+function exportarDatos() {
+
+    guardarDatos();
+
+    const contenido =
+        JSON.stringify(datos, null, 2);
+
+    const blob =
+        new Blob(
+            [contenido],
+            { type: "application/json" }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const a =
+        document.createElement("a");
+
+    const fecha =
+        new Date()
+            .toISOString()
+            .slice(0,10);
+
+    a.href = url;
+
+    a.download =
+        `black-gold-backup-${fecha}.json`;
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+function importarDatos(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) return;
+
+    const reader =
+        new FileReader();
+
+    reader.onload = e => {
+
+        try {
+
+            const nuevosDatos =
+                JSON.parse(e.target.result);
+
+            if (
+                typeof nuevosDatos !== "object" ||
+                !("sesionActual" in nuevosDatos)
+            ) {
+
+                throw new Error();
+
             }
+
+            if (
+                !confirm(
+                    "¿Importar esta copia?\n\n" +
+                    "Los datos actuales serán sustituidos."
+                )
+            ) return;
+
+            datos = nuevosDatos;
+
+            sesionActual =
+                datos.sesionActual || 0;
+
+            guardarDatos();
+
+            alert("Datos restaurados correctamente.");
+
+            mostrarInicio();
+
+        } catch {
+
+            alert(
+                "El archivo no parece una copia válida."
+            );
+
         }
 
-        // Lógica de deslizar/siguiente
-        function siguienteEjercicio() {
-            const card = document.getElementById('card-container');
-            
-            // Animación de salida hacia la izquierda
-            card.classList.add('swipe-out');
+    };
 
-            setTimeout(() => {
-                ejercicioActualIndex++;
-                if (ejercicioActualIndex < ejerciciosActuales.length) {
-                    mostrarTarjeta();
-                } else {
-                    completarEntrenamiento(false);
+    reader.readAsText(file);
+
+}
+
+
+function borrarDatos() {
+
+    if (
+        !confirm(
+            "¿BORRAR TODOS LOS DATOS?\n\n" +
+            "Se eliminarán pesos, reps, RIR e historial."
+        )
+    ) return;
+
+    localStorage.removeItem(STORAGE_KEY);
+
+    datos = {
+        sesionActual: 0,
+        historial: [],
+        ejercicios: {}
+    };
+
+    sesionActual = 0;
+
+    alert("Todos los datos han sido eliminados.");
+
+    mostrarInicio();
+
+}
+
+
+/* =========================================================
+   REST TIMER
+========================================================= */
+
+function iniciarTimer(segundos) {
+
+    cerrarTimer();
+
+    timerSeconds = segundos;
+
+    timerPaused = false;
+
+    document
+        .getElementById("timer")
+        .classList.remove("hidden");
+
+    actualizarTimer();
+
+    timerInterval =
+        setInterval(() => {
+
+            if (timerPaused) return;
+
+            timerSeconds--;
+
+            actualizarTimer();
+
+            if (timerSeconds <= 0) {
+
+                clearInterval(timerInterval);
+
+                timerInterval = null;
+
+                if (navigator.vibrate) {
+
+                    navigator.vibrate([
+                        300,
+                        100,
+                        300
+                    ]);
+
                 }
-            }, 400); // Espera a que termine la animación
-        }
 
-        // Completar el día y rotar
-        function completarEntrenamiento(desdeInicio = false) {
-            sesionActual = (sesionActual + 1) % rutina.length;
-            localStorage.setItem('sesionActual', sesionActual);
-            
-            if(!desdeInicio) alert("¡Brutal! Has reventado el entrenamiento. Descansa y aliméntate bien.");
-            
-            window.scrollTo(0, 0);
-            cargarVistaPrincipal();
-        }
+                document
+                    .getElementById("timer-value")
+                    .innerText = "LISTO";
 
-        function reiniciarCiclo() {
-            if(confirm("¿Seguro que quieres volver a la Sesión 1?")) {
-                sesionActual = 0;
-                localStorage.setItem('sesionActual', 0);
-                cargarVistaPrincipal();
             }
-        }
 
-        // LOGICA DE SWIPE TÁCTIL (Deslizar con el dedo)
-        let touchstartX = 0;
-        let touchendX = 0;
-        
-        document.getElementById('card-container').addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-        });
+        }, 1000);
 
-        document.getElementById('card-container').addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            handleSwipe();
-        });
+}
 
-        function handleSwipe() {
-            // Si desliza el dedo hacia la izquierda significativamente (más de 50px)
-            if (touchstartX - touchendX > 50) {
-                siguienteEjercicio();
-            }
-        }
 
-        // Arrancar
-        cargarVistaPrincipal();
-    </script>
+function actualizarTimer() {
+
+    if (timerSeconds < 0)
+        timerSeconds = 0;
+
+    const min =
+        Math.floor(timerSeconds / 60)
+            .toString()
+            .padStart(2,"0");
+
+    const sec =
+        (timerSeconds % 60)
+            .toString()
+            .padStart(2,"0");
+
+    document
+        .getElementById("timer-value")
+        .innerText =
+        `${min}:${sec}`;
+
+}
+
+
+function sumarDescanso(valor) {
+
+    timerSeconds =
+        Math.max(
+            0,
+            timerSeconds + valor
+        );
+
+    actualizarTimer();
+
+}
+
+
+function pausarTimer() {
+
+    timerPaused =
+        !timerPaused;
+
+    document
+        .getElementById("timer-pause")
+        .innerText =
+        timerPaused
+            ? "CONTINUAR"
+            : "PAUSAR";
+
+}
+
+
+function cerrarTimer() {
+
+    if (timerInterval) {
+
+        clearInterval(timerInterval);
+
+        timerInterval = null;
+
+    }
+
+    timerSeconds = 0;
+
+    timerPaused = false;
+
+    document
+        .getElementById("timer")
+        .classList.add("hidden");
+
+}
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+cargarVistaPrincipal();
+
+</script>
+
 </body>
 </html>

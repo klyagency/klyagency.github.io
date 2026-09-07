@@ -652,6 +652,273 @@ h1 {
 }
 
 /* =========================
+   CARDIO GOALS
+========================= */
+
+.goals-intro {
+    margin: 22px 0 16px;
+    color: var(--muted);
+    font-size: .86rem;
+    line-height: 1.5;
+}
+
+.goals-weight-card,
+.goal-form-card,
+.goal-card {
+    background: linear-gradient(145deg, #151515, #0d0d0d);
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.goals-weight-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.goals-weight-copy strong,
+.goal-card-title {
+    display: block;
+    font-size: .98rem;
+}
+
+.goals-weight-copy small,
+.goal-card-subtitle,
+.goal-estimate-note {
+    display: block;
+    color: var(--muted);
+    font-size: .73rem;
+    margin-top: 4px;
+}
+
+.weight-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 105px;
+}
+
+.weight-input-wrap input,
+.goal-form-grid input {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid #292929;
+    background: #090909;
+    color: white;
+    border-radius: 9px;
+    padding: 11px 8px;
+    text-align: center;
+    outline: none;
+}
+
+.weight-input-wrap input:focus,
+.goal-form-grid input:focus {
+    border-color: var(--gold-dark);
+}
+
+.weight-input-wrap span {
+    color: var(--muted);
+    font-size: .75rem;
+}
+
+.goal-form-card h2 {
+    margin: 0 0 13px;
+    font-size: 1.02rem;
+}
+
+.goal-form-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 8px;
+}
+
+.goal-form-grid label {
+    color: var(--muted);
+    font-size: .67rem;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+}
+
+.goal-form-grid input {
+    display: block;
+    margin-top: 5px;
+    text-align: left;
+}
+
+.goal-form-hint {
+    margin: 10px 0 0;
+    color: #777;
+    font-size: .72rem;
+    line-height: 1.4;
+}
+
+.goal-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.goal-card.completed {
+    border-color: #806b27;
+}
+
+.goal-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.goal-status {
+    flex: 0 0 auto;
+    border: 1px solid #3b3b3b;
+    border-radius: 999px;
+    padding: 5px 8px;
+    color: var(--muted);
+    font-size: .64rem;
+    font-weight: 900;
+    letter-spacing: .5px;
+}
+
+.goal-card.completed .goal-status {
+    border-color: #806b27;
+    color: var(--gold-light);
+}
+
+.goal-card-subtitle {
+    color: var(--gold);
+    font-weight: 800;
+}
+
+.goal-time-row {
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    margin-top: 18px;
+}
+
+.goal-current-time {
+    color: var(--gold-light);
+    font-size: 1.55rem;
+    font-weight: 900;
+}
+
+.goal-target-time,
+.goal-time-separator {
+    color: #aaa;
+    font-size: .9rem;
+    font-weight: 700;
+}
+
+.goal-progress-track {
+    height: 9px;
+    margin-top: 11px;
+    background: #090909;
+    border: 1px solid #292929;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.goal-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+    transition: width .25s ease;
+}
+
+.goal-progress-meta,
+.goal-card-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.goal-progress-meta {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: .74rem;
+}
+
+.goal-progress-meta strong {
+    color: var(--white);
+}
+
+.goal-calories {
+    margin-top: 16px;
+    color: #e0e0e0;
+    font-size: .86rem;
+}
+
+.goal-calories strong {
+    color: var(--gold-light);
+}
+
+.goal-card-foot {
+    align-items: center;
+    margin-top: 14px;
+}
+
+.goal-update-wrap {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex: 1;
+}
+
+.goal-update-wrap input {
+    width: 76px;
+    border: 1px solid #292929;
+    background: #090909;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 6px;
+    text-align: center;
+    outline: none;
+}
+
+.goal-update-wrap span {
+    color: var(--muted);
+    font-size: .7rem;
+}
+
+.goal-action-btn {
+    border: 1px solid #383838;
+    border-radius: 8px;
+    padding: 8px 9px;
+    background: #0c0c0c;
+    color: #bbb;
+    font-size: .69rem;
+    font-weight: 800;
+}
+
+.goal-action-btn.delete {
+    color: #c66;
+    border-color: #4a2222;
+}
+
+.empty-goals {
+    padding: 23px 16px;
+    border: 1px dashed #333;
+    border-radius: 15px;
+    color: var(--muted);
+    text-align: center;
+    font-size: .83rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 390px) {
+    .goal-form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .goal-form-grid label:first-child {
+        grid-column: 1 / -1;
+    }
+}
+
+/* =========================
    GOLD DETAIL
 ========================= */
 
@@ -749,6 +1016,7 @@ h1 {
             <button class="nav-btn active" onclick="mostrarInicio()">INICIO</button>
             <button class="nav-btn" onclick="mostrarHistorial()">HISTORIAL</button>
             <button class="nav-btn" onclick="mostrarDatos()">DATOS</button>
+            <button class="nav-btn" onclick="mostrarObjetivos()">OBJETIVOS</button>
         </div>
 
     </section>
@@ -965,6 +1233,60 @@ h1 {
     </section>
 
 </div>
+
+
+    <!-- ================= CARDIO GOALS ================= -->
+
+    <section id="goals-view" class="view hidden">
+
+        <div class="logo">BLACK GOLD</div>
+
+        <h1>Objetivos</h1>
+
+        <div class="subtitle">Cardio · mantener la combinación</div>
+
+        <p class="goals-intro">
+            Crea objetivos de cardio basados en velocidad, inclinación y tiempo.
+            El progreso solo aumenta al registrar más minutos manteniendo esa combinación.
+        </p>
+
+        <div class="goals-weight-card">
+            <div class="goals-weight-copy">
+                <strong>Peso actual</strong>
+                <small>Se usa para recalcular las calorías estimadas.</small>
+            </div>
+            <div class="weight-input-wrap">
+                <input id="current-weight" type="number" min="20" max="500" step="0.1" inputmode="decimal" aria-label="Peso actual en kilogramos" onchange="guardarPesoActual()">
+                <span>kg</span>
+            </div>
+        </div>
+
+        <div class="goal-form-card">
+            <h2>Nuevo objetivo de cardio</h2>
+            <div class="goal-form-grid">
+                <label>Nombre
+                    <input id="goal-name" type="text" maxlength="40" placeholder="Caminadora">
+                </label>
+                <label>Velocidad
+                    <input id="goal-speed" type="number" min="0.1" max="40" step="0.1" inputmode="decimal" placeholder="5">
+                </label>
+                <label>Inclinación
+                    <input id="goal-incline" type="number" min="0" max="45" step="0.1" inputmode="decimal" placeholder="15">
+                </label>
+                <label>Tiempo (min)
+                    <input id="goal-duration" type="number" min="1" max="1440" step="1" inputmode="numeric" placeholder="30">
+                </label>
+            </div>
+            <p class="goal-form-hint">La velocidad se interpreta en km/h y la inclinación en porcentaje.</p>
+            <button class="btn-primary" style="margin-top:14px;" onclick="crearObjetivo()">AÑADIR OBJETIVO</button>
+        </div>
+
+        <div class="section-title">Tus objetivos</div>
+        <div id="goals-container"></div>
+
+        <button class="btn-secondary" onclick="mostrarInicio()">← Volver</button>
+
+    </section>
 
 
 <!-- ================= TIMER ================= -->
@@ -1287,10 +1609,23 @@ if (!datos) {
     datos = {
         sesionActual: 0,
         historial: [],
-        ejercicios: {}
+        ejercicios: {},
+        objetivos: [],
+        pesoActual: 70
     };
 
 }
+
+function normalizarDatos() {
+    if (!datos || typeof datos !== "object") datos = {};
+    if (!Array.isArray(datos.historial)) datos.historial = [];
+    if (!datos.ejercicios || typeof datos.ejercicios !== "object") datos.ejercicios = {};
+    if (!Array.isArray(datos.objetivos)) datos.objetivos = [];
+    const peso = Number(datos.pesoActual);
+    datos.pesoActual = Number.isFinite(peso) && peso >= 20 && peso <= 500 ? peso : 70;
+}
+
+normalizarDatos();
 
 let sesionActual = datos.sesionActual || 0;
 let modoPrueba = false;
@@ -2088,6 +2423,192 @@ function mostrarDatos() {
 }
 
 
+/* =========================================================
+   CARDIO GOALS
+========================================================= */
+
+function mostrarObjetivos() {
+    ocultarVistas();
+    document.getElementById("goals-view").classList.remove("hidden");
+    document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
+    renderizarObjetivos();
+}
+
+function formatearTiempo(totalSeconds) {
+    const seconds = Math.max(0, Math.round(Number(totalSeconds) || 0));
+    const minutes = Math.floor(seconds / 60);
+    const remainder = seconds % 60;
+    return `${minutes}:${String(remainder).padStart(2, "0")}`;
+}
+
+function numeroLocal(value, decimals = 1) {
+    return Number(value).toLocaleString("es-ES", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: decimals
+    });
+}
+
+function escaparHTML(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function estimarCaloriasCardio(objetivo, peso) {
+    // Ecuación ACSM para caminata en cinta; se presenta como una estimación,
+    // no como una medición clínica individual.
+    const velocidadMetrosMinuto = objetivo.velocidad * 1000 / 60;
+    const pendiente = objetivo.inclinacion / 100;
+    const vo2 = (0.1 * velocidadMetrosMinuto) + (1.8 * velocidadMetrosMinuto * pendiente) + 3.5;
+    const kcalMinuto = Math.max(0, vo2 * peso / 200);
+    return Math.round(kcalMinuto * objetivo.duracion);
+}
+
+function guardarPesoActual() {
+    const input = document.getElementById("current-weight");
+    const peso = Number(input.value);
+    if (!Number.isFinite(peso) || peso < 20 || peso > 500) {
+        input.value = datos.pesoActual;
+        alert("Introduce un peso válido entre 20 y 500 kg.");
+        return false;
+    }
+    datos.pesoActual = peso;
+    guardarDatos();
+    actualizarCaloriasObjetivos();
+    return true;
+}
+
+function actualizarCaloriasObjetivos() {
+    document.querySelectorAll("[data-goal-calories]").forEach(element => {
+        const objetivo = datos.objetivos.find(item => String(item.id) === element.dataset.goalCalories);
+        if (objetivo) {
+            element.innerHTML = `🔥 Calorías estimadas: <strong>~${numeroLocal(estimarCaloriasCardio(objetivo, datos.pesoActual), 0)} kcal</strong>`;
+        }
+    });
+}
+
+function crearObjetivo() {
+    if (!guardarPesoActual()) return;
+
+    const nameInput = document.getElementById("goal-name");
+    const speedInput = document.getElementById("goal-speed");
+    const inclineInput = document.getElementById("goal-incline");
+    const durationInput = document.getElementById("goal-duration");
+
+    const nombre = nameInput.value.trim() || "Cardio";
+    const velocidad = Number(speedInput.value);
+    const inclinacion = Number(inclineInput.value);
+    const duracion = Number(durationInput.value);
+
+    if (!Number.isFinite(velocidad) || velocidad <= 0 || velocidad > 40 ||
+        !Number.isFinite(inclinacion) || inclinacion < 0 || inclinacion > 45 ||
+        !Number.isFinite(duracion) || duracion < 1 || duracion > 1440) {
+        alert("Revisa velocidad, inclinación y tiempo. Usa valores válidos para cardio.");
+        return;
+    }
+
+    datos.objetivos.push({
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        nombre,
+        velocidad,
+        inclinacion,
+        duracion,
+        recordSeconds: 0,
+        creadoEn: new Date().toISOString()
+    });
+
+    guardarDatos();
+    [nameInput, speedInput, inclineInput, durationInput].forEach(input => input.value = "");
+    renderizarObjetivos();
+}
+
+function registrarProgresoObjetivo(id) {
+    const objetivo = datos.objetivos.find(item => String(item.id) === String(id));
+    if (!objetivo) return;
+
+    const input = document.querySelector(`[data-goal-input=\"${CSS.escape(String(id))}\"]`);
+    const minutos = Number(input && input.value);
+    if (!Number.isFinite(minutos) || minutos < 0) {
+        alert("Introduce un tiempo válido en minutos.");
+        return;
+    }
+
+    objetivo.recordSeconds = Math.max(objetivo.recordSeconds || 0, Math.round(minutos * 60));
+    guardarDatos();
+    renderizarObjetivos();
+}
+
+function eliminarObjetivo(id) {
+    const objetivo = datos.objetivos.find(item => String(item.id) === String(id));
+    if (!objetivo) return;
+    if (!confirm(`¿Eliminar el objetivo “${objetivo.nombre}”?`)) return;
+    datos.objetivos = datos.objetivos.filter(item => String(item.id) !== String(id));
+    guardarDatos();
+    renderizarObjetivos();
+}
+
+function renderizarObjetivos() {
+    const weightInput = document.getElementById("current-weight");
+    if (weightInput) weightInput.value = datos.pesoActual;
+
+    const container = document.getElementById("goals-container");
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (!datos.objetivos.length) {
+        container.innerHTML = `<div class="empty-goals">Todavía no tienes objetivos. Añade una combinación de cardio para empezar a registrar tu récord.</div>`;
+        return;
+    }
+
+    datos.objetivos.forEach(objetivo => {
+        const targetSeconds = Math.max(60, Math.round(objetivo.duracion * 60));
+        const currentSeconds = Math.min(targetSeconds, Math.max(0, Number(objetivo.recordSeconds) || 0));
+        const progress = Math.min(100, (currentSeconds / targetSeconds) * 100);
+        const completed = currentSeconds >= targetSeconds;
+        const card = document.createElement("article");
+        card.className = `goal-card${completed ? " completed" : ""}`;
+        card.innerHTML = `
+            <div class="goal-card-head">
+                <div>
+                    <span class="goal-card-title">${escaparHTML(objetivo.nombre)}</span>
+                    <span class="goal-card-subtitle">${numeroLocal(objetivo.velocidad)} km/h · ${numeroLocal(objetivo.inclinacion)}% inclinación</span>
+                </div>
+                <span class="goal-status">${completed ? "COMPLETADO" : "EN PROGRESO"}</span>
+            </div>
+
+            <div class="goal-time-row">
+                <span class="goal-current-time">${formatearTiempo(currentSeconds)}</span>
+                <span class="goal-time-separator">/</span>
+                <span class="goal-target-time">${formatearTiempo(targetSeconds)}</span>
+            </div>
+
+            <div class="goal-progress-track" role="progressbar" aria-valuenow="${Math.round(progress)}" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso de ${escaparHTML(objetivo.nombre)}">
+                <div class="goal-progress-fill" style="width:${progress}%"></div>
+            </div>
+            <div class="goal-progress-meta">
+                <span>Restante: <strong>${formatearTiempo(Math.max(0, targetSeconds - currentSeconds))}</strong></span>
+                <span><strong>${numeroLocal(progress)}%</strong></span>
+            </div>
+
+            <div class="goal-calories" data-goal-calories="${escaparHTML(objetivo.id)}">🔥 Calorías estimadas: <strong>~${numeroLocal(estimarCaloriasCardio(objetivo, datos.pesoActual), 0)} kcal</strong></div>
+            <span class="goal-estimate-note">Estimación aproximada según peso, velocidad, inclinación y duración.</span>
+
+            <div class="goal-card-foot">
+                <div class="goal-update-wrap">
+                    <input type="number" min="0" max="${objetivo.duracion}" step="0.1" inputmode="decimal" placeholder="${Math.round(currentSeconds / 60)}" data-goal-input="${escaparHTML(objetivo.id)}" aria-label="Nuevo récord en minutos">
+                    <span>minutos mantenidos</span>
+                    <button class="goal-action-btn" onclick="registrarProgresoObjetivo('${String(objetivo.id).replace(/'/g, "\\'")}')">GUARDAR</button>
+                </div>
+                <button class="goal-action-btn delete" onclick="eliminarObjetivo('${String(objetivo.id).replace(/'/g, "\\'")}')">ELIMINAR</button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
 function exportarDatos() {
 
     guardarDatos();
@@ -2163,6 +2684,7 @@ function importarDatos(event) {
             ) return;
 
             datos = nuevosDatos;
+            normalizarDatos();
 
             sesionActual =
                 datos.sesionActual || 0;
@@ -2207,7 +2729,9 @@ function borrarDatos() {
     datos = {
         sesionActual: 0,
         historial: [],
-        ejercicios: {}
+        ejercicios: {},
+        objetivos: [],
+        pesoActual: 70
     };
 
     sesionActual = 0;

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KLY Agency | Cuenta atrás</title>
 
-    
     <link rel="icon" type="image/png" href="favicon.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -28,12 +27,10 @@
             align-items: center;
             text-align: center;
             padding: 20px;
-            /* padding más ajustado en móvil */
             overflow: hidden;
             position: relative;
         }
 
-        /* Canvas de partículas */
         #particles-canvas {
             position: fixed;
             top: 0;
@@ -52,13 +49,11 @@
             opacity: 0;
             animation: fadeIn 1.2s ease forwards;
             padding: 10px 0;
-            /* Centrado perfecto con flex del body */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 80vh;
-            /* Ocupa la mayor parte de la pantalla */
         }
 
         @keyframes fadeIn {
@@ -133,7 +128,165 @@
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.12);
         }
 
-        /* Ajustes específicos para móviles muy pequeños */
+        .comunicado-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: opacity 0.4s ease;
+        }
+
+        .comunicado-overlay.closing {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .comunicado-card {
+            background: #0d0d0d;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 22px;
+            padding: 42px 36px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 88vh;
+            overflow-y: auto;
+            text-align: center;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+            animation: cardIn 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .comunicado-card::-webkit-scrollbar {
+            width: 6px;
+        }
+        .comunicado-card::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .comunicado-card::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+        }
+
+        .comunicado-title {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: #fff;
+            text-transform: uppercase;
+            margin-bottom: 26px;
+        }
+
+        .comunicado-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+        }
+
+        .comunicado-actions button {
+            background: none;
+            border: none;
+            color: #cccccc;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 400;
+            cursor: pointer;
+            padding: 6px 4px;
+            transition: color 0.25s ease;
+        }
+
+        .comunicado-actions button:hover {
+            color: #ffffff;
+        }
+
+        .comunicado-actions .sep {
+            color: #3a3a3a;
+            font-size: 0.9rem;
+            user-select: none;
+        }
+
+        .comunicado-view {
+            animation: fadeView 0.4s ease;
+        }
+
+        @keyframes fadeView {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .comunicado-body {
+            text-align: left;
+            color: #bdbdbd;
+            font-size: 0.9rem;
+            line-height: 1.85;
+        }
+
+        .comunicado-body p {
+            margin-bottom: 14px;
+        }
+
+        .comunicado-body ul {
+            margin: 0 0 14px 0;
+            padding-left: 20px;
+        }
+
+        .comunicado-body ul ul {
+            margin-top: 8px;
+            margin-bottom: 4px;
+        }
+
+        .comunicado-body li {
+            margin-bottom: 6px;
+        }
+
+        .comunicado-body strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .purple {
+            color: #a855f7;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            margin-top: 26px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 11px 34px;
+            border-radius: 999px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.78rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.45);
+        }
+
         @media (max-width: 480px) {
             body {
                 padding: 15px;
@@ -170,6 +323,27 @@
                 line-height: 1.9;
                 padding: 0 3px;
             }
+
+            .comunicado-card {
+                padding: 34px 24px;
+                border-radius: 18px;
+            }
+
+            .comunicado-title {
+                font-size: 0.9rem;
+                letter-spacing: 5px;
+                margin-bottom: 22px;
+            }
+
+            .comunicado-body {
+                font-size: 0.84rem;
+                line-height: 1.8;
+            }
+
+            .comunicado-actions button {
+                font-size: 0.8rem;
+                letter-spacing: 3px;
+            }
         }
 
         @media (max-width: 360px) {
@@ -184,9 +358,14 @@
                 width: 60px;
                 margin-bottom: 20px;
             }
+            .comunicado-card {
+                padding: 28px 20px;
+            }
+            .comunicado-body {
+                font-size: 0.8rem;
+            }
         }
 
-        /* Para pantallas muy altas o anchas, mantener centrado */
         @media (min-height: 900px) {
             .container {
                 min-height: 60vh;
@@ -227,8 +406,52 @@
 
     </div>
 
+    <div class="comunicado-overlay" id="comunicado">
+        <div class="comunicado-card">
+
+            <div class="comunicado-view" id="viewInitial">
+                <h2 class="comunicado-title">COMUNICADO</h2>
+                <div class="comunicado-actions">
+                    <button type="button" id="btnLeer">Leer</button>
+                    <span class="sep">|</span>
+                    <button type="button" id="btnSalir">Salir</button>
+                </div>
+            </div>
+
+            <div class="comunicado-view" id="viewContent" style="display: none;">
+                <h2 class="comunicado-title">COMUNICADO</h2>
+                <div class="comunicado-body">
+                    <p>
+                        Hemos empezado el desarrollo de <span class="purple">KLY BARBER</span>, un sistema diseñado
+                        para ayudar a las barberías a gestionar sus citas, organizar su negocio y crecer
+                    </p>
+
+                    <p>La primera versión tendrá:</p>
+
+                    <ul>
+                        <li>Sistema de gestión de citas.</li>
+                        <li>Avisos automáticos a clientes según los horarios y patrones.</li>
+                        <li>Panel de administración con dos niveles de acceso:
+                            <ul>
+                                <li><strong>Barbero:</strong> consultar, confirmar y cancelar citas.</li>
+                                <li><strong>Administrador:</strong> gestionar las citas de todos los barberos,
+                                    consultar estadísticas de ganancias y añadir o eliminar barberos.</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p>Esperamos el lanzamiento en 2027</p>
+
+                    <p>Un saludo,<br>kly agency</p>
+                </div>
+
+                <button type="button" class="close-btn" id="btnCerrar">Salir</button>
+            </div>
+
+        </div>
+    </div>
+
     <script>
-        // === PARTÍCULAS BLANCAS ===
         (function() {
             const canvas = document.getElementById('particles-canvas');
             const ctx = canvas.getContext('2d');
@@ -298,6 +521,36 @@
             resize();
             initParticles();
             animate();
+        })();
+
+        (function() {
+            const comunicado   = document.getElementById('comunicado');
+            const viewInitial  = document.getElementById('viewInitial');
+            const viewContent  = document.getElementById('viewContent');
+            const btnLeer      = document.getElementById('btnLeer');
+            const btnSalir     = document.getElementById('btnSalir');
+            const btnCerrar    = document.getElementById('btnCerrar');
+
+            btnLeer.addEventListener('click', () => {
+                viewInitial.style.display = 'none';
+                viewContent.style.display = 'block';
+            });
+
+            function cerrarComunicado() {
+                comunicado.classList.add('closing');
+                setTimeout(() => {
+                    comunicado.style.display = 'none';
+                }, 400);
+            }
+
+            btnSalir.addEventListener('click', cerrarComunicado);
+            btnCerrar.addEventListener('click', cerrarComunicado);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !comunicado.classList.contains('closing')) {
+                    cerrarComunicado();
+                }
+            });
         })();
     </script>
 

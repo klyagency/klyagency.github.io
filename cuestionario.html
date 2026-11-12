@@ -1,0 +1,743 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="KLY Agency: comparte tu relación con la música y descubre las dificultades de crear tus propias canciones.">
+<title>KLY Agency</title>
+
+<style>
+:root {
+  --accent: #5551ff;
+  --gold: #f5c75e;
+  --bg: #000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 35px 18px 90px;
+}
+
+.container {
+  width: 100%;
+  max-width: 480px;
+  padding: clamp(22px, 5vw, 35px);
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 20px;
+  box-shadow: 0 15px 45px #0008;
+  animation: appear .6s ease;
+}
+
+@keyframes appear {
+  from {opacity:0; transform:translateY(20px)}
+  to {opacity:1; transform:translateY(0)}
+}
+
+.brand {
+  font-size: 12px;
+  letter-spacing: 5px;
+  color: #aaa;
+  margin-bottom: 25px;
+}
+
+h1 {
+  font-size: clamp(23px, 5vw, 28px);
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+
+.intro {
+  color: #aaa;
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 12px;
+  color: #888;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 11px;
+  border: 1px solid #333;
+  background: rgba(255,255,255,.05);
+  color: white;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+  min-width: 0;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--accent);
+}
+
+input::placeholder, textarea::placeholder {
+  color: #888;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.question {
+  margin-top: 27px;
+}
+
+.question h2 {
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  margin-bottom: 9px;
+  border: 1px solid #333;
+  border-radius: 11px;
+  background: rgba(255,255,255,.035);
+  font-size: 14px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.option:has(input:checked) {
+  border-color: var(--accent);
+  background: #5551ff20;
+}
+
+.option input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+
+.hidden {
+  display: none;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: .25s;
+}
+
+button:hover {
+  background: #403bdb;
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.footer {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 12px;
+  color: #777;
+}
+
+.error {
+  display: none;
+  color: #ff7777;
+  font-size: 13px;
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+.consent {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: #aaa;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 15px;
+}
+
+.consent input {
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+
+/* TARJETA REGALO */
+
+#giftScreen {
+  display: none;
+  width: 100%;
+  max-width: 480px;
+  animation: appear .8s ease;
+}
+
+.gift-heading {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.gift-heading p {
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+.gift-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(25px, 6vw, 36px) clamp(18px, 5vw, 25px);
+  text-align: center;
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at top right, #8e6c2b55, transparent 60%),
+    linear-gradient(145deg, #242019, #090909 65%);
+  border: 1px solid #c9a44c;
+  box-shadow: 0 0 35px #c9a44c20;
+}
+
+.gift-card::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid #c9a44c55;
+  border-radius: 16px;
+  pointer-events: none;
+}
+
+.gift-icon {
+  font-size: 38px;
+  margin-bottom: 20px;
+}
+
+.gift-brand {
+  color: #d9b765;
+  font-size: 11px;
+  letter-spacing: 5px;
+  margin-bottom: 28px;
+}
+
+.gift-card h2 {
+  font-size: clamp(23px, 5vw, 27px);
+  line-height: 1.25;
+  margin-bottom: 15px;
+}
+
+.gift-card .premium {
+  display: block;
+  color: var(--gold);
+  font-size: clamp(28px, 7vw, 35px);
+  letter-spacing: 3px;
+  font-weight: 800;
+  margin: 13px 0;
+  text-shadow: 0 0 20px #f5c75e55;
+}
+
+.gift-card .months {
+  font-size: clamp(20px, 5vw, 24px);
+  color: white;
+  font-weight: 700;
+  margin: 12px 0;
+}
+
+.gift-card .free {
+  color: var(--gold);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 4px;
+}
+
+.gift-card .gift-description {
+  color: #c5bda9;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 25px 0;
+}
+
+.gift-separator {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c9a44c, transparent);
+  margin: 20px 0;
+}
+
+.gift-footer {
+  color: #d9b765;
+  font-size: 11px;
+  letter-spacing: 3px;
+}
+
+.instructions {
+  text-align: center;
+  margin-top: 25px;
+  padding: 0 5px;
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.instructions strong {
+  color: white;
+}
+
+.email {
+  color: var(--gold);
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.insta-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+  color: white;
+  background: #ffffff12;
+  border: 1px solid #ffffff25;
+  padding: 10px 16px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 13px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: .2s;
+}
+
+.insta-button:hover {
+  background: #ffffff25;
+}
+
+/* TABLETS */
+
+@media (min-width: 600px) {
+  body {
+    padding: 45px 25px 90px;
+  }
+
+  .container,
+  #giftScreen {
+    max-width: 520px;
+  }
+}
+
+/* MÓVILES */
+
+@media (max-width: 480px) {
+  body {
+    align-items: flex-start;
+    padding: 20px 13px 85px;
+  }
+
+  .container {
+    border-radius: 17px;
+  }
+
+  .brand {
+    margin-bottom: 20px;
+  }
+
+  .intro {
+    font-size: 13px;
+    margin-bottom: 25px;
+  }
+
+  .question {
+    margin-top: 24px;
+  }
+
+  .question h2 {
+    font-size: 14px;
+  }
+
+  input, textarea {
+    font-size: 16px;
+    padding: 13px;
+  }
+
+  .option {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  button {
+    padding: 15px 12px;
+    font-size: 14px;
+  }
+
+  .insta-button {
+    bottom: 14px;
+    right: 14px;
+    padding: 9px 13px;
+    font-size: 12px;
+  }
+
+  #giftScreen {
+    margin: 10px auto 0;
+  }
+
+  .gift-heading {
+    margin-bottom: 20px;
+  }
+
+  .gift-brand {
+    letter-spacing: 3px;
+  }
+
+  .instructions {
+    font-size: 12px;
+  }
+}
+
+/* MÓVILES PEQUEÑOS */
+
+@media (max-width: 350px) {
+  body {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .container {
+    padding: 20px 16px;
+  }
+
+  .gift-card {
+    padding: 25px 15px;
+  }
+
+  .gift-card .premium {
+    letter-spacing: 2px;
+  }
+
+  .gift-brand {
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+}
+
+/* ACCESIBILIDAD */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* IMPRESIÓN DE LA TARJETA */
+
+@media print {
+  body {
+    display: block;
+    background: #000 !important;
+    color: white !important;
+    padding: 20px;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  #surveyScreen,
+  .insta-button,
+  #giftScreen > button {
+    display: none !important;
+  }
+
+  #giftScreen {
+    display: block !important;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .gift-card {
+    box-shadow: none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="surveyScreen">
+
+  <div class="brand">KLY AGENCY</div>
+
+  <h1>La música está cambiando.</h1>
+
+  <p class="intro">
+    Queremos conocer tu relación con la música y descubrir
+    qué dificultades encuentran las personas que quieren
+    crear sus propias canciones.
+    Tu opinión importa.
+  </p>
+
+  <form id="form"
+    action="https://formspree.io/f/xzzeoyoa"
+    method="POST">
+
+    <div class="section-title">TUS DATOS</div>
+
+    <input type="text" name="nombre"
+      placeholder="Nombre" autocomplete="given-name" required>
+
+    <input type="text" name="apellidos"
+      placeholder="Apellidos" autocomplete="family-name" required>
+
+    <input type="email" name="email"
+      placeholder="Correo electrónico" autocomplete="email" required>
+
+    <div class="question">
+      <h2>01. Si fueras cantante, ¿cuál sería tu mayor problema?</h2>
+
+      <label class="option">
+        <input type="radio" name="problema_principal"
+          value="El dinero" required>
+        A) El dinero
+      </label>
+
+      <label class="option">
+        <input type="radio" name="problema_principal"
+          value="Inspiración o letras">
+        B) Inspiración o letras
+      </label>
+
+      <label class="option">
+        <input type="radio" name="problema_principal"
+          value="Producción musical">
+        C) Producción musical
+      </label>
+
+      <label class="option">
+        <input type="radio" name="problema_principal"
+          value="Otro">
+        D) Otro
+      </label>
+
+      <input type="text" name="otro_problema"
+        id="otroProblema"
+        class="hidden"
+        placeholder="Especifica tu problema">
+    </div>
+
+    <div class="question">
+      <h2>02. Si tuvieras la herramienta perfecta para producir todas tus canciones, ¿cuánto sería lo máximo que pagarías?</h2>
+
+      <input type="number" name="precio_maximo"
+        placeholder="Ej. 10 € al mes"
+        min="0" step="0.01" required>
+    </div>
+
+    <div class="question">
+      <h2>03. ¿Qué es lo que te impide ser cantante?</h2>
+
+      <textarea name="impedimento"
+        rows="4"
+        placeholder="Cuéntanos tu opinión..."
+        required></textarea>
+    </div>
+
+    <label class="consent">
+      <input type="checkbox" name="consentimiento"
+        value="Aceptado" required>
+      <span>
+        Acepto que KLY Agency utilice mis datos para gestionar
+        esta participación y enviarme información sobre el
+        lanzamiento y el acceso promocional. Puedo solicitar
+        la baja escribiendo a contacto.klyagency@gmail.com.
+      </span>
+    </label>
+
+    <button type="submit" id="submitBtn">
+      Enviar respuestas
+    </button>
+
+    <div class="error" id="error" role="alert">
+      No se han podido enviar tus respuestas.
+      Inténtalo de nuevo en unos segundos.
+    </div>
+
+  </form>
+
+  <div class="footer">
+    KLY AGENCY ·
+  </div>
+
+</div>
+
+<div id="giftScreen">
+
+  <div class="gift-heading">
+    <div class="brand">KLY AGENCY</div>
+    <h1>¡Tu participación tiene recompensa!</h1>
+    <p>Guarda esta tarjeta. La necesitarás próximamente.</p>
+  </div>
+
+  <div class="gift-card" id="giftCard">
+
+    <div class="gift-icon">✦</div>
+
+    <div class="gift-brand">KLY AGENCY PRESENTS</div>
+
+    <h2>¡Felicidades!</h2>
+
+    <p style="color:#c5bda9;font-size:14px">
+      Tienes un futuro acceso
+    </p>
+
+    <span class="premium">PREMIUM</span>
+
+    <div class="months">2 MESES</div>
+
+    <div class="free">GRATIS</div>
+
+    <div class="gift-separator"></div>
+
+    <p class="gift-description">
+      Disfruta de dos meses de acceso PREMIUM
+      cuando nuestra plataforma esté disponible.
+      <br><br>
+      Este es tu regalo por formar parte
+      de nuestra investigación.
+    </p>
+
+    <div class="gift-footer">
+      TU MÚSICA. TUS REGLAS.
+    </div>
+
+  </div>
+
+  <div class="instructions">
+    <strong>¡No pierdas esta tarjeta!</strong>
+    <br>
+    El día del lanzamiento, envía una fotografía
+    o captura de pantalla de esta tarjeta a:
+    <br>
+    <span class="email">contacto.klyagency@gmail.com</span>
+    <br><br>
+    Igualmente, te avisaremos por correo electrónico
+    cuando llegue el momento.
+  </div>
+
+  <button onclick="window.print()">
+    Guardar tarjeta / Imprimir
+  </button>
+
+  <div class="footer">
+    KLY AGENCY y ???
+  </div>
+
+</div>
+
+<a class="insta-button"
+   href="https://instagram.com/agencykly"
+   target="_blank" rel="noopener">
+   @agencykly
+</a>
+
+<script>
+const form = document.getElementById('form');
+const submitBtn = document.getElementById('submitBtn');
+const error = document.getElementById('error');
+
+const otherRadio = form.querySelector(
+  'input[value="Otro"]'
+);
+
+const otherInput = document.getElementById('otroProblema');
+
+otherRadio.addEventListener('change', () => {
+  otherInput.classList.remove('hidden');
+  otherInput.required = true;
+});
+
+form.querySelectorAll('input[name="problema_principal"]')
+.forEach(radio => {
+  radio.addEventListener('change', () => {
+    if (radio.value !== 'Otro') {
+      otherInput.classList.add('hidden');
+      otherInput.required = false;
+      otherInput.value = '';
+    }
+  });
+});
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Enviando respuestas...';
+  error.style.display = 'none';
+
+  try {
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Error de envío');
+    }
+
+    document.getElementById('surveyScreen').style.display = 'none';
+    document.getElementById('giftScreen').style.display = 'block';
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
+  } catch (err) {
+    error.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Enviar respuestas';
+  }
+});
+</script>
+
+</body>
+</html>

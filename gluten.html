@@ -1,899 +1,370 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GlutenFree Madrid · Mapa y Escáner</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GlutenFree Madrid · v2</title>
 
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <!-- Leaflet MarkerCluster CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
 
-    <style>
-        :root {
-            --primary: #2e7d32;
-            --primary-dark: #1b5e20;
-            --danger: #c62828;
-            --warning: #f9a825;
-            --bg: #f5f5f5;
-            --card-bg: #ffffff;
-            --text: #212121;
-            --text-light: #616161;
-            --border: #e0e0e0;
-            --radius: 16px;
-            --shadow: 0 2px 12px rgba(0,0,0,0.08);
-        }
+<style>
+:root{
+  --primary:#2e7d32;--primary-dark:#1b5e20;--danger:#c62828;--warning:#f9a825;
+  --bg:#f5f5f5;--card:#fff;--text:#212121;--light:#616161;--border:#e0e0e0;
+  --radius:16px;--shadow:0 2px 12px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+/* Header con degradado sutil para detectar versión nueva */
+header{
+  background:linear-gradient(135deg,#2e7d32 0%,#1b5e20 100%);
+  color:#fff;padding:14px 20px;text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,0.18);
+  position:sticky;top:0;z-index:1000;
+}
+header h1{font-size:1.3rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.badge-v{
+  display:inline-block;background:#fff;color:var(--primary-dark);
+  font-size:0.65rem;font-weight:800;padding:2px 8px;border-radius:20px;
+  letter-spacing:0.5px;
+}
+header p{font-size:0.72rem;opacity:0.92;margin-top:3px}
+header p .ver{font-weight:700;opacity:1}
 
-        body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Header */
-        header {
-            background: var(--primary);
-            color: white;
-            padding: 16px 20px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        header h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        header p {
-            font-size: 0.8rem;
-            opacity: 0.9;
-            margin-top: 4px;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            background: var(--card-bg);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 70px;
-            z-index: 999;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 14px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: var(--text-light);
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            transition: color 0.2s, border-bottom 0.2s;
-            border-bottom: 3px solid transparent;
-        }
-
-        .tab.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-
-        .tab:hover {
-            color: var(--primary-dark);
-        }
-
-        /* Content */
-        .content {
-            flex: 1;
-            position: relative;
-        }
-
-        .panel {
-            display: none;
-            height: calc(100vh - 130px);
-        }
-
-        .panel.active {
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Map */
-        #map {
-            flex: 1;
-            width: 100%;
-            min-height: 300px;
-            z-index: 1;
-        }
-
-        /* Scanner */
-        #scanner-panel {
-            padding: 20px;
-            overflow-y: auto;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        .scanner-box {
-            width: 100%;
-            max-width: 500px;
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-
-        .scanner-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: var(--text);
-        }
-
-        .scanner-subtitle {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            margin-bottom: 20px;
-        }
-
-        #interactive {
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-            position: relative;
-            aspect-ratio: 4/3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #interactive video, #interactive canvas {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover;
-        }
-
-        .scanner-placeholder {
-            color: #9e9e9e;
-            font-size: 0.9rem;
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 14px 24px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            width: 100%;
-            margin-top: 16px;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-secondary {
-            background: #eeeeee;
-            color: var(--text);
-        }
-
-        .btn-secondary:hover {
-            background: #e0e0e0;
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        /* Result card */
-        .result-card {
-            width: 100%;
-            max-width: 500px;
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 24px;
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .result-card.visible {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result-status {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .status-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .status-icon.safe {
-            background: #e8f5e9;
-            color: var(--primary);
-        }
-
-        .status-icon.danger {
-            background: #ffebee;
-            color: var(--danger);
-        }
-
-        .status-icon.warning {
-            background: #fff8e1;
-            color: var(--warning);
-        }
-
-        .status-text h3 {
-            font-size: 1.1rem;
-            margin-bottom: 4px;
-        }
-
-        .status-text p {
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-
-        .product-info {
-            border-top: 1px solid var(--border);
-            padding-top: 16px;
-            margin-top: 8px;
-        }
-
-        .product-info h4 {
-            font-size: 0.95rem;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-
-        .product-info p {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            line-height: 1.5;
-            margin-bottom: 6px;
-        }
-
-        .product-image {
-            width: 100%;
-            max-height: 180px;
-            object-fit: contain;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            background: #fafafa;
-        }
-
-        .tag-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 8px;
-        }
-
-        .tag {
-            font-size: 0.7rem;
-            padding: 4px 10px;
-            border-radius: 20px;
-            background: #eeeeee;
-            color: var(--text-light);
-        }
-
-        .tag.gf {
-            background: #e8f5e9;
-            color: var(--primary-dark);
-        }
-
-        .tag.allergen {
-            background: #ffebee;
-            color: var(--danger);
-        }
-
-        /* Map legend / footer */
-        .map-legend {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: var(--card-bg);
-            padding: 10px 16px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            font-size: 0.75rem;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .legend-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: inline-block;
-        }
-
-        /* Leaflet popup custom */
-        .leaflet-popup-content {
-            font-family: inherit;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        .leaflet-popup-content strong {
-            color: var(--primary-dark);
-        }
-
-        /* Loading spinner */
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* Responsive */
-        @media (min-width: 768px) {
-            header h1 { font-size: 1.6rem; }
-            .scanner-box, .result-card { margin-top: 10px; }
-        }
-    </style>
+.tabs{display:flex;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:70px;z-index:999}
+.tab{flex:1;padding:13px;text-align:center;font-weight:600;font-size:0.9rem;color:var(--light);cursor:pointer;border:none;background:transparent;border-bottom:3px solid transparent;transition:.2s}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.content{flex:1;position:relative}
+.panel{display:none;height:calc(100vh - 124px)}
+.panel.active{display:flex;flex-direction:column}
+#map{flex:1;width:100%;min-height:300px;z-index:1}
+#scanner-panel{padding:16px;overflow-y:auto;align-items:center}
+.scanner-box,.result-card{width:100%;max-width:500px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:14px}
+.scanner-title{font-size:1.05rem;font-weight:700;margin-bottom:4px}
+.scanner-subtitle{font-size:0.82rem;color:var(--light);margin-bottom:14px}
+#interactive{width:100%;border-radius:12px;overflow:hidden;background:#000;position:relative;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center}
+#interactive video,#interactive canvas{width:100%!important;height:100%!important;object-fit:cover}
+.scanner-placeholder{color:#9e9e9e;font-size:0.88rem;text-align:center;padding:30px 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:12px;font-weight:600;font-size:0.98rem;border:none;cursor:pointer;transition:.2s;width:100%;margin-top:12px}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-secondary{background:#eee;color:var(--text)}
+.btn-danger{background:var(--danger);color:#fff}
+.result-card{display:none;animation:fadeIn .3s}
+.result-card.visible{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.result-status{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.status-icon{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.status-icon.safe{background:#e8f5e9;color:var(--primary)}
+.status-icon.danger{background:#ffebee;color:var(--danger)}
+.status-icon.warning{background:#fff8e1;color:var(--warning)}
+.status-text h3{font-size:1.05rem;margin-bottom:3px}
+.status-text p{font-size:0.82rem;color:var(--light)}
+.product-info{border-top:1px solid var(--border);padding-top:14px;margin-top:6px}
+.product-info h4{font-size:0.95rem;margin-bottom:6px}
+.product-info p{font-size:0.83rem;color:var(--light);line-height:1.5;margin-bottom:5px}
+.product-image{width:100%;max-height:170px;object-fit:contain;border-radius:8px;margin-bottom:10px;background:#fafafa}
+.tag-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font-size:0.7rem;padding:4px 10px;border-radius:20px;background:#eee;color:var(--light)}
+.tag.gf{background:#e8f5e9;color:var(--primary-dark)}
+.tag.allergen{background:#ffebee;color:var(--danger)}
+.map-legend{position:absolute;bottom:20px;left:20px;background:var(--card);padding:10px 14px;border-radius:12px;box-shadow:var(--shadow);font-size:0.72rem;z-index:1000;display:flex;align-items:center;gap:8px}
+.legend-dot{width:10px;height:10px;border-radius:50%;background:var(--primary);display:inline-block}
+.spinner{border:3px solid #f3f3f3;border-top:3px solid var(--primary);border-radius:50%;width:22px;height:22px;animation:spin .8s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none!important}
+.manual-box{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.manual-box p{font-size:0.82rem;color:var(--light);margin-bottom:10px}
+.manual-row{display:flex;gap:8px}
+.manual-row input{flex:1;padding:11px;border:1px solid var(--border);border-radius:10px;font-size:0.95rem}
+.manual-row button{margin:0;width:auto;padding:11px 18px}
+.ver-stamp{
+  position:absolute;top:8px;right:10px;
+  font-size:0.62rem;color:rgba(255,255,255,0.85);
+  background:rgba(0,0,0,0.18);padding:2px 7px;border-radius:20px;
+  letter-spacing:0.3px;
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <h1>🌾 GlutenFree Madrid</h1>
-        <p>Restaurantes 100% sin gluten y escáner de productos</p>
-    </header>
+<header>
+  <h1>🌾 GlutenFree Madrid <span class="badge-v">v2</span></h1>
+  <p>Restaurantes sin gluten y escáner · <span class="ver">build 25-nov</span></p>
+  <span class="ver-stamp">v2</span>
+</header>
 
-    <nav class="tabs">
-        <button class="tab active" data-panel="map-panel" id="tab-map">🗺️ Mapa</button>
-        <button class="tab" data-panel="scanner-panel" id="tab-scanner">📷 Escáner</button>
-    </nav>
+<nav class="tabs">
+  <button class="tab active" data-panel="map-panel">🗺️ Mapa</button>
+  <button class="tab" data-panel="scanner-panel">📷 Escáner</button>
+</nav>
 
-    <div class="content">
-        <!-- MAPA -->
-        <div id="map-panel" class="panel active">
-            <div id="map"></div>
-            <div class="map-legend">
-                <span class="legend-dot"></span>
-                <span>Restaurantes 100% sin gluten (Madrid)</span>
-            </div>
+<div class="content">
+  <div id="map-panel" class="panel active">
+    <div id="map"></div>
+    <div class="map-legend"><span class="legend-dot"></span><span>Restaurantes 100% sin gluten (Madrid)</span></div>
+  </div>
+
+  <div id="scanner-panel" class="panel">
+    <div class="scanner-box">
+      <div class="scanner-title">Escanear código de barras</div>
+      <div class="scanner-subtitle">Apunta la cámara al código del producto.</div>
+      <div id="interactive">
+        <div class="scanner-placeholder" id="scanner-placeholder">📷 La cámara se activará aquí</div>
+      </div>
+      <button class="btn btn-primary" id="btn-start-scan">Iniciar escáner</button>
+      <button class="btn btn-secondary hidden" id="btn-stop-scan">Detener escáner</button>
+
+      <div class="manual-box">
+        <p>¿No detecta el código? Introdúcelo a mano:</p>
+        <div class="manual-row">
+          <input type="text" id="manual-barcode" inputmode="numeric" placeholder="Ej: 3017620422003">
+          <button class="btn btn-primary" id="btn-manual-search">Buscar</button>
         </div>
-
-        <!-- ESCÁNER -->
-        <div id="scanner-panel" class="panel">
-            <div class="scanner-box">
-                <div class="scanner-title">Escanear código de barras</div>
-                <div class="scanner-subtitle">Apunta la cámara al código del producto para comprobar si contiene gluten.</div>
-
-                <div id="interactive">
-                    <div class="scanner-placeholder" id="scanner-placeholder">
-                        📷 La cámara se activará aquí
-                    </div>
-                </div>
-
-                <button class="btn btn-primary" id="btn-start-scan">Iniciar escáner</button>
-                <button class="btn btn-secondary hidden" id="btn-stop-scan">Detener escáner</button>
-            </div>
-
-            <!-- Resultado -->
-            <div class="result-card" id="result-card">
-                <div class="result-status" id="result-status">
-                    <div class="status-icon" id="status-icon"></div>
-                    <div class="status-text">
-                        <h3 id="status-title"></h3>
-                        <p id="status-desc"></p>
-                    </div>
-                </div>
-                <div class="product-info" id="product-info">
-                    <!-- Se rellena dinámicamente -->
-                </div>
-            </div>
-
-            <div class="scanner-box" style="margin-top: 10px; padding: 16px;">
-                <p style="font-size: 0.75rem; color: var(--text-light); text-align: center;">
-                    Los datos de productos provienen de <strong>Open Food Facts</strong> (base de datos colaborativa).
-                    La información puede ser incompleta o contener errores. Verifica siempre el etiquetado físico.
-                </p>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Leaflet MarkerCluster JS -->
-    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-    <!-- QuaggaJS (escáner de códigos de barras) -->
-    <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2/dist/quagga.min.js"></script>
+    <div class="result-card" id="result-card">
+      <div class="result-status">
+        <div class="status-icon" id="status-icon"></div>
+        <div class="status-text">
+          <h3 id="status-title"></h3>
+          <p id="status-desc"></p>
+        </div>
+      </div>
+      <div class="product-info" id="product-info"></div>
+      <p style="margin-top:12px;font-size:0.65rem;color:#bdbdbd;text-align:right;">v2</p>
+    </div>
 
-    <script>
-        // ============================================================
-        // 1. DATOS DE RESTAURANTES (Madrid, 100% sin gluten / certificados)
-        // ============================================================
-        // Coordenadas obtenidas de fuentes públicas (MapCarta, Listae, etc.)
-        const restaurantes = [
-            {
-                nombre: "Okashi Sanda",
-                direccion: "C. de San Vicente Ferrer, 22 (Malasaña)",
-                lat: 40.42574,
-                lng: -3.70327,
-                tipo: "Japonés 100% sin gluten (certificado FACE)"
-            },
-            {
-                nombre: "As De Bastos Madrid",
-                direccion: "Calle de Castilla, 62 (Tetuán)",
-                lat: 40.45318,
-                lng: -3.70798,
-                tipo: "Cocina española 100% sin gluten"
-            },
-            {
-                nombre: "LaLina (La Latina)",
-                direccion: "Plaza de la Cebada, 2",
-                lat: 40.41130,
-                lng: -3.70876,
-                tipo: "Tapas 100% sin gluten"
-            },
-            {
-                nombre: "Goiko 100% Gluten Free",
-                direccion: "Calle de María de Molina, 20 (Salamanca)",
-                lat: 40.43770,
-                lng: -3.68671,
-                tipo: "Hamburguesas 100% sin gluten (respaldo FACE)"
-            },
-            {
-                nombre: "Pink's!! 100% Gluten Free",
-                direccion: "Calle de Viriato, 68 (Chamberí)",
-                lat: 40.43556,
-                lng: -3.70111,
-                tipo: "Smash burgers 100% sin gluten"
-            },
-            {
-                nombre: "Celicioso (Hortaleza)",
-                direccion: "C/ de Hortaleza, 3",
-                lat: 40.42044,
-                lng: -3.70107,
-                tipo: "Pastelería y brunch 100% sin gluten"
-            },
-            {
-                nombre: "Senza Glutine di Grosso Napoletano",
-                direccion: "Centro (pizzería 100% sin gluten)",
-                lat: 40.42315,
-                lng: -3.70450,
-                tipo: "Pizza napolitana 100% sin gluten"
-            },
-            {
-                nombre: "La Celiacoteca",
-                direccion: "C/ Eraso, 3 (Guindalera)",
-                lat: 40.43880,
-                lng: -3.66980,
-                tipo: "Pastelería 100% sin gluten"
-            }
-        ];
+    <div class="scanner-box" style="padding:14px">
+      <p style="font-size:0.72rem;color:var(--light);text-align:center">
+        Datos vía <strong>Open Food Facts</strong>. Pueden estar incompletos. Verifica el envase físico.
+      </p>
+    </div>
+  </div>
+</div>
 
-        // ============================================================
-        // 2. MAPA (Leaflet + MarkerCluster)
-        // ============================================================
-        let map;
-        let clusterGroup;
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2@1.8.2/dist/quagga.min.js"></script>
 
-        function initMap() {
-            // Centro de Madrid
-            map = L.map('map').setView([40.4250, -3.6950], 13);
+<script>
+(function(){
+  "use strict";
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                maxZoom: 19
-            }).addTo(map);
+  const restaurantes = [
+    {n:"Okashi Sanda",d:"C. San Vicente Ferrer, 22",lat:40.42574,lng:-3.70327,t:"Japonés 100% sin gluten (FACE)"},
+    {n:"As De Bastos",d:"C. Castilla, 62 (Tetuán)",lat:40.45318,lng:-3.70798,t:"Cocina española 100% sin gluten"},
+    {n:"LaLina",d:"Plaza de la Cebada, 2",lat:40.41130,lng:-3.70876,t:"Tapas 100% sin gluten"},
+    {n:"Goiko GF",d:"C. María de Molina, 20",lat:40.43770,lng:-3.68671,t:"Hamburguesas 100% sin gluten"},
+    {n:"Pink's!! GF",d:"C. Viriato, 68",lat:40.43556,lng:-3.70111,t:"Smash burgers 100% sin gluten"},
+    {n:"Celicioso",d:"C. Hortaleza, 3",lat:40.42044,lng:-3.70107,t:"Pastelería 100% sin gluten"},
+    {n:"Senza Glutine",d:"Centro (pizzería)",lat:40.42315,lng:-3.70450,t:"Pizza 100% sin gluten"},
+    {n:"La Celiacoteca",d:"C. Eraso, 3",lat:40.43880,lng:-3.66980,t:"Pastelería 100% sin gluten"}
+  ];
 
-            clusterGroup = L.markerClusterGroup({
-                maxClusterRadius: 50,
-                spiderfyOnMaxZoom: true,
-                showCoverageOnHover: false
-            });
+  let map=null, cluster=null;
+  function initMap(){
+    map = L.map('map').setView([40.4250,-3.6950],13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+    cluster = L.markerClusterGroup({maxClusterRadius:50,spiderfyOnMaxZoom:true,showCoverageOnHover:false});
+    const icon = L.divIcon({className:'',html:'<div style="background:#2e7d32;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)"></div>',iconSize:[18,18],iconAnchor:[9,9]});
+    restaurantes.forEach(r=>{
+      const m = L.marker([r.lat,r.lng],{icon});
+      m.bindPopup(`<strong>${r.n}</strong><br>${r.d}<br><em style="color:#2e7d32">${r.t}</em>`);
+      cluster.addLayer(m);
+    });
+    map.addLayer(cluster);
+  }
 
-            const iconoVerde = L.divIcon({
-                className: 'custom-marker',
-                html: '<div style="background:#2e7d32;width:14px;height:14px;border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.4);"></div>',
-                iconSize: [18, 18],
-                iconAnchor: [9, 9]
-            });
+  const $ = id => document.getElementById(id);
+  const btnStart=$('btn-start-scan'), btnStop=$('btn-stop-scan');
+  const placeholder=$('scanner-placeholder'), interactive=$('interactive');
+  const resultCard=$('result-card'), statusIcon=$('status-icon');
+  const statusTitle=$('status-title'), statusDesc=$('status-desc');
+  const productInfo=$('product-info');
 
-            restaurantes.forEach(r => {
-                const marker = L.marker([r.lat, r.lng], { icon: iconoVerde });
-                marker.bindPopup(`
-                    <strong>${r.nombre}</strong><br>
-                    ${r.direccion}<br>
-                    <em style="color:#2e7d32;">${r.tipo}</em>
-                `);
-                clusterGroup.addLayer(marker);
-            });
+  let scanning=false, quaggaReady=false;
 
-            map.addLayer(clusterGroup);
-        }
+  function startScanner(){
+    if (scanning) return;
+    resultCard.classList.remove('visible');
+    productInfo.innerHTML='';
+    placeholder.style.display='none';
+    btnStart.classList.add('hidden');
+    btnStop.classList.remove('hidden');
+    scanning=true;
 
-        // ============================================================
-        // 3. ESCÁNER DE CÓDIGOS DE BARRAS (QuaggaJS + Open Food Facts)
-        // ============================================================
-        let scanning = false;
-        let quaggaInitialized = false;
+    if (!quaggaReady){
+      Quagga.init({
+        inputStream:{ name:"Live", type:"LiveStream", target:interactive,
+          constraints:{ facingMode:"environment", width:{ideal:1280}, height:{ideal:720} } },
+        locator:{ patchSize:"medium", halfSample:true },
+        decoder:{ readers:["ean_reader","ean_8_reader","upc_reader","upc_e_reader","code_128_reader"] },
+        locate:true, frequency:10
+      }, function(err){
+        if (err){ console.error('[Quagga] init error:', err); alert('No se pudo acceder a la cámara.'); resetUI(); return; }
+        quaggaReady=true;
+        Quagga.start();
+        console.log('[Quagga] iniciado');
+      });
+    } else { Quagga.start(); }
+    Quagga.onDetected(onDetected);
+  }
 
-        const btnStart = document.getElementById('btn-start-scan');
-        const btnStop = document.getElementById('btn-stop-scan');
-        const placeholder = document.getElementById('scanner-placeholder');
-        const interactive = document.getElementById('interactive');
-        const resultCard = document.getElementById('result-card');
-        const statusIcon = document.getElementById('status-icon');
-        const statusTitle = document.getElementById('status-title');
-        const statusDesc = document.getElementById('status-desc');
-        const productInfo = document.getElementById('product-info');
+  function stopScanner(){
+    if (!scanning) return;
+    scanning=false;
+    if (quaggaReady){ try{Quagga.stop();}catch(e){} }
+    resetUI();
+  }
 
-        btnStart.addEventListener('click', startScanner);
-        btnStop.addEventListener('click', stopScanner);
+  function resetUI(){
+    scanning=false;
+    btnStart.classList.remove('hidden');
+    btnStop.classList.add('hidden');
+    placeholder.style.display='block';
+    interactive.querySelectorAll('video,canvas').forEach(v=>v.remove());
+  }
 
-        function startScanner() {
-            if (scanning) return;
+  function onDetected(data){
+    if (!scanning) return;
+    const code = data && data.code;
+    if (!code || code.length<6) return;
+    console.log('[Detectado]', code);
+    stopScanner();
+    buscarCodigo(code);
+  }
 
-            // Ocultar resultado anterior
-            resultCard.classList.remove('visible');
-            productInfo.innerHTML = '';
+  function buscarCodigo(code){
+    resultCard.classList.add('visible');
+    statusIcon.className='status-icon warning';
+    statusIcon.textContent='⏳';
+    statusTitle.textContent='Buscando producto...';
+    statusDesc.textContent='Código: '+code;
+    productInfo.innerHTML='<div class="spinner"></div>';
 
-            placeholder.style.display = 'none';
-            btnStart.classList.add('hidden');
-            btnStop.classList.remove('hidden');
+    const url = `https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(code)}.json`;
+    console.log('[OFF] GET', url);
 
-            scanning = true;
+    fetch(url)
+      .then(r=>{ console.log('[OFF] HTTP', r.status); if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+      .then(data=>{
+        console.log('[OFF] status', data.status);
+        if (data.status!==1 || !data.product){ mostrarNoEncontrado(code); return; }
+        renderProduct(data.product, code);
+      })
+      .catch(err=>{
+        console.error('[OFF] error', err);
+        mostrarNoEncontrado(code, 'Error de conexión con Open Food Facts.');
+      });
+  }
 
-            if (!quaggaInitialized) {
-                Quagga.init({
-                    inputStream: {
-                        name: "Live",
-                        type: "LiveStream",
-                        target: interactive,
-                        constraints: {
-                            facingMode: "environment",
-                            width: { min: 640 },
-                            height: { min: 480 }
-                        }
-                    },
-                    decoder: {
-                        readers: ["ean_reader", "ean_8_reader", "upc_reader", "upc_e_reader", "code_128_reader"]
-                    },
-                    locate: true,
-                    numOfWorkers: navigator.hardwareConcurrency || 2,
-                    frequency: 10
-                }, function (err) {
-                    if (err) {
-                        console.error("Error Quagga:", err);
-                        alert("No se pudo acceder a la cámara. Revisa los permisos o usa HTTPS.");
-                        resetScannerUI();
-                        return;
-                    }
-                    quaggaInitialized = true;
-                    Quagga.start();
-                });
-            } else {
-                Quagga.start();
-            }
+  function renderProduct(p, code){
+    const nombre = p.product_name || p.product_name_es || 'Producto sin nombre';
+    const marca = p.brands || '';
+    const img = p.image_front_url || p.image_url || '';
+    const g = evaluarGluten(p);
 
-            // Detectar código
-            Quagga.onDetected(onBarcodeDetected);
-        }
+    statusIcon.className='status-icon '+g.estado;
+    statusIcon.textContent=g.icono;
+    statusTitle.textContent=g.titulo;
+    statusDesc.textContent=g.descripcion;
 
-        function stopScanner() {
-            if (!scanning) return;
-            scanning = false;
-            if (quaggaInitialized) {
-                Quagga.stop();
-            }
-            resetScannerUI();
-        }
+    let html='';
+    if (img) html+=`<img src="${img}" class="product-image" onerror="this.style.display='none'">`;
+    html+=`<h4>${nombre}</h4>`;
+    if (marca) html+=`<p><strong>Marca:</strong> ${marca}</p>`;
+    html+=`<p><strong>Código:</strong> ${code}</p>`;
 
-        function resetScannerUI() {
-            scanning = false;
-            btnStart.classList.remove('hidden');
-            btnStop.classList.add('hidden');
-            placeholder.style.display = 'block';
-            // Limpiar el contenedor de video
-            const videos = interactive.querySelectorAll('video, canvas');
-            videos.forEach(v => v.remove());
-        }
+    const al = p.allergens_tags || [];
+    if (al.length){
+      html+='<p style="margin-top:8px"><strong>Alérgenos:</strong></p><div class="tag-list">';
+      al.forEach(t=>{
+        const txt = t.replace('en:','').replace(/-/g,' ');
+        html+=`<span class="tag ${t.includes('gluten')?'allergen':''}">${txt}</span>`;
+      });
+      html+='</div>';
+    }
 
-        // Callback cuando se detecta un código
-        function onBarcodeDetected(data) {
-            if (!scanning) return;
-            const code = data.code;
-            if (!code || code.length < 6) return;
+    const lb = (p.labels_tags||[]).filter(t=>t.includes('gluten'));
+    if (lb.length){
+      html+='<p style="margin-top:10px"><strong>Etiquetas:</strong></p><div class="tag-list">';
+      lb.forEach(t=>{
+        const txt=t.replace('en:','').replace(/-/g,' ');
+        const gf=t.includes('no-gluten')||t.includes('gluten-free');
+        html+=`<span class="tag ${gf?'gf':''}">${txt}</span>`;
+      });
+      html+='</div>';
+    }
 
-            // Detener escáner inmediatamente para evitar múltiples lecturas
-            stopScanner();
+    const ing = p.ingredients_text_es || p.ingredients_text;
+    if (ing){
+      const c = ing.substring(0,300);
+      html+=`<p style="margin-top:10px"><strong>Ingredientes:</strong> ${c}${ing.length>=300?'...':''}</p>`;
+    }
+    productInfo.innerHTML=html;
+  }
 
-            // Mostrar resultado y consultar API
-            resultCard.classList.add('visible');
-            statusIcon.className = 'status-icon warning';
-            statusIcon.textContent = '⏳';
-            statusTitle.textContent = 'Buscando producto...';
-            statusDesc.textContent = `Código: ${code}`;
-            productInfo.innerHTML = '<div class="spinner"></div>';
+  function evaluarGluten(p){
+    const al=(p.allergens_tags||[]).map(t=>t.toLowerCase());
+    const lb=(p.labels_tags||[]).map(t=>t.toLowerCase());
+    const ing=(p.ingredients_text_es||p.ingredients_text||'').toLowerCase();
+    const contiene = al.some(t=>t.includes('gluten'));
+    const etiquetaGF = lb.some(t=>t.includes('no-gluten')||t.includes('gluten-free')||t.includes('sin-gluten'));
+    const sospechoso = /trigo|cebada|centeno|espelta|kamut|triticale|malta|sémola|semola|harina de trigo/i.test(ing);
+    if (contiene) return {estado:'danger',icono:'⚠️',titulo:'Contiene gluten',descripcion:'Declara gluten entre sus alérgenos.'};
+    if (etiquetaGF && !sospechoso) return {estado:'safe',icono:'✅',titulo:'Apto para celíacos',descripcion:'Etiquetado como sin gluten.'};
+    if (sospechoso) return {estado:'danger',icono:'⚠️',titulo:'Posible gluten',descripcion:'Ingredientes con cereales con gluten.'};
+    return {estado:'warning',icono:'❓',titulo:'Información insuficiente',descripcion:'Verifica el envase físicamente.'};
+  }
 
-            fetchProduct(code);
-        }
+  function mostrarNoEncontrado(code, msg){
+    statusIcon.className='status-icon warning';
+    statusIcon.textContent='❓';
+    statusTitle.textContent='Producto no encontrado';
+    statusDesc.textContent= msg || 'No está en la base de datos.';
+    productInfo.innerHTML = `
+      <p><strong>Código:</strong> ${code}</p>
+      <p style="margin-top:6px;font-size:0.82rem;color:var(--light)">
+        Este producto no está en Open Food Facts. Puedes añadirlo en su web.
+      </p>`;
+  }
 
-        // ============================================================
-        // 4. CONSULTA A OPEN FOOD FACTS
-        // ============================================================
-        async function fetchProduct(barcode) {
-            // Limpiar resultados anteriores
-            productInfo.innerHTML = '';
+  btnStart.addEventListener('click', startScanner);
+  btnStop.addEventListener('click', stopScanner);
 
-            // User-Agent personalizado (requerido por OFF)
-            const userAgent = 'GlutenFreeMadrid/1.0 (contacto@ejemplo.com)';
+  $('btn-manual-search').addEventListener('click', function(){
+    const v = $('manual-barcode').value.trim();
+    if (!v || v.length<6){ alert('Introduce un código válido (mínimo 6 dígitos).'); return; }
+    if (scanning) stopScanner();
+    buscarCodigo(v);
+  });
+  $('manual-barcode').addEventListener('keypress', function(e){
+    if (e.key==='Enter') $('btn-manual-search').click();
+  });
 
-            // Endpoint v3 de Open Food Facts
-            const url = `https://world.openfoodfacts.org/api/v3/product/${barcode}.json`;
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.panel).classList.add('active');
+      if (tab.dataset.panel==='map-panel' && map) setTimeout(()=>map.invalidateSize(),100);
+      if (tab.dataset.panel!=='scanner-panel' && scanning) stopScanner();
+    });
+  });
 
-            try {
-                const response = await fetch(url, {
-                    headers: {
-                        'User-Agent': userAgent
-                    }
-                });
+  document.addEventListener('visibilitychange', ()=>{ if (document.hidden && scanning) stopScanner(); });
 
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                // Estructura de la respuesta v3
-                if (data.status === 'failure' || !data.product) {
-                    showUnknownProduct(barcode, 'Producto no encontrado en la base de datos.');
-                    return;
-                }
-
-                const product = data.product;
-                renderProduct(product, barcode);
-
-            } catch (error) {
-                console.error('Error fetching OFF:', error);
-                showUnknownProduct(barcode, 'Error de conexión. Inténtalo de nuevo.');
-            }
-        }
-
-        // ============================================================
-        // 5. LÓGICA DE GLUTEN
-        // ============================================================
-        function renderProduct(product, barcode) {
-            const nombre = product.product_name || product.product_name_es || 'Producto sin nombre';
-            const marca = product.brands || '';
-            const imagen = product.image_front_url || product.image_url || '';
-
-            // Determinar estado del gluten
-            const glutenInfo = evaluarGluten(product);
-
-            // Actualizar tarjeta de estado
-            statusIcon.className = `status-icon ${glutenInfo.estado}`;
-            statusIcon.textContent = glutenInfo.icono;
-            statusTitle.textContent = glutenInfo.titulo;
-            statusDesc.textContent = glutenInfo.descripcion;
-
-            // Construir información del producto
-            let html = '';
-            if (imagen) {
-                html += `<img src="${imagen}" alt="${nombre}" class="product-image" onerror="this.style.display='none'">`;
-            }
-            html += `<h4>${nombre}</h4>`;
-            if (marca) html += `<p><strong>Marca:</strong> ${marca}</p>`;
-            html += `<p><strong>Código:</strong> ${barcode}</p>`;
-
-            // Mostrar alérgenos si existen
-            const allergenTags = product.allergens_tags || [];
-            if (allergenTags.length > 0) {
-                html += `<p style="margin-top:8px;"><strong>Alérgenos declarados:</strong></p>`;
-                html += `<div class="tag-list">`;
-                allergenTags.forEach(tag => {
-                    const limpio = tag.replace('en:', '').replace(/-/g, ' ');
-                    const esGluten = tag.includes('gluten');
-                    html += `<span class="tag ${esGluten ? 'allergen' : ''}">${limpio}</span>`;
-                });
-                html += `</div>`;
-            }
-
-            // Mostrar etiquetas relevantes (gluten free, etc.)
-            const labelTags = product.labels_tags || [];
-            const glutenLabels = labelTags.filter(t => t.includes('gluten'));
-            if (glutenLabels.length > 0) {
-                html += `<p style="margin-top:12px;"><strong>Etiquetas:</strong></p>`;
-                html += `<div class="tag-list">`;
-                glutenLabels.forEach(tag => {
-                    const limpio = tag.replace('en:', '').replace(/-/g, ' ');
-                    const esGF = tag.includes('no-gluten') || tag.includes('gluten-free');
-                    html += `<span class="tag ${esGF ? 'gf' : ''}">${limpio}</span>`;
-                });
-                html += `</div>`;
-            }
-
-            // Ingredientes (truncados)
-            if (product.ingredients_text || product.ingredients_text_es) {
-                const ing = (product.ingredients_text_es || product.ingredients_text).substring(0, 300);
-                html += `<p style="margin-top:12px;"><strong>Ingredientes:</strong> ${ing}${ing.length >= 300 ? '...' : ''}</p>`;
-            }
-
-            productInfo.innerHTML = html;
-        }
-
-        function evaluarGluten(product) {
-            const allergens = (product.allergens_tags || []).map(t => t.toLowerCase());
-            const labels = (product.labels_tags || []).map(t => t.toLowerCase());
-            const ingredients = (product.ingredients_text || product.ingredients_text_es || '').toLowerCase();
-
-            // 1. Si contiene el alérgeno gluten explícitamente
-            const contieneGluten = allergens.some(t => t.includes('gluten'));
-
-            // 2. Si tiene etiqueta "sin gluten" / "gluten free"
-            const etiquetaSinGluten = labels.some(t =>
-                t.includes('no-gluten') || t.includes('gluten-free') || t.includes('sin-gluten')
-            );
-
-            // 3. Si en ingredientes aparece trigo, cebada, centeno, etc. (detección básica)
-            const ingredientesSospechosos = /trigo|cebada|centeno|espelta|kamut|triticale|avena|malta|sémola|semola|harina de trigo/i.test(ingredients);
-
-            if (contieneGluten) {
-                return {
-                    estado: 'danger',
-                    icono: '⚠️',
-                    titulo: 'Contiene gluten',
-                    descripcion: 'El producto declara gluten entre sus alérgenos.'
-                };
-            }
-
-            if (etiquetaSinGluten && !ingredientesSospechosos) {
-                return {
-                    estado: 'safe',
-                    icono: '✅',
-                    titulo: 'Apto para celíacos',
-                    descripcion: 'El producto está etiquetado como sin gluten.'
-                };
-            }
-
-            if (ingredientesSospechosos && !etiquetaSinGluten) {
-                return {
-                    estado: 'danger',
-                    icono: '⚠️',
-                    titulo: 'Posible gluten',
-                    descripcion: 'Los ingredientes incluyen cereales con gluten. Verifica el etiquetado.'
-                };
-            }
-
-            // Si no hay información clara
-            return {
-                estado: 'warning',
-                icono: '❓',
-                titulo: 'Información insuficiente',
-                descripcion: 'No se puede confirmar si es apto. Revisa el envase físicamente.'
-            };
-        }
-
-        function showUnknownProduct(barcode, mensaje) {
-            statusIcon.className = 'status-icon warning';
-            statusIcon.textContent = '❓';
-            statusTitle.textContent = 'Producto no encontrado';
-            statusDesc.textContent = mensaje;
-            productInfo.innerHTML = `
-                <p>Código escaneado: <strong>${barcode}</strong></p>
-                <p style="margin-top:8px; font-size:0.85rem; color:var(--text-light);">
-                    Este producto no está en la base de datos de Open Food Facts.
-                    Si quieres, puedes fotografiarlo y añadirlo tú mismo en su web.
-                </p>
-            `;
-        }
-
-        // ============================================================
-        // 6. CONTROL DE PESTAÑAS
-        // ============================================================
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Desactivar todas las pestañas y paneles
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-
-                // Activar la seleccionada
-                tab.classList.add('active');
-                const panelId = tab.dataset.panel;
-                document.getElementById(panelId).classList.add('active');
-
-                // Si se cambia al mapa, invalidar tamaño (Leaflet necesita recalcular)
-                if (panelId === 'map-panel' && map) {
-                    setTimeout(() => map.invalidateSize(), 100);
-                }
-
-                // Si se sale del escáner, detener cámara
-                if (panelId !== 'scanner-panel' && scanning) {
-                    stopScanner();
-                }
-            });
-        });
-
-        // ============================================================
-        // 7. INICIALIZACIÓN
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', () => {
-            initMap();
-
-            // Asegurar que el mapa se renderiza bien al cargar
-            setTimeout(() => {
-                if (map) map.invalidateSize();
-            }, 300);
-        });
-
-        // Manejar cambio de visibilidad de la página (pausar cámara si se oculta)
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && scanning) {
-                stopScanner();
-            }
-        });
-
-    </script>
+  document.addEventListener('DOMContentLoaded', ()=>{
+    initMap();
+    setTimeout(()=>{ if (map) map.invalidateSize(); }, 300);
+  });
+})();
+</script>
 </body>
 </html>
